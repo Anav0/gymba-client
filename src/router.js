@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Landing from '../pages/Landing'
-import SignUp from '../pages/SignUp'
-import SignIn from '../pages/SignIn'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Landing from '../pages/Landing';
+import SignUp from '../pages/SignUp';
+import SignIn from '../pages/SignIn';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
 	mode: 'history',
@@ -13,17 +13,17 @@ export default new Router({
 		{
 			path: '/',
 			name: 'landing',
-			component: Landing
+			component: Landing,
 		},
 		{
 			path: '/sign-in',
 			name: 'sign-in',
-			component: SignIn
+			component: SignIn,
 		},
 		{
 			path: '/sign-up',
 			name: 'sign-up',
-			component: SignUp
-		}
-	]
-})
+			component: SignUp,
+		},
+	],
+});

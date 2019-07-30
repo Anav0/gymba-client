@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar></navbar>
-    <router-view />
+    <router-view class="app-content" />
   </div>
 </template>
 <script>
@@ -24,5 +24,9 @@ export default {
   @media (max-width: $xsm) {
     padding: 20px 30px;
   }
+}
+.app-content {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -11,12 +11,14 @@ $WhiteSmoke: #F5F5F5;
 $NeonGreen: #64FDA1;
 $Link: #7DB0FC;
 $Alert: #FF6961;
+$White: #ffff;
+$FaintingGray: #E5E5E5;
 
 //FONT SIZES
 $font-size-h1: 45px;
 $font-size-h2: 30px;
 $font-size-h3: 25px;
-$font-size-h4: 18px;
+$font-size-larger: 18px;
 $font-size-regular: 16px;
 $font-size-small: 12px;
 
@@ -34,3 +36,5 @@ $icon-size-regular: 30px;
 
 
 
+//TRANSITION TIME
+$transition-duration-default: .2s;

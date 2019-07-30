@@ -15,7 +15,7 @@ export default {};
   align-items: center;
 
   &__text {
-    color: white;
+    color: $White;
   }
 
   &__icon {
