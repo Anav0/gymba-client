@@ -1,26 +1,43 @@
 <template>
-  <div class="landing">
-    <h3 class="landing__marketing">{{$t('landing-marketing-pitch')}}</h3>
-    <div class="landing__buttons">
-      <button class="btn btn--default">{{$t('sign-up')}}</button>
-      <button class="btn btn--outline">{{$t('sign-in')}}</button>
-    </div>
+  <div>
+    <section class="greeting website-page">
+      <h1 class="greeting__marketing">{{$t('greeting-marketing-pitch')}}</h1>
+      <div class="greeting__buttons">
+        <router-link tag="button" to="/sign-up" class="btn btn--default">{{$t('sign-up')}}</router-link>
+        <router-link tag="button" to="/sign-in" class="btn btn--outline">{{$t('sign-in')}}</router-link>
+      </div>
+    </section>
+    <features id="features" />
+    <contact id="contact" />
   </div>
 </template>
 
 <script>
-export default {};
+import features from "./features";
+import contact from "./contact";
+
+export default {
+  components: {
+    features,
+    contact
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-.landing {
+.greeting {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  padding-bottom: 50px;
 
   @media (min-width: $sm) {
-    .landing__buttons {
+    justify-content: flex-start;
+  }
+
+  @media (min-width: $sm) {
+    .greeting__buttons {
       display: none;
     }
   }
@@ -49,6 +66,17 @@ export default {};
   &__marketing {
     color: $White;
     text-align: center;
+    max-width: 600px;
+
+    @media (max-width: $sm) {
+      max-width: 100%;
+      font-size: $font-size-h3;
+      margin-top: 0px;
+    }
+    @media (min-width: $sm) {
+      justify-content: flex-start;
+      margin-top: 150px;
+    }
   }
 }
 </style>

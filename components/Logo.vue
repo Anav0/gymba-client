@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
     <img class="logo__icon" src="../assets/icons/logo.svg" />
-    <h2 class="logo__text">Gymba</h2>
+    <h2 class="logo__text">{{$t('app-name')}}</h2>
   </div>
 </template>
 
@@ -19,8 +19,9 @@ export default {};
   }
 
   &__icon {
+    width: 100%;
+    height: 100%;
     margin-right: 5px;
-    width: 35px;
   }
 }
 </style>

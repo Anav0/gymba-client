@@ -1,7 +1,25 @@
 {
-    "landing-marketing-pitch": "Talk and laugh with world’s top ML based chatbot!",
+    "app-name": "Gymba",
+    "greeting-marketing-pitch": "Talk and laugh with world’s top ML based chatbot!",
     "sign-up": "sign up",
     "sign-in": "sign in",
     "navbar-features": "feature",
-    "navbar-contact": "contact"
+    "navbar-contact": "contact",
+    "features-one-header": "Starving for humans? Chat with friends!",
+    "features-two-desc": "Gymba offeres several chatbot personalities to choose from. Starting with your friendly neighbour ",
+    "features-two-racist-intro": "finishing with racist",
+    "features-two-throught": "throught conspiracy theorist",
+    "features-two-header": "Choose personality that suits you best.",
+    "features-one-desc-1": "If you don’t want to spend your time on lengthy conversations with ",
+    "features-one-desc-2": " about meaning of life, you can still jut chat with your friends!",
+    "features-three-header": "One man army",
+    "features-three-desc-1": "Gymba is created by ",
+    "features-three-desc-2": "If you notice any bug or there is a feature you would like to see. ",
+    "features-three-desc-3": " me and i will reply in a moments notice.",
+    "personality-friendly-name": "Stefi",
+    "personality-conspiracy-name": "Alex",
+    "personality-racist-name": "Don",
+    "ai": "AI",
+    "one-men": "one men",
+    "contact": "contact"
 }

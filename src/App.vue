@@ -16,10 +16,13 @@ export default {
 
 <style lang="scss">
 #app {
-  background: $LinearGradient;
   width: 100%;
   height: 100%;
   padding: 50px;
+  background-image: url("../assets/images/background-wave.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 150%;
 
   @media (max-width: $xsm) {
     padding: 20px 30px;
