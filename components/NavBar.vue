@@ -2,8 +2,8 @@
   <nav class="navbar">
     <logo class="navbar__logo"></logo>
     <div class="navbar__menu--desktop">
-      <router-link tag="button" to="#features" class="btn btn--raw">{{$t('navbar-features')}}</router-link>
-      <router-link tag="button" to="#contact" class="btn btn--raw">{{$t('navbar-contact')}}</router-link>
+      <router-link tag="button" to="/#features" class="btn btn--raw">{{$t('navbar-features')}}</router-link>
+      <router-link tag="button" to="/#contact" class="btn btn--raw">{{$t('navbar-contact')}}</router-link>
       <router-link tag="button" to="/sign-in" class="btn btn--outline">{{$t('sign-in')}}</router-link>
       <router-link tag="button" to="/sign-up" class="btn btn--long">{{$t('sign-up')}}</router-link>
     </div>

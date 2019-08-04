@@ -2,6 +2,11 @@
   <div id="app">
     <navbar></navbar>
     <router-view class="app-content" />
+    <div class="credits">
+      <h4>{{$t('made-with')}}</h4>
+      <font-awesome-icon class="credits__icon" icon="tint" />
+      <h4>{{$t('by-me')}}</h4>
+    </div>
   </div>
 </template>
 <script>
@@ -16,6 +21,9 @@ export default {
 
 <style lang="scss">
 #app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
   padding: 50px;
@@ -30,6 +38,16 @@ export default {
 }
 .app-content {
   width: 100%;
-  height: 100%;
+}
+.credits {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: $font-weight-regular;
+  padding-bottom: 50px;
+  &__icon {
+    color: $Alert;
+    margin: 0px 10px;
+  }
 }
 </style>

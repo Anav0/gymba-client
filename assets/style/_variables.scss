@@ -14,6 +14,18 @@ $Alert: #ff6961;
 $White: #ffff;
 $FaintingGray: #e5e5e5;
 
+//COMPONENTS
+$input-border-color: $LightGray;
+$input-border-color-focused: $AccentColor2;
+$input-background-color: $White;
+
+$card-background-color: $White;
+$card-border-color: $FaintingGray;
+
+$button-color: $White;
+$button-background-color: $AccentColor1;
+$button-background-color-disable: $FaintingGray;
+
 //FONT SIZES
 $font-size-h1: 45px;
 $font-size-h2: 30px;

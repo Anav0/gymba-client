@@ -4,7 +4,6 @@
   box-sizing: border-box;
   font-family: "Lato", sans-serif;
   font-size: $font-size-regular;
-  color: $MainFontColor;
   padding: 0;
   margin: 0;
 }
@@ -13,10 +12,33 @@ html,
 body {
   width: 100%;
   height: 100%;
+  color: $MainFontColor;
 }
 
 button {
   cursor: pointer;
+}
+
+input {
+  background: $input-background-color;
+  border: 1px solid $input-border-color;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 10px;
+}
+input:focus {
+  border-color: $input-border-color-focused;
+}
+
+textarea:focus {
+  border-color: $input-border-color-focused;
+}
+
+textarea {
+  background: $input-background-color;
+  border: 1px solid $input-border-color;
+  border-radius: 10px;
+  padding: 10px;
 }
 
 h1,
