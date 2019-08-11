@@ -1,12 +1,13 @@
 <template>
   <div id="app">
+    <div class="background" />
     <navbar></navbar>
     <router-view class="app-content" />
-    <div class="credits">
+    <!-- <div class="credits">
       <h4>{{$t('made-with')}}</h4>
-      <font-awesome-icon class="credits__icon" icon="tint" />
+      <fa-icon class="credits__icon" icon="tint" />
       <h4>{{$t('by-me')}}</h4>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
@@ -21,33 +22,58 @@ export default {
 
 <style lang="scss">
 #app {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   padding: 50px;
-  background-image: url("../assets/images/background-wave.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 0 150%;
 
   @media (max-width: $xsm) {
     padding: 20px 30px;
+  }
+}
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  overflow: hidden;
+  background-image: url("../assets/images/mobile-background.svg");
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+
+  @media (min-width: $sm) {
+    background-image: url("../assets/images/desktop-background.svg");
   }
 }
 .app-content {
   width: 100%;
 }
 .credits {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: $font-weight-regular;
-  padding-bottom: 50px;
+  margin-bottom: 50px;
   &__icon {
     color: $Alert;
     margin: 0px 10px;
+  }
+
+  @media (max-width: $sm) {
+    margin: 20px;
+    * {
+      font-size: $font-size-regular;
+    }
   }
 }
 </style>

@@ -63,7 +63,7 @@ export default {
     }
   }
 
-  @media (min-width: $sm) {
+  @media (min-width: $sm+100px) {
     &__menu--desktop {
       * {
         margin: 0 10px;

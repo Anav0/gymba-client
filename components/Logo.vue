@@ -1,7 +1,7 @@
 <template>
-  <div class="logo">
+  <div class="logo" href="/">
     <img class="logo__icon" src="../assets/icons/logo.svg" />
-    <h2 class="logo__text">{{$t('app-name')}}</h2>
+    <router-link tag="h2" to="/" class="logo__text">{{$t('app-name')}}</router-link>
   </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {};
 
   &__text {
     color: $White;
+    cursor: pointer;
   }
 
   &__icon {

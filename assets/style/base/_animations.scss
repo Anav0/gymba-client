@@ -1,0 +1,18 @@
+.fade-leave-active,
+.fade-enter-active {
+  transition: opacity $transition-duration-default ease-in-out;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all $transition-duration-default ease-in-out;
+}
+.slide-enter,
+.slide-leave-to {
+  transform: translateY(-100vh);
+  opacity: 0;
+}

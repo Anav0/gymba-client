@@ -23,6 +23,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+  text-align: center;
 
   &__form {
     @media (max-width: $sm) {

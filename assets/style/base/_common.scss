@@ -1,0 +1,14 @@
+.capitalize {
+  text-transform: capitalize;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.error-list {
+  color: $Alert;
+  list-style: none;
+  overflow: auto;
+  * {
+    padding: 0.25rem 0;
+  }
+}

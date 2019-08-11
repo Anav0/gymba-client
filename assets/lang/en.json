@@ -28,5 +28,15 @@
     "contact-form-btn": "Send",
     "contact-form-message-placeholder": "Write your message...",
     "contact-form-from-placeholder": "From..",
-    "contact-header": "Have any ideas or issues? Send me a message and i will reply in no time!"
+    "contact-header": "Have any ideas or issues? Send me a message and i will reply in no time!",
+    "sign-up-fullname": "Fullname",
+    "sign-up-email": "Email",
+    "sign-up-forget": "I forgot my password",
+    "sign-up-username": "Username",
+    "sign-up-password": "Password",
+    "sign-up-confirm-password": "Confirm password",
+    "sign-up-bio": "Tell us a little bit about yourself",
+    "successfull-resend": "Resend",
+    "successfull-success": "success",
+    "successfull-info": "Now you in order to login you must verify your accout by clicking a link that was send to you."
 }
