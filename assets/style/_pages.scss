@@ -1,4 +1,8 @@
-.website-page {
+.landing-page-section {
   min-height: 100vh;
   width: 100%;
+  padding: 50px;
+  @media (max-width: $xsm) {
+    padding: 20px 30px;
+  }
 }

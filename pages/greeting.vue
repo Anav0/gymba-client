@@ -1,5 +1,5 @@
 <template>
-  <section class="greeting website-page">
+  <section class="greeting landing-page-section">
     <h1 class="greeting__marketing">{{$t('greeting-marketing-pitch')}}</h1>
     <div class="greeting__buttons">
       <router-link tag="button" to="/sign-up" class="btn btn--default">{{$t('sign-up')}}</router-link>

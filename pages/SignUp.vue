@@ -1,5 +1,5 @@
 `<template>
-  <div class="sign-up website-page">
+  <div class="sign-up landing-page-section">
     <div class="card">
       <transition v-if="!isSuccessfull" name="slide">
         <form class="sign-up__form">

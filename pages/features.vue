@@ -1,5 +1,5 @@
 <template>
-  <div class="features website-page">
+  <div class="features landing-page-section">
     <article class="features__feature">
       <img class="features__image" src="../assets/images/people.png" />
       <section>

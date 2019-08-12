@@ -26,13 +26,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 100%;
-  min-height: 100%;
-  padding: 50px;
-
-  @media (max-width: $xsm) {
-    padding: 20px 30px;
-  }
 }
 .background {
   position: absolute;
@@ -64,6 +57,7 @@ export default {
   align-items: center;
   font-weight: $font-weight-regular;
   margin-bottom: 50px;
+
   &__icon {
     color: $Alert;
     margin: 0px 10px;

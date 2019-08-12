@@ -5,21 +5,40 @@
       required
       type="email"
       :placeholder="$i18n.t('contact-form-from-placeholder')"
-      v-model="message.sender"
+      v-model.trim="message.sender"
     />
     <textarea
       required
       :placeholder="$i18n.t('contact-form-message-placeholder')"
-      v-model="message.content"
+      v-model.trim="message.content"
     />
-    <button @click="submit" class="btn btn--default">{{$t('contact-form-btn')}}</button>
+    <div class="contact-form__transitions">
+      <transition name="fade" v-if="!isLoading">
+        <button @click="submit" class="btn btn--default">{{$t('contact-form-btn')}}</button>
+      </transition>
+      <transition name="fade" v-else>
+        <flower-spinner
+          class="contact-form__spinner"
+          :animation-duration="1500"
+          :size="60"
+          color="#fa8072"
+        />
+      </transition>
+    </div>
   </form>
 </template>
 
 <script>
+import api from "../api";
+import { FlowerSpinner } from "epic-spinners";
+
 export default {
+  components: {
+    FlowerSpinner
+  },
   data() {
     return {
+      isLoading: false,
       message: {
         sender: "",
         content: ""
@@ -27,9 +46,19 @@ export default {
     };
   },
   methods: {
-    submit() {
-      alert("awdawd");
-      //TODO: send message to server
+    async submit(e) {
+      e.preventDefault();
+      try {
+        this.isLoading = true;
+        //TODO: show snackbar
+        if (!this.message.sender || !this.message.content) return;
+        await api.opinion.postOpinion(this.message);
+      } catch (err) {
+        console.error(err);
+        //TODO: show snackbar
+      } finally {
+        this.isLoading = false;
+      }
     }
   }
 };
@@ -43,12 +72,23 @@ export default {
   justify-content: space-evenly;
   height: 100%;
   width: 100%;
-  overflow: hidden;
-  padding: 0px 60px;
   text-align: center;
 
+  &__transitions {
+    position: relative;
+    width: 100%;
+  }
+
+  &__spinner,
+  .btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   * {
     width: 100%;
+    margin: 5px 0;
   }
 
   textarea {

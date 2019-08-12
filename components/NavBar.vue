@@ -26,6 +26,11 @@ export default {
   grid-template-columns: 1fr 1fr;
   width: 100%;
   z-index: 1;
+  padding: 50px;
+
+  @media (max-width: $xsm) {
+    padding: 20px 30px;
+  }
 
   .btn {
     text-transform: capitalize;

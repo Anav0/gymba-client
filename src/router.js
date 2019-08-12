@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import landing from '../pages/landing';
 import signUp from '../pages/signUp';
 import signIn from '../pages/signIn';
+import noPage from '../pages/noPage';
 
 Vue.use(Router);
 
@@ -20,6 +21,10 @@ export default new Router({
 	},
 	routes: [
 		{
+			path: '*',
+			name: 'noPage',
+			component: noPage,
+		}, {
 			path: '/',
 			name: 'landing',
 			component: landing,

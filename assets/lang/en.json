@@ -38,5 +38,8 @@
     "sign-up-bio": "Tell us a little bit about yourself",
     "successfull-resend": "Resend",
     "successfull-success": "success",
-    "successfull-info": "Now you in order to login you must verify your accout by clicking a link that was send to you."
+    "successfull-info": "Now you in order to login you must verify your accout by clicking a link that was send to you.",
+    "no-page-take-me-home": "Take me home",
+    "no-page-desc": "It seems that this page does not exists",
+    "no-page-why": "Why am I here?"
 }

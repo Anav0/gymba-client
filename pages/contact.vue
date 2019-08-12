@@ -1,5 +1,5 @@
 <template>
-  <div class="contact website-page">
+  <div class="contact landing-page-section">
     <h2>{{$t('contact-header')}}</h2>
     <div class="contact__card card">
       <contact-form class="contact__form"></contact-form>
