@@ -9,6 +9,7 @@ import store from './store';
 import i18n from '../plugins/i18n';
 import './registerServiceWorker';
 import '../assets/style/styles.scss';
+import vuetify from './plugins/vuetify';
 
 Vue.component('fa-icon', FontAwesomeIcon);
 library.add({ faTint, faCheckCircle });
@@ -22,5 +23,6 @@ new Vue({
   router,
   store,
   i18n,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app');
