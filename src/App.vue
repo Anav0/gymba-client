@@ -2,7 +2,9 @@
   <div id="app">
     <div class="background" />
     <navbar></navbar>
-    <router-view class="app-content" />
+    <transition name="page-fade">
+      <router-view class="app-content" />
+    </transition>
     <!-- <div class="credits">
       <h4>{{$t('made-with')}}</h4>
       <fa-icon class="credits__icon" icon="tint" />
