@@ -13,7 +13,7 @@
         <div class="successfull__buttons">
           <router-link
             tag="button"
-            to="SignIn"
+            to="sign-in"
             class="successfull__success-btn btn btn--outline capitalize"
           >{{$t('sign-in')}}</router-link>
           <button
@@ -73,7 +73,8 @@ export default {
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
-  height: 100%;
+  min-height: 560px;
+  text-align: center;
 
   &__icon-header {
     display: flex;
@@ -83,6 +84,7 @@ export default {
   &__transitions {
     position: relative;
     width: 100%;
+    height: 75px;
   }
   .flower-spinner,
   &__buttons {

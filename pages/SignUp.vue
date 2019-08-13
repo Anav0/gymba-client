@@ -146,12 +146,11 @@ export default {
 .sign-up {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   justify-content: flex-start;
   align-items: center;
   @media (max-width: $xsm) {
     margin-top: 5rem;
-    justify-content: center;
   }
   .btn--raw {
     color: $MainFontColor;
@@ -165,7 +164,6 @@ export default {
       background: transparent;
       box-shadow: none;
       width: 100%;
-      height: 100%;
       padding: 0;
     }
   }
