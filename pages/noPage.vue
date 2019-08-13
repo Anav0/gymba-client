@@ -17,21 +17,21 @@ export default {};
 .no-page {
   color: $WhiteSmoke;
   text-align: center;
-  position: relative;
-  background-image: $LinearGradient;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 
   .btn--outline {
-    position: absolute;
     color: $WhiteSmoke;
     border-color: $WhiteSmoke;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    padding: 20px 30px;
 
     @media (min-width: $sm) {
-      width: auto;
-      height: auto;
       padding: 28px 40px;
     }
   }
@@ -50,7 +50,6 @@ export default {};
   }
   &__wrapper {
     position: relative;
-    margin-top: 70px;
   }
   &__404 {
     position: absolute;

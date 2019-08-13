@@ -20,10 +20,21 @@ export default {};
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  min-height: 100vh;
 
-  @media (max-width: $sm) {
+  @media (min-width: $md) and (max-width: $lg) {
+    margin-bottom: 350px;
+  }
+
+  @media (min-width: $lg) {
+    min-height: 100vh;
+  }
+
+  @media (min-width: $sm) and (max-width: $md) {
     justify-content: flex-start;
+    margin-bottom: 150px;
+  }
+  @media (max-width: $sm) {
+    min-height: 100vh;
   }
   &__content {
     height: 100%;

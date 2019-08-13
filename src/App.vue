@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="background" />
+    <div class="background" :class="dynamicBackground" />
     <navbar></navbar>
     <transition name="page-fade">
       <router-view class="app-content" />
@@ -18,6 +18,18 @@ import navbar from "../components/NavBar";
 export default {
   components: {
     navbar
+  },
+  data() {
+    return {
+      fillRoutes: ["noPage"]
+    };
+  },
+  computed: {
+    dynamicBackground() {
+      return this.fillRoutes.includes(this.$route.name)
+        ? "background--fill"
+        : "";
+    }
   }
 };
 </script>
@@ -45,7 +57,12 @@ export default {
   @media (min-width: $sm) {
     background-image: url("../assets/images/desktop-background.svg");
   }
+
+  &--fill {
+    background-image: $LinearGradient;
+  }
 }
+
 .app-content {
   width: 100%;
 }
