@@ -58,7 +58,7 @@ export default {};
 .features {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 
   &__header {
@@ -70,13 +70,13 @@ export default {};
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
+    margin: 50px 0;
 
-    @media (min-width: $md) {
-      width: 75%;
-      justify-content: space-evenly;
-      margin-top: 10rem;
+    @media (max-width: $md) {
+      justify-content: center;
     }
+
     section {
       max-width: 350px;
       align-self: center;

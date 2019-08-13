@@ -25,4 +25,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+#fetures {
+  flex-grow: 1;
+}
 </style>

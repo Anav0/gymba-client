@@ -1,9 +1,11 @@
 <template>
   <section class="greeting landing-page-section">
-    <h1 class="greeting__marketing">{{$t('greeting-marketing-pitch')}}</h1>
-    <div class="greeting__buttons">
-      <router-link tag="button" to="/sign-up" class="btn btn--default">{{$t('sign-up')}}</router-link>
-      <router-link tag="button" to="/sign-in" class="btn btn--outline">{{$t('sign-in')}}</router-link>
+    <div class="greeting__content">
+      <h1 class="greeting__marketing">{{$t('greeting-marketing-pitch')}}</h1>
+      <div class="greeting__buttons">
+        <router-link tag="button" to="/sign-up" class="btn btn--default">{{$t('sign-up')}}</router-link>
+        <router-link tag="button" to="/sign-in" class="btn btn--outline">{{$t('sign-in')}}</router-link>
+      </div>
     </div>
   </section>
 </template>
@@ -18,19 +20,23 @@ export default {};
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  margin: 50px 0;
+  min-height: 100vh;
 
-  @media (min-width: $lg) {
-    margin: 150px 0;
-  }
-
-  @media (min-width: $sm) {
+  @media (max-width: $sm) {
     justify-content: flex-start;
-    .greeting__buttons {
-      display: none;
+  }
+  &__content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    @media (min-width: $sm) {
+      justify-content: flex-start;
     }
   }
-
   .btn {
     text-transform: capitalize;
   }
@@ -40,12 +46,15 @@ export default {};
   }
 
   &__buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    * {
-      margin-bottom: 25px;
+    display: none;
+    @media (max-width: $sm) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      * {
+        margin-bottom: 25px;
+      }
     }
   }
   &__marketing {

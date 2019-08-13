@@ -24,6 +24,7 @@ export default {
   align-items: center;
   justify-content: space-evenly;
   text-align: center;
+  min-height: 100vh;
 
   &__form {
     @media (max-width: $sm) {

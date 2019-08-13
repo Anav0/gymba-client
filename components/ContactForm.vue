@@ -53,6 +53,8 @@ export default {
         //TODO: show snackbar
         if (!this.message.sender || !this.message.content) return;
         await api.opinion.postOpinion(this.message);
+        this.message.sender = "";
+        this.message.content = "";
       } catch (err) {
         console.error(err);
         //TODO: show snackbar
@@ -77,6 +79,7 @@ export default {
   &__transitions {
     position: relative;
     width: 100%;
+    height: 50px;
   }
 
   &__spinner,
