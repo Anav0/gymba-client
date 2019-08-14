@@ -46,10 +46,11 @@
           <ul class="error-list">
             <li v-for="error in errors" :key="error">{{error}}</li>
           </ul>
-          <div class="sign-up__buttons" v-if="!isLoading">
-            <button class="btn btn--default capitalize" @click="submit">{{$t('sign-up')}}</button>
-            <button class="btn btn--raw">{{$t('sign-up-forget')}}</button>
-          </div>
+          <button
+            class="btn btn--default capitalize"
+            v-if="!isLoading"
+            @click="submit"
+          >{{$t('sign-up')}}</button>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
         </form>
       </transition>
@@ -172,17 +173,9 @@ export default {
     color: $AccentColor1;
     margin-bottom: 50px;
   }
-  &__buttons {
-    display: flex;
-    flex-direction: column;
-
-    button:first-child {
-      margin-bottom: 10px;
-    }
-  }
 
   .error-list,
-  &__buttons {
+  .btn--default {
     margin: 10px 0;
   }
   &__form {
