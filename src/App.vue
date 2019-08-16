@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div class="background" :class="dynamicBackground" />
-    <navbar></navbar>
+    <div v-if="!isChat" class="background" :class="dynamicBackground" />
+    <navbar v-if="!isChat"></navbar>
     <transition name="page-fade">
       <router-view class="app-content" />
     </transition>
@@ -14,6 +14,7 @@
 </template>
 <script>
 import navbar from "../components/NavBar";
+import api from "../api";
 
 export default {
   components: {
@@ -25,6 +26,9 @@ export default {
     };
   },
   computed: {
+    isChat() {
+      return this.$route.matched.some(route => route.name === "chat");
+    },
     dynamicBackground() {
       return this.fillRoutes.includes(this.$route.name)
         ? "background--fill"

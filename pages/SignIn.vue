@@ -60,7 +60,8 @@ export default {
       try {
         this.isLoading = true;
         const response = await api.user.login(this.credentials);
-        //TODO: save user to store
+        this.$store.dispatch("auth/login", response.data.user);
+        this.$router.push("/chat");
 
         this.isLoading = false;
       } catch (err) {

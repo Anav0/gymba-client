@@ -5,7 +5,7 @@
   border-radius: 10px;
   border: none;
   color: $button-color;
-  transition: transform $transition-duration-default ease-in-out;
+  transition: transform $transition-duration-quick ease-in-out;
 
   &--raw {
     background: none;

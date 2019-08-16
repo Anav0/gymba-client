@@ -42,7 +42,12 @@
             type="password"
             v-model.trim="user.confirmPassword"
           />
-          <textarea max="250" name="bio" :placeholder="$i18n.t('sign-up-bio')" v-model="user.bio" />
+          <textarea
+            max="250"
+            name="desc"
+            :placeholder="$i18n.t('sign-up-desc')"
+            v-model="user.desc"
+          />
           <ul class="error-list">
             <li v-for="error in errors" :key="error">{{error}}</li>
           </ul>
@@ -100,7 +105,7 @@ export default {
         password: "",
         confirmPassword: "",
         email: "",
-        bio: ""
+        desc: ""
       }
     };
   },
