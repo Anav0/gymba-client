@@ -44,6 +44,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 .background {
   position: absolute;
@@ -69,6 +71,7 @@ export default {
 
 .app-content {
   width: 100%;
+  height: 100%;
 }
 .credits {
   position: absolute;

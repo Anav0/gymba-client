@@ -10,7 +10,7 @@
         <fa-icon class="avatar__active-indicator" :icon="icon"></fa-icon>
       </transition>
     </div>
-    <span v-if="text" class="avatar__text uppercase">{{text}}</span>
+    <span v-if="text" class="avatar__text capitalize">{{text}}</span>
   </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
     },
     text: {
       type: String,
-      default: "Charlotte"
+      default: ""
     }
   }
 };
@@ -51,7 +51,12 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
+  &__wrapper,
+  &__image {
+    border-radius: 50%;
+  }
   &__wrapper {
     border-radius: 50%;
     position: relative;
@@ -70,9 +75,14 @@ export default {
     width: 100%;
     height: 100%;
   }
+  &__image:empty {
+    background-color: $LightGray;
+    color: transparent;
+  }
   &__text {
     margin-top: 5px;
     color: $avatars-text-color;
+    text-align: center;
   }
   &__active-indicator {
     position: absolute;

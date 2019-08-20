@@ -28,8 +28,10 @@ $button-background-color-disable: $FaintingGray;
 
 $avatars-initials: $White;
 $avatars-active-indication-border: $White;
-$avatars-text-color: $MainFontColor;
+$avatars-text-color: $White;
 $avatars-active-indication-background: $NeonGreen;
+
+$contact-card-color: $White;
 
 //FONT SIZES
 $font-size-h1: 45px;
@@ -48,9 +50,9 @@ $font-weight-light: 300;
 
 //ICON SIZES
 $icon-size-large: 30px;
-$icon-size-extra-medium: 30px;
-$icon-size-medium: 30px;
-$icon-size-regular: 30px;
+$icon-size-extra-medium: 25px;
+$icon-size-medium: 20px;
+$icon-size-regular: 15px;
 
 //TRANSITION TIME
 $transition-duration-default: 0.5s;
