@@ -11,7 +11,7 @@
         ></fa-icon>
       </div>
     </div>
-    <ul v-if="!isSearching" class="contact-card__suggestions">
+    <ul v-show="!isSearching" class="contact-card__suggestions">
       <li
         class="contact-card__suggestion"
         v-for="(user, i) in suggestedUsers"
@@ -26,7 +26,8 @@
       </li>
     </ul>
     <input
-      v-else
+      v-show="isSearching"
+      ref="contactCardInput"
       class="contact-card__search"
       @input="search($event.target.value)"
       placeholder="Search contacts..."
@@ -67,6 +68,7 @@ export default {
     },
     isSearching(value) {
       this.filteredContacts = this.contacts;
+      if (value) this.$nextTick(() => this.$refs.contactCardInput.focus());
     }
   },
   data() {
