@@ -6,6 +6,7 @@ import signIn from '../pages/signIn';
 import noPage from '../pages/noPage';
 import chat from '../pages/chat';
 import ChatContacts from '../pages/ChatContacts';
+import ChatUserProfile from '../components/ChatUserProfile';
 import store from "../store";
 
 Vue.use(Router);
@@ -45,7 +46,6 @@ export const router = new Router({
 		},
 		{
 			path: '/chat',
-			name: 'chat',
 			alias: '/messanger',
 			component: chat,
 			meta: {
@@ -54,8 +54,13 @@ export const router = new Router({
 			children: [
 				{
 					path: '',
+					name: "chatContacts",
 					component: ChatContacts,
-
+				},
+				{
+					path: 'profile',
+					name: 'chatProfile',
+					component: ChatUserProfile,
 				},
 			]
 		}

@@ -1,6 +1,7 @@
 <template>
   <div class="avatar-wrapper">
     <avatar
+      class="avatar-wrapper__avatar"
       :isOnline="isOnline"
       :avatarUrl="avatarUrl"
       :icon="icon"
@@ -53,5 +54,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  &__avatar {
+    width: 48px;
+    height: 48px;
+  }
 }
 </style>

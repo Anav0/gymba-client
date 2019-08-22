@@ -8,13 +8,18 @@
       </div>
     </div>
     <ul class="contact-card__suggestions">
-      <avatar
+      <li
+        class="contact-card__suggestion"
         v-for="(user, i) in suggestedUsers"
-        :text="user.fullname | getFirstname"
-        :avatarUrl="i % 3 === 0 ? 'https://source.unsplash.com/random' : null"
-        :initials="user.fullname | getInitials"
-        :isOnline="i % 2 === 0 ? true : false"
-      />
+        :key="`contact-card-${user._id}`"
+      >
+        <avatar
+          :avatarUrl="i % 3 === 0 ? 'https://source.unsplash.com/random' : null"
+          :initials="user.fullname | getInitials"
+          :isOnline="i % 2 === 0 ? true : false"
+        />
+        <span>{{user.fullname | getFirstname}}</span>
+      </li>
     </ul>
     <ul class="contact-card__contacts">
       <potential-contact v-for="contact in contacts" :key="contact.username" :user="contact" />
@@ -64,7 +69,10 @@ export default {
   align-items: center;
   justify-content: flex-start;
   padding: 20px 15px;
-
+  .avatar {
+    width: 48px;
+    height: 48px;
+  }
   &__icon {
     font-size: $icon-size-medium;
     margin-left: 15px;
@@ -74,6 +82,15 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  &__suggestion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    span {
+      margin-top: 5px;
+    }
   }
   &__suggestions {
     display: flex;

@@ -43,5 +43,10 @@
     "successfull-info": "Now you in order to login you must verify your accout by clicking a link that was send to you.",
     "no-page-take-me-home": "Take me home",
     "no-page-desc": "It seems that this page does not exists",
-    "no-page-why": "Why am I here?"
+    "no-page-why": "Why am I here?",
+    "user-profile-header": "Settings",
+    "user-profile-username": "Username",
+    "user-profile-email": "Email",
+    "user-profile-bio": "Bio",
+    "user-profile-joined": "Joined"
 }

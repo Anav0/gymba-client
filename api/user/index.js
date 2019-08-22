@@ -2,6 +2,7 @@ import axios from "axios";
 
 export default {
     getAuthUser: () => axios.get("/user"),
+    logout: () => axios.get('/logout'),
     getSendInvitations: (populate) => axios.get(`/user/invite/${populate}`),
     postInvitation: (targetId) => axios.post(`/user/invite`, { targetId: targetId }),
     cancelInvitation: (invitationId) => axios.post('/user/invite/cancel', { id: invitationId }),

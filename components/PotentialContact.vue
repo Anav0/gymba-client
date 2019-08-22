@@ -70,6 +70,10 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  &__avatar {
+    width: 48px;
+    height: 48px;
+  }
   &__desc {
     margin-top: 10px;
   }

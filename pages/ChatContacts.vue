@@ -5,7 +5,7 @@
       class="chat-contacts__avatar-wrapper"
       :initials="initials"
     >
-      <h4>{{name}}</h4>
+      <router-link tag="h4" to="/chat/profile">{{name}}</router-link>
     </avatar-wrapper>
     <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
     <contact-card
@@ -119,6 +119,7 @@ export default {
   max-height: 100%;
 
   &__avatar-wrapper {
+    cursor: pointer;
     max-width: 100%;
     width: 125px;
     margin: 20px;
