@@ -11,7 +11,7 @@
       @click="takeAction"
       :class="{'btn--outline': !user.invitationId, 'btn--default': user.invitationId}"
     >{{!user.invitationId ? 'invite' : 'cancel'}}</button>
-    <spring-spinner v-else :animation-duration="2000" :size="40" color="#fcd87d" />
+    <spring-spinner v-else :animation-duration="1000" :size="40" color="#fcd87d" />
   </div>
 </template>
 

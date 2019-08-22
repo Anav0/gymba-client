@@ -4,10 +4,14 @@
       <h4>{{header}}</h4>
       <div>
         <fa-icon class="contact-card__icon" icon="sort-amount-up-alt"></fa-icon>
-        <fa-icon class="contact-card__icon" icon="search"></fa-icon>
+        <fa-icon
+          class="contact-card__icon"
+          :icon="isSearching ?  'times' : 'search'"
+          @click="isSearching=!isSearching"
+        ></fa-icon>
       </div>
     </div>
-    <ul class="contact-card__suggestions">
+    <ul v-if="!isSearching" class="contact-card__suggestions">
       <li
         class="contact-card__suggestion"
         v-for="(user, i) in suggestedUsers"
@@ -21,8 +25,18 @@
         <span>{{user.fullname | getFirstname}}</span>
       </li>
     </ul>
+    <input
+      v-else
+      class="contact-card__search"
+      @input="search($event.target.value)"
+      placeholder="Search contacts..."
+    />
     <ul class="contact-card__contacts">
-      <potential-contact v-for="contact in contacts" :key="contact.username" :user="contact" />
+      <potential-contact
+        v-for="contact in filteredContacts"
+        :key="contact.username"
+        :user="contact"
+      />
     </ul>
   </div>
 </template>
@@ -36,8 +50,30 @@ export default {
     Avatar,
     PotentialContact
   },
+  methods: {
+    search(phrase) {
+      phrase = phrase.toLowerCase().trim();
+      if (!phrase) return (this.filteredContacts = this.contacts);
+      this.filteredContacts = this.contacts.filter(
+        contact =>
+          contact.fullname.toLowerCase().includes(phrase) ||
+          contact.desc.toLowerCase().includes(phrase)
+      );
+    }
+  },
+  watch: {
+    contacts(value) {
+      this.filteredContacts = value;
+    },
+    isSearching(value) {
+      this.filteredContacts = this.contacts;
+    }
+  },
   data() {
-    return {};
+    return {
+      isSearching: false,
+      filteredContacts: []
+    };
   },
   props: {
     header: {
@@ -73,9 +109,14 @@ export default {
     width: 48px;
     height: 48px;
   }
+  &__search {
+    width: 100%;
+    margin-top: 30px;
+  }
   &__icon {
     font-size: $icon-size-medium;
     margin-left: 15px;
+    width: 20px;
   }
   &__toolbar {
     width: 100%;
