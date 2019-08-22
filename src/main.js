@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTint, faCheckCircle, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTint, faCheckCircle, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 import App from './App.vue';
@@ -10,7 +10,7 @@ import './registerServiceWorker';
 import store from '../store';
 import '../assets/style/styles.scss';
 Vue.component('fa-icon', FontAwesomeIcon);
-library.add({ faTint, faCheckCircle, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes });
+library.add({ faTint, faCheckCircle, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown });
 import api from "../api";
 import * as filters from "../filters";
 

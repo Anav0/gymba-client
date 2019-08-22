@@ -32,6 +32,7 @@
       @input="search($event.target.value)"
       placeholder="Search contacts..."
     />
+    <g-select :options="['Name','Bio','Status']" icon="angle-down" placeholder="Filter by..." />
     <ul class="contact-card__contacts">
       <potential-contact
         v-for="contact in filteredContacts"
@@ -45,11 +46,13 @@
 <script>
 import Avatar from "../Avatars/Avatar";
 import PotentialContact from "../PotentialContact";
+import GSelect from "../GSelect";
 
 export default {
   components: {
     Avatar,
-    PotentialContact
+    PotentialContact,
+    GSelect
   },
   methods: {
     search(phrase) {
