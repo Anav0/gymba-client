@@ -54,7 +54,8 @@ export default {
     async logout() {
       try {
         await api.user.logout();
-        this.$router.replace("/sign-in");
+        this.$store.dispatch("auth/logout");
+        this.$router.push("/sign-in");
       } catch (err) {
         console.error(err);
       }
