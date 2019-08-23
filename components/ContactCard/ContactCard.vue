@@ -1,9 +1,23 @@
 <template>
   <div class="contact-card">
     <div class="contact-card__toolbar">
-      <h4>{{header}}</h4>
-      <div>
-        <fa-icon class="contact-card__icon" icon="sort-amount-up-alt"></fa-icon>
+      <h4 class="contact-card__header">{{header}}</h4>
+      <div class="contact-card__toolbar">
+        <div class="contact-card__select-wrapper">
+          <fa-icon
+            class="contact-card__icon"
+            icon="sort-amount-up-alt"
+            @click="isFiltering=!isFiltering"
+          ></fa-icon>
+          <transition v-if="isFiltering" name="fade">
+            <g-select
+              :options="['Name','Bio','Status']"
+              icon="angle-down"
+              placeholder="Filter by..."
+            />
+          </transition>
+        </div>
+
         <fa-icon
           class="contact-card__icon"
           :icon="isSearching ?  'times' : 'search'"
@@ -32,7 +46,7 @@
       @input="search($event.target.value)"
       placeholder="Search contacts..."
     />
-    <g-select :options="['Name','Bio','Status']" icon="angle-down" placeholder="Filter by..." />
+
     <ul class="contact-card__contacts">
       <potential-contact
         v-for="contact in filteredContacts"
@@ -77,6 +91,7 @@ export default {
   data() {
     return {
       isSearching: false,
+      isFiltering: false,
       filteredContacts: []
     };
   },
@@ -145,7 +160,9 @@ export default {
     overflow-x: auto;
     width: 100%;
   }
-
+  &__header {
+    white-space: nowrap;
+  }
   &__contacts {
     display: flex;
     flex-direction: column;
@@ -157,7 +174,21 @@ export default {
       margin-bottom: 30px;
     }
   }
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 
+    .g-select {
+      position: absolute;
+      margin-top: 10px;
+      right: 0;
+      top: 10;
+    }
+  }
+  &__select-wrapper {
+    position: relative;
+  }
   &__contacts,
   &__suggestions {
     margin-top: 30px;

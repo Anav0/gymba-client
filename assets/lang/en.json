@@ -35,9 +35,12 @@
     "sign-up-password": "Password",
     "sign-up-confirm-password": "Confirm password",
     "sign-up-bio": "Tell us a little bit about yourself",
+    "sign-up-submit": "Send",
     "sign-in-forget": "I forgot my password",
     "sign-in-username": "Username",
     "sign-in-password": "Password",
+    "sign-in-require": "Username and password are both required",
+    "sign-in-submit": "Send",
     "successfull-resend": "Resend",
     "successfull-success": "success",
     "successfull-info": "Now you in order to login you must verify your accout by clicking a link that was send to you.",
@@ -48,5 +51,8 @@
     "user-profile-username": "Username",
     "user-profile-email": "Email",
     "user-profile-bio": "Bio",
-    "user-profile-joined": "Joined"
+    "user-profile-joined": "Joined",
+    "chat-tab-contact": "contact",
+    "chat-tab-new-friends": "find new friend",
+    "chat-tab-invites": "invitations"
 }

@@ -55,7 +55,7 @@ export default {
       this.errors = [];
 
       if (!this.credentials.username || !this.credentials.password)
-        return this.errors.push("Username and password are both required");
+        return this.errors.push(this.$i18n.t("sign-in-require"));
 
       try {
         this.isLoading = true;

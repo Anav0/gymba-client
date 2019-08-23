@@ -45,7 +45,7 @@
           <textarea
             max="250"
             name="desc"
-            :placeholder="$i18n.t('sign-up-desc')"
+            :placeholder="$i18n.t('sign-up-bio')"
             v-model="user.desc"
           />
           <ul class="error-list">
@@ -55,7 +55,7 @@
             class="btn btn--default capitalize"
             v-if="!isLoading"
             @click="submit"
-          >{{$t('sign-up')}}</button>
+          >{{$t('sign-up-submit')}}</button>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
         </form>
       </transition>

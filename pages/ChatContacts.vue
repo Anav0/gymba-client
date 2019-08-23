@@ -1,7 +1,7 @@
 <template>
   <div class="chat-contacts">
     <avatar-wrapper
-      avatarUrl="https://source.unsplash.com/random"
+      avatarUrl="https://source.unsplash.com/random/96x96"
       class="chat-contacts__avatar-wrapper"
       :initials="initials"
     >
@@ -44,9 +44,9 @@ export default {
       activeTab: 0,
       contactCardHeader: "",
       tabs: [
-        { name: "contacts", isActive: false },
-        { name: "find new friends", isActive: false },
-        { name: "groups", isActive: false }
+        { name: this.$i18n.t("chat-tab-contact"), isActive: false },
+        { name: this.$i18n.t("chat-tab-new-friends"), isActive: false },
+        { name: this.$i18n.t("chat-tab-invites"), isActive: false }
       ],
       friends: [],
       suggesstions: []
