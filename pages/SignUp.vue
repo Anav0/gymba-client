@@ -54,7 +54,7 @@
           <button
             class="btn btn--default capitalize"
             v-if="!isLoading"
-            @click="submit"
+            @click.stop.prevent="submit"
           >{{$t('sign-up-submit')}}</button>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
         </form>
@@ -110,39 +110,38 @@ export default {
     };
   },
   methods: {
-    async submit(e) {
-      e.preventDefault();
-      this.isLoading = true;
+    async submit() {
+      try {
+        this.isLoading = true;
+        this.errors = [];
+        let isValid = true;
 
-      this.errors = [];
-      let isValid = true;
-      for (let x in this.user) {
-        let rules = this.rules[x];
+        for (let x in this.user) {
+          let rules = this.rules[x];
 
-        if (rules)
-          rules.forEach(rule => {
-            let result = rule(this.user[x]);
-            if (result !== true) {
-              isValid = false;
-              this.errors.push(result);
-            }
-          });
-      }
-
-      if (isValid) {
-        try {
+          if (rules)
+            rules.forEach(rule => {
+              let result = rule(this.user[x]);
+              if (result !== true) {
+                isValid = false;
+                this.errors.push(result);
+              }
+            });
+        }
+        if (isValid) {
           const response = await api.user.postUser(this.user);
           this.createdUserId = response.data._id;
-          this.isLoading = false;
           this.isSuccessfull = true;
-        } catch (err) {
-          const errors = err.response.data.errors;
-          for (let error in errors) {
-            this.errors.push(errors[error].message);
-          }
         }
+      } catch (err) {
+        console.error(err);
+        const errors = err.response.data.errors;
+        for (let error in errors) {
+          this.errors.push(errors[error].message);
+        }
+      } finally {
+        this.isLoading = false;
       }
-      this.isLoading = false;
     }
   }
 };

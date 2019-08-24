@@ -51,8 +51,8 @@ export default {
   },
   methods: {
     async resendVerificationEmail() {
-      this.isLoading = true;
       try {
+        this.isLoading = true;
         const response = await api.user.resendVerificationEmail(this.userId);
         consoe.log(response);
       } catch (err) {

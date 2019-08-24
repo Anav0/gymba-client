@@ -11,7 +11,13 @@
       @click="takeAction"
       :class="{'btn--outline': !user.invitationId, 'btn--default': user.invitationId}"
     >{{!user.invitationId ? 'invite' : 'cancel'}}</button>
-    <spring-spinner v-else :animation-duration="1000" :size="40" color="#fcd87d" />
+    <spring-spinner
+      class="potential-contact__spinner"
+      v-else
+      :animation-duration="1000"
+      :size="40"
+      color="#fcd87d"
+    />
   </div>
 </template>
 
@@ -70,9 +76,11 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
   &__avatar {
-    width: 48px;
-    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    margin-right: 10px;
   }
   &__desc {
     margin-top: 10px;
@@ -82,12 +90,14 @@ export default {
   }
   .btn {
     color: $White;
-    width: 75px;
-    height: 40px;
-    grid-column: 3;
-    grid-row: 1/2;
-
     font-size: $font-size-regular;
+  }
+
+  .btn,
+  &__spinner {
+    width: 95px;
+    height: 48px;
+    margin-left: 10px;
   }
 
   .btn--default {

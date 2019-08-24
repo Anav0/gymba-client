@@ -62,12 +62,11 @@ export default {
         const response = await api.user.login(this.credentials);
         this.$store.dispatch("auth/login", response.data.user);
         this.$router.push("/chat");
-
-        this.isLoading = false;
       } catch (err) {
         this.errors = err.response.data.errors;
+      } finally {
+        this.isLoading = false;
       }
-      this.isLoading = false;
     }
   }
 };
