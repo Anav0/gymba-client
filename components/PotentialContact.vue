@@ -2,8 +2,8 @@
   <div class="potential-contact">
     <avatar class="potential-contact__avatar" :initials="user.fullname | getInitials" />
     <div class="potential-contact__middle">
-      <span class="potential-contact__fullname bold">{{user.fullname}}</span>
-      <p class="potential-contact__desc">{{user.desc}}</p>
+      <span class="potential-contact__fullname bold ellipsis">{{user.fullname}}</span>
+      <p v-if="user.desc" class="potential-contact__desc ellipsis">{{user.desc}}</p>
     </div>
     <slot v-if="!isLoading" />
     <spring-spinner
@@ -39,7 +39,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
+  height: 48px;
   &__avatar {
     min-width: 48px;
     min-height: 48px;
@@ -47,6 +47,7 @@ export default {
   }
   &__middle {
     width: 200px;
+    height: 100%;
   }
   &__desc {
     margin-top: 10px;

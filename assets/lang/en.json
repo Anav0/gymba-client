@@ -54,5 +54,6 @@
     "user-profile-joined": "Joined",
     "chat-tab-contact": "contact",
     "chat-tab-new-friends": "find new friend",
-    "chat-tab-invites": "invitations"
+    "chat-tab-invites": "invitations",
+    "contact-card-no-result": "No results"
 }

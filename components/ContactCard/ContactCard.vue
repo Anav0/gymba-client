@@ -25,7 +25,11 @@
         ></fa-icon>
       </div>
     </div>
-    <ul v-if="!isLoading" v-show="!isSearching" class="contact-card__suggestions">
+    <ul
+      v-if="!isLoading && suggestedUsers.length > 0"
+      v-show="!isSearching"
+      class="contact-card__suggestions"
+    >
       <li
         class="contact-card__suggestion"
         v-for="(user, i) in suggestedUsers"
@@ -47,7 +51,7 @@
       placeholder="Search viewmodels..."
     />
 
-    <ul v-if="!isLoading" class="contact-card__viewmodels">
+    <ul v-if="!isLoading " class="contact-card__viewmodels">
       <potential-contact
         v-for="viewmodel in filteredViewModels"
         :key="viewmodel.user.username"
@@ -72,15 +76,23 @@
             @click="acceptInvitation(viewmodel)"
           />
         </div>
+        <div v-if="selectedTab===0" class="contact-card__info">
+          <span class="contact-card__send-date">{{'09:00'}}</span>
+          <div class="contact-card__new-message">{{5}}</div>
+        </div>
       </potential-contact>
     </ul>
     <spring-spinner
       v-else
-      class="contact-card__spinner"
+      class="contact-card__center"
       :animation-duration="1000"
       :size="50"
       color="#fcd87d"
     />
+    <h4
+      class="contact-card__center"
+      v-if="viewmodels.length === 0 && !isLoading"
+    >{{$t('contact-card-no-result')}}</h4>
   </div>
 </template>
 
@@ -212,6 +224,7 @@ export default {
   justify-content: flex-start;
   padding: 20px 15px;
   position: relative;
+
   .avatar {
     width: 48px;
     height: 48px;
@@ -251,7 +264,7 @@ export default {
       margin-top: 5px;
     }
   }
-  &__spinner {
+  &__center {
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
@@ -278,6 +291,24 @@ export default {
     .potential-contact {
       margin-bottom: 30px;
     }
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+  &__new-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: $AccentColor2;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
   }
   &__icons {
     display: flex;

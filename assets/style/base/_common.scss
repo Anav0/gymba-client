@@ -19,3 +19,9 @@
 .bold {
   font-weight: $font-weight-bold;
 }
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
