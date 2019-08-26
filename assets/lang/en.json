@@ -55,5 +55,6 @@
     "chat-tab-contact": "contact",
     "chat-tab-new-friends": "find new friend",
     "chat-tab-invites": "invitations",
-    "contact-card-no-result": "No results"
+    "contact-card-no-result": "No results",
+    "contact-card-search": "Search contacts..."
 }

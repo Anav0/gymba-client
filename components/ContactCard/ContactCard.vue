@@ -48,7 +48,7 @@
       ref="contactCardInput"
       class="contact-card__search"
       @input="search($event.target.value)"
-      placeholder="Search viewmodels..."
+      :placeholder="$i18n.t('contact-card-search')"
     />
 
     <ul v-if="!isLoading " class="contact-card__viewmodels">
