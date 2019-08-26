@@ -36,7 +36,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-
+  .btn {
+    margin: 0 5px;
+  }
   .btn:hover {
     color: $AccentColor1;
   }

@@ -288,8 +288,11 @@ export default {
     justify-content: space-evenly;
     width: 100%;
     height: 100%;
+    .potential-contact:first-of-type {
+      margin-top: 40px;
+    }
     .potential-contact {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
   }
   &__info {
@@ -330,7 +333,6 @@ export default {
   &__select-wrapper {
     position: relative;
   }
-  &__viewmodels,
   &__suggestions {
     margin-top: 30px;
   }
