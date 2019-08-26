@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTint, faCheckCircle, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faTint, faCheckCircle, faCheck, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 import App from './App.vue';
@@ -9,14 +9,16 @@ import { i18n } from '../plugins';
 import './registerServiceWorker';
 import store from '../store';
 import '../assets/style/styles.scss';
-Vue.component('fa-icon', FontAwesomeIcon);
-library.add({ faTint, faCheckCircle, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown });
 import api from "../api";
-import * as filters from "../filters";
+import * as filters from '../filters';
+
+Vue.component('fa-icon', FontAwesomeIcon);
+library.add({ faTint, faCheckCircle, faCheck, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown });
 
 Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
+axios.defaults.timeout = 5000;
 
 const getAuth = async () => {
   try {

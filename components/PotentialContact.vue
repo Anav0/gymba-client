@@ -1,16 +1,11 @@
 <template>
   <div class="potential-contact">
     <avatar class="potential-contact__avatar" :initials="user.fullname | getInitials" />
-    <div>
+    <div class="potential-contact__middle">
       <span class="potential-contact__fullname bold">{{user.fullname}}</span>
       <p class="potential-contact__desc">{{user.desc}}</p>
     </div>
-    <button
-      class="btn capitalize"
-      v-if="!isLoading"
-      @click="takeAction"
-      :class="{'btn--outline': !user.invitationId, 'btn--default': user.invitationId}"
-    >{{!user.invitationId ? 'invite' : 'cancel'}}</button>
+    <slot v-if="!isLoading" />
     <spring-spinner
       class="potential-contact__spinner"
       v-else
@@ -31,41 +26,9 @@ export default {
     avatar,
     SpringSpinner
   },
-  data() {
-    return {
-      isLoading: false
-    };
-  },
   props: {
+    isLoading: { type: Boolean, default: false },
     user: { type: Object, required: true }
-  },
-  methods: {
-    takeAction() {
-      if (this.user.invitationId) this.cancelInvitation();
-      else this.sendInvitation();
-    },
-    async sendInvitation() {
-      this.isLoading = true;
-      try {
-        const response = await api.user.postInvitation(this.user._id);
-        this.user.invitationId = response.data._id;
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    async cancelInvitation() {
-      this.isLoading = true;
-      try {
-        await api.user.cancelInvitation(this.user.invitationId);
-        this.user.invitationId = undefined;
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.isLoading = false;
-      }
-    }
   }
 };
 </script>
@@ -81,6 +44,9 @@ export default {
     min-width: 48px;
     min-height: 48px;
     margin-right: 10px;
+  }
+  &__middle {
+    width: 200px;
   }
   &__desc {
     margin-top: 10px;

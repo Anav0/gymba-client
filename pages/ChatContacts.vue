@@ -9,9 +9,12 @@
     </avatar-wrapper>
     <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
     <contact-card
-      :contacts="friends"
+      :viewmodels="friends"
       :suggestedUsers="suggesstions"
       :header="contactCardHeader"
+      :selectedTab="activeTab"
+      @reload-invitations="loadInvites"
+      :isLoading="isLoading"
       class="chat-contacts__contact-card"
     ></contact-card>
   </div>
@@ -29,7 +32,6 @@ export default {
     TabSwitcher,
     ContactCard
   },
-  mounted() {},
   computed: {
     name() {
       return this.$store.getters["auth/user"].fullname.split(" ")[0];
@@ -42,6 +44,7 @@ export default {
   data() {
     return {
       activeTab: 0,
+      isLoading: true,
       contactCardHeader: "",
       tabs: [
         { name: this.$i18n.t("chat-tab-contact"), isActive: false },
@@ -54,39 +57,68 @@ export default {
   },
   methods: {
     loadFriends() {
+      this.isLoading = true;
+
       this.friends = [];
-      const friedsIds = this.$store.getters["auth/user"].friends;
-      friedsIds.forEach(id => {
-        const friend = api.users.getUser(id);
-        this.friends.push(friend);
-      });
-    },
-    async suggestFriends() {
       this.suggesstions = [];
+      const friedsIds = this.$store.getters["auth/user"].friends;
+      friedsIds.forEach(async id => {
+        const response = await api.users.getUser(id);
+        this.friends.push({
+          isLoading: false,
+          user: response.data
+        });
+      });
+      this.isLoading = false;
     },
     async loadPotentialFriends() {
       try {
+        this.isLoading = true;
+
         this.friends = [];
-        const response = await api.user.getSendInvitations("target");
+        this.suggesstions = [];
+        let response = await api.invite.getSendInvitations("target");
         response.data.forEach(invitation => {
-          invitation.target.invitationId = invitation._id;
-          this.friends.push(invitation.target);
+          this.friends.push({
+            isLoading: false,
+            invitationId: invitation._id,
+            user: invitation.target
+          });
+        });
+        response = await api.user.getSuggestedContacts();
+        this.suggesstions = response.data;
+        response.data.forEach(user => {
+          this.friends.push({
+            isLoading: false,
+            invitationId: null,
+            user
+          });
         });
       } catch (err) {
         console.error(err);
+      } finally {
+        this.isLoading = false;
       }
     },
-    async suggestPotentialFriends() {
-      this.clearSuggestions();
-      const response = await api.user.getSuggestedContacts();
-      this.suggesstions = response.data;
-      this.friends.push(...this.suggesstions);
-    },
-    loadInvites() {
-      this.friends = [];
-    },
-    clearSuggestions() {
-      this.suggesstions = [];
+
+    async loadInvites() {
+      try {
+        this.isLoading = true;
+        this.friends = [];
+        this.suggesstions = [];
+        const response = await api.invite.getRecivedInvitations("sender");
+        response.data.forEach(invitation => {
+          this.friends.push({
+            isLoading: false,
+            invitationId: invitation._id,
+            user: invitation.sender
+          });
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.isLoading = false;
+      }
     },
     switchTabs(i) {
       this.activeTab = i;
@@ -95,17 +127,14 @@ export default {
         case 0:
           this.contactCardHeader = "Favorite contacts";
           this.loadFriends();
-          this.suggestFriends();
           break;
         case 1:
           this.contactCardHeader = "Users you might know";
           this.loadPotentialFriends();
-          this.suggestPotentialFriends();
           break;
         case 2:
-          this.contactCardHeader = "Groups";
+          this.contactCardHeader = "Recived invitations";
           this.loadInvites();
-          this.clearSuggestions();
           break;
       }
     }

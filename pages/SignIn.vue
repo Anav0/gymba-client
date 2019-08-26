@@ -23,7 +23,10 @@
             <li v-for="error in errors" :key="error">{{error}}</li>
           </ul>
           <div class="sign-in__buttons" v-if="!isLoading">
-            <button class="btn btn--default capitalize" @click="login">{{$t('sign-in')}}</button>
+            <button
+              class="btn btn--default capitalize"
+              @click.stop.prevent="login"
+            >{{$t('sign-in')}}</button>
             <button class="btn btn--raw">{{$t('sign-in-forget')}}</button>
           </div>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
@@ -50,8 +53,7 @@ export default {
     };
   },
   methods: {
-    async login(e) {
-      e.preventDefault();
+    async login() {
       this.errors = [];
 
       if (!this.credentials.username || !this.credentials.password)
