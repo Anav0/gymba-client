@@ -10,10 +10,11 @@
     <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
     <contact-card
       :viewmodels="friends"
+      :conversations="conversations"
       :suggestedUsers="suggesstions"
       :header="contactCardHeader"
       :selectedTab="activeTab"
-      @reload-invitations="loadInvites"
+      @reloadInvitations="loadInvites"
       :isLoading="isLoading"
       class="chat-contacts__contact-card"
     ></contact-card>
@@ -52,22 +53,19 @@ export default {
         { name: this.$i18n.t("chat-tab-invites"), isActive: false }
       ],
       friends: [],
+      conversations: [],
       suggesstions: []
     };
   },
   methods: {
-    loadFriends() {
+    loadConversations() {
       this.isLoading = true;
-
       this.friends = [];
       this.suggesstions = [];
-      const friedsIds = this.$store.getters["auth/user"].friends;
-      friedsIds.forEach(async id => {
-        const response = await api.users.getUser(id);
-        this.friends.push({
-          isLoading: false,
-          user: response.data
-        });
+      const conversationIds = this.$store.getters["auth/user"].conversations;
+      conversationIds.forEach(async id => {
+        const response = await api.conversation.getConversation(id);
+        this.conversations.push(response.data);
       });
       this.isLoading = false;
     },
@@ -126,7 +124,7 @@ export default {
         default:
         case 0:
           this.contactCardHeader = "Favorite contacts";
-          this.loadFriends();
+          this.loadConversations();
           break;
         case 1:
           this.contactCardHeader = "Users you might know";

@@ -1,0 +1,126 @@
+.contact-card {
+  background: $LinearGradient;
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 25px 25px 0px 0px;
+  width: 100%;
+  height: 100%;
+  color: $contact-card-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 15px;
+  position: relative;
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+  }
+  &__search {
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  &__icon--invite:hover {
+    color: $AccentColor2;
+    transition: color $transition-duration-quick ease-in-out;
+  }
+  &__icon--invite {
+    font-size: $icon-size-extra-medium;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+  &__icon {
+    font-size: $icon-size-medium;
+    margin-left: 15px;
+    width: 20px;
+  }
+  &__toolbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__suggestion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 40px;
+    span {
+      margin-top: 5px;
+    }
+  }
+  &__center {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    top: 25%;
+    bottom: 0;
+  }
+  &__suggestions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: auto;
+    width: 100%;
+  }
+  &__header {
+    white-space: nowrap;
+  }
+  &__viewmodels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    .potential-contact:first-of-type {
+      margin-top: 40px;
+    }
+    .potential-contact {
+      margin-bottom: 40px;
+    }
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+  &__new-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: $AccentColor2;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+  }
+  &__icons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .g-select {
+      position: absolute;
+      margin-top: 10px;
+      right: 0;
+      top: 10;
+    }
+  }
+  &__select-wrapper {
+    position: relative;
+  }
+  &__suggestions {
+    margin-top: 30px;
+  }
+}

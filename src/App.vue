@@ -2,7 +2,7 @@
   <div id="app">
     <div v-if="!isChat" class="background" :class="dynamicBackground" />
     <navbar v-if="!isChat"></navbar>
-    <transition name="page-fade">
+    <transition name="fade">
       <router-view class="app-content" />
     </transition>
     <!-- <div class="credits">

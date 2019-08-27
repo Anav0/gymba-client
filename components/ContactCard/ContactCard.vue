@@ -53,35 +53,32 @@
     />
 
     <ul v-if="!isLoading " class="contact-card__viewmodels">
-      <potential-contact
-        v-for="viewmodel in filteredViewModels"
-        :key="viewmodel.user.username"
-        :user="viewmodel.user"
-        :isLoading="viewmodel.isLoading"
-      >
-        <button
-          class="btn capitalize"
-          v-if="selectedTab===1 && !viewmodel.isLoading"
-          @click="processInvitation(viewmodel)"
-          :class="{'btn--outline': !viewmodel.invitationId, 'btn--default': viewmodel.invitationId}"
-        >{{!viewmodel.invitationId ? 'invite' : 'cancel'}}</button>
-        <div class="contact-card__icons" v-if="selectedTab===2">
-          <fa-icon
-            class="contact-card__icon--invite"
-            icon="times"
-            @click="rejectInvitation(viewmodel)"
-          />
-          <fa-icon
-            class="contact-card__icon--invite"
-            icon="check"
-            @click="acceptInvitation(viewmodel)"
-          />
-        </div>
-        <div v-if="selectedTab===0" class="contact-card__info">
-          <span class="contact-card__send-date">{{'09:00'}}</span>
-          <div class="contact-card__new-message">{{5}}</div>
-        </div>
-      </potential-contact>
+      <template v-if="selectedTab===0">
+        <contact-card-conversation
+          v-for="conversation in conversations"
+          :key="conversation._id"
+          :conversation="conversation"
+        />
+      </template>
+      <template v-if="selectedTab===1">
+        <contact-card-invitation
+          v-for="viewmodel in filteredViewModels"
+          :key="viewmodel.user._id"
+          :invitationId="viewmodel.invitationId"
+          :user="viewmodel.user"
+          @invitationSend="(id)=>viewmodel.invitationId = id"
+        />
+      </template>
+      <template v-if="selectedTab===2">
+        <contact-card-decide
+          v-for="viewmodel in filteredViewModels"
+          :key="viewmodel.user._id"
+          :user="viewmodel.user"
+          :invitationId="viewmodel.invitationId"
+          @invitationSend="(id)=>viewmodel.invitationId = id"
+          @reloadInvitations="$emit('reloadInvitations')"
+        />
+      </template>
     </ul>
     <spring-spinner
       v-else
@@ -99,17 +96,21 @@
 
 <script>
 import Avatar from "../Avatars/Avatar";
-import PotentialContact from "../PotentialContact";
 import GSelect from "../GSelect";
 import api from "../../api";
 import { SpringSpinner } from "epic-spinners";
+import ContactCardDecide from "./ContactCardDecide";
+import ContactCardInvitation from "./ContactCardInvitation";
+import ContactCardConversation from "./ContactCardConversation";
 
 export default {
   components: {
     Avatar,
-    PotentialContact,
     GSelect,
-    SpringSpinner
+    SpringSpinner,
+    ContactCardDecide,
+    ContactCardInvitation,
+    ContactCardConversation
   },
   props: {
     isLoading: {
@@ -122,7 +123,7 @@ export default {
     },
     header: {
       type: String,
-      default: "viewmodels"
+      default: "contact"
     },
     suggestedUsers: {
       type: Array,
@@ -137,7 +138,8 @@ export default {
     return {
       isSearching: false,
       isFiltering: false,
-      filteredViewModels: []
+      filteredViewModels: [],
+      conversations: []
     };
   },
   watch: {
@@ -155,61 +157,13 @@ export default {
         (a, b) => a.user[selected] > b.user[selected]
       );
     },
-    async rejectInvitation(viewmodel) {
-      try {
-        viewmodel.isLoading = true;
-        await api.invite.rejectInvitation(viewmodel.invitationId);
-        this.$emit("reload-invitations");
-      } catch (err) {
-        console.error(err);
-      } finally {
-        viewmodel.isLoading = false;
-      }
-    },
-    async acceptInvitation(viewmodel) {
-      try {
-        viewmodel.isLoading = true;
-        await api.invite.acceptInvitation(viewmodel.invitationId);
-        this.$emit("reload-invitations");
-      } catch (err) {
-        console.error(err);
-      } finally {
-        viewmodel.isLoading = false;
-      }
-    },
-    processInvitation(viewmodel) {
-      if (viewmodel.invitationId) this.cancelInvitation(viewmodel);
-      else this.sendInvitation(viewmodel);
-    },
-    async sendInvitation(viewmodel) {
-      viewmodel.isLoading = true;
-      try {
-        const response = await api.invite.postInvitation(viewmodel.user._id);
-        viewmodel.invitationId = response.data._id;
-      } catch (err) {
-        console.error(err);
-      } finally {
-        viewmodel.isLoading = false;
-      }
-    },
-    async cancelInvitation(viewmodel) {
-      viewmodel.isLoading = true;
-      try {
-        await api.invite.cancelInvitation(viewmodel.invitationId);
-        viewmodel.invitationId = null;
-      } catch (err) {
-        console.error(err);
-      } finally {
-        viewmodel.isLoading = false;
-      }
-    },
     search(phrase) {
       phrase = phrase.toLowerCase().trim();
       if (!phrase) return (this.filteredViewModels = this.viewmodels);
       this.filteredViewModels = this.viewmodels.filter(
-        contact =>
-          contact.user.fullname.toLowerCase().includes(phrase) ||
-          contact.user.desc.toLowerCase().includes(phrase)
+        viewmodel =>
+          viewmodel.user.fullname.toLowerCase().includes(phrase) ||
+          viewmodel.user.desc.toLowerCase().includes(phrase)
       );
     }
   }
@@ -217,130 +171,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.contact-card {
-  background: $LinearGradient;
-  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.25);
-  border-radius: 25px 25px 0px 0px;
-  width: 100%;
-  height: 100%;
-  color: $contact-card-color;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 20px 15px;
-  position: relative;
-
-  .avatar {
-    width: 48px;
-    height: 48px;
-  }
-  &__search {
-    width: 100%;
-    margin-top: 30px;
-  }
-
-  &__icon--invite:hover {
-    color: $AccentColor2;
-    transition: color $transition-duration-quick ease-in-out;
-  }
-  &__icon--invite {
-    font-size: $icon-size-extra-medium;
-    margin-left: 20px;
-    cursor: pointer;
-  }
-  &__icon {
-    font-size: $icon-size-medium;
-    margin-left: 15px;
-    width: 20px;
-  }
-  &__toolbar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  &__suggestion {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-right: 40px;
-    span {
-      margin-top: 5px;
-    }
-  }
-  &__center {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-    top: 25%;
-    bottom: 0;
-  }
-  &__suggestions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    overflow-x: auto;
-    width: 100%;
-  }
-  &__header {
-    white-space: nowrap;
-  }
-  &__viewmodels {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-    .potential-contact:first-of-type {
-      margin-top: 40px;
-    }
-    .potential-contact {
-      margin-bottom: 40px;
-    }
-  }
-  &__info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-  }
-  &__new-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: $AccentColor2;
-    font-weight: 700;
-    width: 20px;
-    height: 20px;
-    padding: 5px;
-  }
-  &__icons {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  &__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
-    .g-select {
-      position: absolute;
-      margin-top: 10px;
-      right: 0;
-      top: 10;
-    }
-  }
-  &__select-wrapper {
-    position: relative;
-  }
-  &__suggestions {
-    margin-top: 30px;
-  }
-}
 </style>
