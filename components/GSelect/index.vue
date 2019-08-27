@@ -59,6 +59,7 @@ export default {
   color: $select-color;
   position: relative;
   cursor: pointer;
+  z-index: 100;
 
   &__selection {
     width: 100%;

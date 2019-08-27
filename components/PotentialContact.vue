@@ -48,6 +48,8 @@ export default {
   &__middle {
     width: 200px;
     height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   &__desc {
     margin-top: 10px;

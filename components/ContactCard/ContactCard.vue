@@ -11,9 +11,10 @@
           ></fa-icon>
           <transition v-if="isFiltering" name="fade">
             <g-select
-              :options="['Name','Bio','Status']"
+              :options="['fullname','desc']"
               icon="angle-down"
               placeholder="Filter by..."
+              @selectionChanged="sort"
             />
           </transition>
         </div>
@@ -149,6 +150,11 @@ export default {
     }
   },
   methods: {
+    sort(selected) {
+      this.filteredViewModels.sort(
+        (a, b) => a.user[selected] > b.user[selected]
+      );
+    },
     async rejectInvitation(viewmodel) {
       try {
         viewmodel.isLoading = true;
