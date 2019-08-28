@@ -89,7 +89,7 @@
     />
     <h4
       class="contact-card__center"
-      v-if="viewmodels.length === 0 && !isLoading"
+      v-if="viewmodels.length === 0 && conversations.length === 0 && !isLoading"
     >{{$t('contact-card-no-result')}}</h4>
   </div>
 </template>
@@ -132,14 +132,17 @@ export default {
     viewmodels: {
       type: Array,
       required: true
+    },
+    conversations: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
       isSearching: false,
       isFiltering: false,
-      filteredViewModels: [],
-      conversations: []
+      filteredViewModels: []
     };
   },
   watch: {
