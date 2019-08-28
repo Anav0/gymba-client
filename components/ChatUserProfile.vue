@@ -13,8 +13,8 @@
       <span>{{user.username}}</span>
       <span>{{$t('user-profile-email')}}:</span>
       <span>{{user.email}}</span>
-      <span>{{$t('user-profile-bio')}}:</span>
-      <p>{{user.desc}}</p>
+      <span v-if="user.bio">{{$t('user-profile-bio')}}:</span>
+      <p v-if="user.bio">{{user.desc}}</p>
     </div>
     <div class="user-profile__icons">
       <fa-icon class="user-profile__icon" icon="trash" @click="deleteAccount" />
