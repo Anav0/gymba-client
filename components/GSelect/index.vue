@@ -1,7 +1,7 @@
 <template>
   <div class="g-select">
     <div @click="isExpanded = !isExpanded" class="g-select__selection card">
-      <span>{{selected}}</span>
+      <span>{{selected.name}}</span>
       <fa-icon class="g-select__caret" :icon="icon" />
     </div>
     <transition v-if="isExpanded" name="fade">
@@ -11,8 +11,8 @@
             class="g-select__option"
             v-for="(option,i) in options"
             @click="selectItem(i)"
-            :key="option"
-          >{{option}}</li>
+            :key="option.name+option.data"
+          >{{option.name}}</li>
         </ul>
       </div>
     </transition>
@@ -22,7 +22,7 @@
 <script>
 export default {
   mounted() {
-    this.selected = this.placeholder;
+    this.selected.name = this.placeholder;
   },
   methods: {
     selectItem(i) {
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       isExpanded: false,
-      selected: ""
+      selected: {}
     };
   },
   props: {

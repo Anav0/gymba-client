@@ -58,10 +58,14 @@ export default {
     };
   },
   methods: {
+    clearData() {
+      this.friends = [];
+      this.conversations = [];
+      this.suggesstions = [];
+    },
     loadConversations() {
       this.isLoading = true;
-      this.friends = [];
-      this.suggesstions = [];
+      this.clearData();
       const conversationIds = this.$store.getters["auth/user"].conversations;
       conversationIds.forEach(async id => {
         const response = await api.conversation.getConversation(id);
@@ -72,9 +76,7 @@ export default {
     async loadPotentialFriends() {
       try {
         this.isLoading = true;
-
-        this.friends = [];
-        this.suggesstions = [];
+        this.clearData();
         let response = await api.invite.getSendInvitations("target");
         response.data.forEach(invitation => {
           this.friends.push({

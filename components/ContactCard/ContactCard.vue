@@ -11,7 +11,7 @@
           ></fa-icon>
           <transition v-if="isFiltering" name="fade">
             <g-select
-              :options="['fullname','desc']"
+              :options="[{name: 'Name', data: 'fullname'},{name: 'Bio', data: 'desc'}]"
               icon="angle-down"
               placeholder="Filter by..."
               @selectionChanged="sort"
@@ -63,7 +63,7 @@
       <template v-if="selectedTab===1">
         <contact-card-invitation
           v-for="viewmodel in filteredViewModels"
-          :key="viewmodel.user._id"
+          :key="'invitation'+viewmodel.user._id"
           :invitationId="viewmodel.invitationId"
           :user="viewmodel.user"
           @invitationSend="(id)=>viewmodel.invitationId = id"
@@ -72,7 +72,7 @@
       <template v-if="selectedTab===2">
         <contact-card-decide
           v-for="viewmodel in filteredViewModels"
-          :key="viewmodel.user._id"
+          :key="'decide'+viewmodel.user._id"
           :user="viewmodel.user"
           :invitationId="viewmodel.invitationId"
           @invitationSend="(id)=>viewmodel.invitationId = id"
@@ -89,7 +89,7 @@
     />
     <h4
       class="contact-card__center"
-      v-if="viewmodels.length === 0 && !isLoading"
+      v-if="viewmodels.length === 0 && conversations.length === 0 && !isLoading"
     >{{$t('contact-card-no-result')}}</h4>
   </div>
 </template>
@@ -132,14 +132,17 @@ export default {
     viewmodels: {
       type: Array,
       required: true
+    },
+    conversations: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
       isSearching: false,
       isFiltering: false,
-      filteredViewModels: [],
-      conversations: []
+      filteredViewModels: []
     };
   },
   watch: {
@@ -154,7 +157,7 @@ export default {
   methods: {
     sort(selected) {
       this.filteredViewModels.sort(
-        (a, b) => a.user[selected] > b.user[selected]
+        (a, b) => a.user[selected.data] > b.user[selected.data]
       );
     },
     search(phrase) {
