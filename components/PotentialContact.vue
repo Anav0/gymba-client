@@ -1,7 +1,11 @@
 <template>
   <div class="potential-contact">
-    <avatar class="potential-contact__avatar" :initials="user.fullname | getInitials" />
-    <div class="potential-contact__middle">
+    <avatar
+      @click="$emit('wasClicked')"
+      class="potential-contact__avatar"
+      :initials="user.fullname | getInitials"
+    />
+    <div @click="$emit('wasClicked')" class="potential-contact__middle">
       <span class="potential-contact__fullname bold ellipsis">{{user.fullname}}</span>
       <p v-if="user.desc" class="potential-contact__desc ellipsis">{{user.desc}}</p>
     </div>

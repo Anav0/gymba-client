@@ -1,5 +1,5 @@
 <template>
-  <potential-contact :user="user" :isLoading="isLoading">
+  <potential-contact @wasClicked="$emit('wasClicked')" :user="user" :isLoading="isLoading">
     <div class="contact-card__icons">
       <fa-icon class="contact-card__icon--invite" icon="times" @click="rejectInvitation" />
       <fa-icon class="contact-card__icon--invite" icon="check" @click="acceptInvitation" />

@@ -1,5 +1,5 @@
 <template>
-  <potential-contact :user="user" :isLoading="isLoading">
+  <potential-contact @wasClicked="$emit('wasClicked')" :user="user" :isLoading="isLoading">
     <button
       class="btn capitalize"
       @click="processInvitation"

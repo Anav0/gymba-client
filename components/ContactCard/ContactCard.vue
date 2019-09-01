@@ -64,7 +64,7 @@
         <contact-card-invitation
           v-for="viewmodel in filteredViewModels"
           :key="'invitation'+viewmodel.user._id"
-          @click.native="showUserProfile(viewmodel.user)"
+          @wasClicked="showUserProfile(viewmodel.user)"
           :invitationId="viewmodel.invitationId"
           :user="viewmodel.user"
           @invitationSend="(id)=>viewmodel.invitationId = id"
@@ -73,7 +73,7 @@
       <template v-if="selectedTab===2">
         <contact-card-decide
           v-for="viewmodel in filteredViewModels"
-          @click.native="showUserProfile(viewmodel.user)"
+          @wasClicked="showUserProfile(viewmodel.user)"
           :key="'decide'+viewmodel.user._id"
           :user="viewmodel.user"
           :invitationId="viewmodel.invitationId"
