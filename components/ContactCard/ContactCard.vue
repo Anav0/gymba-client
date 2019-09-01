@@ -22,7 +22,7 @@
         <fa-icon
           class="contact-card__icon"
           :icon="isSearching ?  'times' : 'search'"
-          @click="isSearching=!isSearching"
+          @click="toggleSearch"
         ></fa-icon>
       </div>
     </div>
@@ -48,6 +48,7 @@
       v-show="isSearching"
       ref="contactCardInput"
       class="contact-card__search"
+      v-model="searchPhrase"
       @input="search($event.target.value)"
       :placeholder="$i18n.t('contact-card-search')"
     />
@@ -55,15 +56,15 @@
     <ul v-if="!isLoading " class="contact-card__viewmodels">
       <template v-if="selectedTab===0">
         <contact-card-conversation
-          v-for="conversation in conversations"
-          :key="conversation._id"
+          v-for="conversation in filteredConversations"
+          :key="`contact-card-conversation-${conversation._id}`"
           :conversation="conversation"
         />
       </template>
       <template v-if="selectedTab===1">
         <contact-card-invitation
           v-for="viewmodel in filteredViewModels"
-          :key="'invitation'+viewmodel.user._id"
+          :key="'contact-card-invitation'+viewmodel.user._id"
           @wasClicked="showUserProfile(viewmodel.user)"
           :invitationId="viewmodel.invitationId"
           :user="viewmodel.user"
@@ -74,7 +75,7 @@
         <contact-card-decide
           v-for="viewmodel in filteredViewModels"
           @wasClicked="showUserProfile(viewmodel.user)"
-          :key="'decide'+viewmodel.user._id"
+          :key="'contact-card-decide'+viewmodel.user._id"
           :user="viewmodel.user"
           :invitationId="viewmodel.invitationId"
           @invitationSend="(id)=>viewmodel.invitationId = id"
@@ -91,7 +92,7 @@
     />
     <h4
       class="contact-card__center"
-      v-if="viewmodels.length === 0 && conversations.length === 0 && !isLoading"
+      v-if="filteredViewModels.length === 0 && filteredConversations.length === 0 && !isLoading"
     >{{$t('contact-card-no-result')}}</h4>
   </div>
 </template>
@@ -142,14 +143,19 @@ export default {
   },
   data() {
     return {
+      searchPhrase: "",
       isSearching: false,
       isFiltering: false,
-      filteredViewModels: []
+      filteredViewModels: [],
+      filteredConversations: []
     };
   },
   watch: {
     viewmodels(value) {
       this.filteredViewModels = value;
+    },
+    conversations(value) {
+      this.filteredConversations = value;
     },
     isSearching(value) {
       this.filteredViewModels = this.viewmodels;
@@ -157,6 +163,12 @@ export default {
     }
   },
   methods: {
+    toggleSearch() {
+      this.isSearching = !this.isSearching;
+      this.searchPhrase = "";
+      this.filteredViewModels = this.viewmodels;
+      this.filteredConversations = this.conversations;
+    },
     showUserProfile(user) {
       console.log(user);
       this.$router.push({ name: "chatFriend", params: { id: user._id } });
@@ -168,6 +180,23 @@ export default {
     },
     search(phrase) {
       phrase = phrase.toLowerCase().trim();
+
+      if (this.selectedTab === 0) return this.searchConversations(phrase);
+
+      return this.searchViewModels(phrase);
+    },
+    searchConversations(phrase) {
+      //TODO: make this search work
+      if (!phrase) return (this.filteredConversations = this.conversations);
+      this.filteredConversations = this.conversations.filter(conversation => {
+        return conversation.participants.includes(
+          user =>
+            user.fullname.toLowerCase().includes(phrase) ||
+            user.desc.toLowerCase().includes(phrase)
+        );
+      });
+    },
+    searchViewModels(phrase) {
       if (!phrase) return (this.filteredViewModels = this.viewmodels);
       this.filteredViewModels = this.viewmodels.filter(
         viewmodel =>

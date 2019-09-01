@@ -1,5 +1,5 @@
 <template>
-  <potential-contact :user="conversation.participants[0]" :isLoading="isLoading">
+  <potential-contact :user="conversation.participants[1]" :isLoading="isLoading">
     <div class="contact-card__info">
       <span class="contact-card__send-date">{{'09:00'}}</span>
       <div class="contact-card__new-message">{{5}}</div>
@@ -9,6 +9,7 @@
 
 <script>
 import PotentialContact from "../PotentialContact";
+import conversation from "../../api/conversation";
 //TODO: make :user binding better
 export default {
   components: {
@@ -24,8 +25,7 @@ export default {
       type: Object,
       required: true
     }
-  },
-  methods: {}
+  }
 };
 </script>
 
