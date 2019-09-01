@@ -104,8 +104,7 @@ export default {
     async loadInvites() {
       try {
         this.isLoading = true;
-        this.friends = [];
-        this.suggesstions = [];
+        this.clearData();
         const response = await api.invite.getRecivedInvitations("sender");
         response.data.forEach(invitation => {
           this.friends.push({
