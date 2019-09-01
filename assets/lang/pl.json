@@ -57,5 +57,11 @@
     "chat-tab-new-friends": "znajdź nowych przyjaciół",
     "chat-tab-invites": "zaproszenia",
     "contact-card-no-result": "Brak wyników",
-    "contact-card-search": "Szukaj w kontaktach..."
+    "contact-card-search": "Szukaj w kontaktach...",
+    "chat-friend-profile-unfriend": "usuń",
+    "chat-friend-profile-invite": "zaprość",
+    "chat-friend-profile-block": "zablokuj",
+    "chat-friend-profile-unblock": "odblokuj",
+    "chat-friend-profile-mute": "wycisz",
+    "chat-friend-profile-unmute": "włącz powiadomienia"
 }

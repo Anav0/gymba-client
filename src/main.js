@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTint, faCheckCircle, faCheck, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faTint, faCheckCircle, faCheck, faHeartBroken, faLockOpen, faComment, faEnvelope, faSearch, faKeyboard, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown, faHeart, faCommentSlash, faBan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 import App from './App.vue';
@@ -11,9 +11,8 @@ import store from '../store';
 import '../assets/style/styles.scss';
 import api from "../api";
 import * as filters from '../filters';
-
 Vue.component('fa-icon', FontAwesomeIcon);
-library.add({ faTint, faCheckCircle, faCheck, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown });
+library.add({ faTint, faCheckCircle, faHeartBroken, faCheck, faLockOpen, faComment, faEnvelope, faKeyboard, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown, faHeart, faCommentSlash, faBan });
 
 Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;

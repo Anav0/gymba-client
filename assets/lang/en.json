@@ -56,5 +56,15 @@
     "chat-tab-new-friends": "find new friend",
     "chat-tab-invites": "invitations",
     "contact-card-no-result": "No results",
-    "contact-card-search": "Search contacts..."
+    "contact-card-search": "Search contacts...",
+    "chat-friend-profile-unfriend": "unfriend",
+    "chat-friend-profile-invite": "invite",
+    "chat-friend-profile-block": "block",
+    "chat-friend-profile-unblock": "unblock",
+    "chat-friend-profile-mute": "mute",
+    "chat-friend-profile-you-exchanged": "You exchanged",
+    "chat-friend-profile-exchanged-messages": "messages",
+    "chat-friend-profile-exchanged-words": "words",
+    "chat-friend-profile-days": "days",
+    "chat-friend-profile-friends-for": "Friends for"
 }

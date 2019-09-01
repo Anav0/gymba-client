@@ -61,7 +61,12 @@ export default {
       }
     },
     async deleteAccount() {
-      console.log("DELETE ACCOUNT");
+      try {
+        await api.user.deleteAccount();
+        await this.logout();
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 };
