@@ -1,4 +1,5 @@
-`<template>
+//TODO: Change register/login buttons to user info when one is logged
+<template>
   <div class="sign-in landing-page-section">
     <div class="card">
       <transition name="slide">
@@ -51,6 +52,19 @@ export default {
         password: ""
       }
     };
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters["auth/loginStatus"];
+    }
+  },
+  watch: {
+    isLoggedIn(isLoggedIn) {
+      if (isLoggedIn) this.$router.push("/chat");
+    }
+  },
+  mounted() {
+    if (this.isLoggedIn) this.$router.push("/chat");
   },
   methods: {
     async login() {

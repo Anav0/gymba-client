@@ -74,7 +74,6 @@ import { setInterval } from "timers";
 
 export default {
   components: { FlowerSpinner, Successfull },
-
   data() {
     return {
       isLoading: false,
@@ -108,6 +107,19 @@ export default {
         desc: ""
       }
     };
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters["auth/loginStatus"];
+    }
+  },
+  watch: {
+    isLoggedIn(isLoggedIn) {
+      if (isLoggedIn) this.$router.push("/chat");
+    }
+  },
+  mounted() {
+    if (this.isLoggedIn) this.$router.push("/chat");
   },
   methods: {
     async submit() {

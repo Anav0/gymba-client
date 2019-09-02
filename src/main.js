@@ -19,18 +19,17 @@ axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
 
-const getAuth = async () => {
+const setAuthUser = async () => {
   try {
     const response = await api.user.getAuthUser();
     if (response.data) {
       await store.dispatch("auth/login", response.data);
-      router.push('/chat');
     }
   } catch (err) {
     console.error(err);
   }
-}
-getAuth();
+};
+setAuthUser();
 
 new Vue({
   router,
