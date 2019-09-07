@@ -18,14 +18,14 @@
         />
         <conversation-stat
           icon="heart"
-          v-if="isInvited"
+          v-if="isFriend"
           :text="`${$i18n.t('chat-friend-profile-friends-for')} ${friendsFor} ${$i18n.t('chat-friend-profile-days')}`"
         />
       </div>
       <div class="chat-friend-profile__actions">
         <text-icon
-          :icon="isInvited ? 'heart-broken' : 'heart'"
-          :text="$i18n.t(`chat-friend-profile-${isInvited ? 'unfriend' : 'invite'}`)"
+          :icon="inviteStatus.icon"
+          :text="$i18n.t(`chat-friend-profile-${inviteStatus.i18n}`)"
           @click.native="invite"
           :isLoading="isInviting"
         />
@@ -70,6 +70,8 @@ export default {
       await this.fillExchangedMessages();
       await this.fillWords();
       await this.fillisInvited();
+      await this.fillIsFriend();
+      await this.fillInvitationId();
     } catch (err) {
       console.error(err);
     } finally {
@@ -83,6 +85,8 @@ export default {
       isLoading: true,
       isInviting: false,
       isInvited: false,
+      isFriend: false,
+      invitationId: null,
       exchangedMessages: [],
       numberOfWordsExchanged: 0
     };
@@ -94,6 +98,11 @@ export default {
     }
   },
   computed: {
+    inviteStatus() {
+      if (this.isFriend) return { i18n: "friend", icon: "heart-broken" };
+      if (this.isInvited) return { i18n: "uninvite", icon: "eraser" };
+      else return { i18n: "invite", icon: "heart" };
+    },
     isMuted() {
       return false;
     },
@@ -101,22 +110,33 @@ export default {
       return false;
     },
     friendsFor() {
-      return 10;
+      return "N";
     }
   },
   methods: {
     async invite() {
+      if (this.isFriend) return await this.removeFriend();
       if (!this.isInvited) await this.sendInvite();
-      else await this.removeFriend();
+      else await this.cancelInvite();
+    },
+    async cancelInvite() {
+      try {
+        this.isInviting = true;
+        await api.invite.rejectInvitation(this.invitationId);
+        this.isInvited = false;
+        this.invitationId = null;
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.isInviting = false;
+      }
     },
     async sendInvite() {
       try {
         this.isInviting = true;
-        await api.invite.postInvitation(this.user._id);
-        const response = await api.user.getAuthUser();
-        if (response.data) {
-          await this.$store.dispatch("auth/login", response.data);
-        }
+        const response = await api.invite.postInvitation(this.user._id);
+        this.invitationId = response.data._id;
+        this.isInvited = true;
       } catch (err) {
         console.error(err);
       } finally {
@@ -127,25 +147,28 @@ export default {
       try {
         this.isInviting = true;
         await api.user.removeFriend(this.user._id);
-        const response = await api.user.getAuthUser();
-        if (response.data) {
-          await store.dispatch("auth/login", response.data);
-        }
       } catch (err) {
         console.error(err);
       } finally {
         this.isInviting = false;
       }
     },
+    async fillIsFriend() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const user = this.$store.getters["auth/user"];
+          if (user.friends.includes(this.user._id)) this.isFriend = true;
+          resolve();
+        } catch (err) {
+          console.error(err);
+          reject(err);
+        }
+      });
+    },
     async fillisInvited() {
       return new Promise(async (resolve, reject) => {
         try {
           const user = this.$store.getters["auth/user"];
-
-          if (user.friends.includes(this.user._id)) {
-            this.isInvited = true;
-            return resolve();
-          }
 
           let response = await api.invite.getSendInvitations("");
           if (response.data.some(invite => invite.target == this.user._id)) {
@@ -203,6 +226,18 @@ export default {
           //TODO: fill this function
           resolve(0);
         } catch (err) {
+          reject(err);
+        }
+      });
+    },
+    async fillInvitationId() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let response = await api.invite.getInviteInvolving(this.user._id);
+          this.invitationId = response.data._id;
+          resolve();
+        } catch (err) {
+          console.error(err);
           reject(err);
         }
       });

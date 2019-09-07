@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     processInvitation() {
-      if (this.invitationId) this.cancelInvitation();
+      if (this.invitationId) this.rejectInvitation();
       else this.sendInvitation();
     },
     async sendInvitation() {
@@ -47,10 +47,10 @@ export default {
         this.isLoading = false;
       }
     },
-    async cancelInvitation() {
+    async rejectInvitation() {
       this.isLoading = true;
       try {
-        await api.invite.cancelInvitation(this.invitationId);
+        await api.invite.rejectInvitation(this.invitationId);
         this.$emit("invitationSend", null);
       } catch (err) {
         console.error(err);
