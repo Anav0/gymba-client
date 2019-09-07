@@ -75,7 +75,7 @@ export default {
 
       try {
         this.isLoading = true;
-        const response = await api.user.login(this.credentials);
+        const response = await api.auth.login(this.credentials);
         this.$store.dispatch("auth/login", response.data.user);
         this.$router.push("/chat");
       } catch (err) {

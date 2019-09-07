@@ -1,13 +1,13 @@
 import user from "./user";
 import users from "./users";
-import opinion from "./opinion";
 import invite from "./invite";
+import auth from "./auth";
 import conversation from "./conversation";
 
 export default {
+    auth,
     invite,
     conversation,
     user,
     users,
-    opinion,
 };

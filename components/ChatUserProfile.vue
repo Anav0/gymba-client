@@ -53,7 +53,7 @@ export default {
   methods: {
     async logout() {
       try {
-        await api.user.logout();
+        await api.auth.logout();
         this.$store.dispatch("auth/logout");
         this.$router.push("/sign-in");
       } catch (err) {

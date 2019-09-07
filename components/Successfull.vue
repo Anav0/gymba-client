@@ -53,7 +53,7 @@ export default {
     async resendVerificationEmail() {
       try {
         this.isLoading = true;
-        const response = await api.user.resendVerificationEmail(this.userId);
+        const response = await api.auth.resendVerificationEmail(this.userId);
         consoe.log(response);
       } catch (err) {
         console.error(err);
