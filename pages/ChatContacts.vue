@@ -144,7 +144,8 @@ export default {
 <style lang="scss" scoped>
 .chat-contacts {
   width: 100%;
-  max-height: 100%;
+  height: 100%;
+  overflow-y: hidden;
 
   &__avatar-wrapper {
     cursor: pointer;
@@ -156,7 +157,7 @@ export default {
     margin: 30px 0;
   }
   &__contact-card {
-    min-height: 100vh;
+    height: 100%;
   }
 }
 </style>

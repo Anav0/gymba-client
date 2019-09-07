@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import Avatar from "./Avatars/Avatar";
-import api from "../api";
+import Avatar from "../Avatars/Avatar";
+import api from "../../api";
 
 export default {
   components: {

@@ -6,8 +6,8 @@ import signIn from '../pages/signIn';
 import noPage from '../pages/noPage';
 import chat from '../pages/chat';
 import ChatContacts from '../pages/ChatContacts';
-import ChatUserProfile from '../components/ChatUserProfile';
-import ChatFriendProfile from '../components/ChatFriendProfile';
+import ChatUserProfile from '../components/chat/ChatUserProfile';
+import ChatFriendProfile from '../components/chat/ChatFriendProfile';
 import store from "../store";
 
 Vue.use(Router);
@@ -54,7 +54,7 @@ export const router = new Router({
 			},
 			children: [
 				{
-					path: '',
+					path: '/:tab',
 					name: "chatContacts",
 					component: ChatContacts,
 				},

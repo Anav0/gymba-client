@@ -52,11 +52,10 @@
 </template>
 
 <script>
-import api from "../api";
-import Avatar from "./Avatars/Avatar";
-import TextIcon from "./TextIcon";
-import ConversationStat from "./ConversationStat";
-import { setTimeout } from "timers";
+import api from "../../api";
+import Avatar from "../Avatars/Avatar";
+import TextIcon from "../TextIcon";
+import ConversationStat from "../ConversationStat";
 import { SpringSpinner } from "epic-spinners";
 
 export default {
