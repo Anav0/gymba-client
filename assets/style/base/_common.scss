@@ -15,6 +15,11 @@
 .active {
   color: $AccentColor1 !important;
 }
+.disable {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 
 .bold {
   font-weight: $font-weight-bold;

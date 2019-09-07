@@ -30,10 +30,12 @@
           :isLoading="isInviting"
         />
         <text-icon
+          class="disable"
           :icon="isBlocked ? 'lock-open' : 'ban'"
           :text="$i18n.t(`chat-friend-profile-${isBlocked ? 'unblock' : 'block'}`)"
         />
         <text-icon
+          class="disable"
           :icon="isMuted ? 'comment' : 'comment-slash'"
           :text="$i18n.t(`chat-friend-profile-${isMuted ? 'unmute' : 'mute'}`)"
         />
