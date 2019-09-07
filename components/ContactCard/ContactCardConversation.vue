@@ -1,5 +1,5 @@
 <template>
-  <potential-contact :user="conversation.participants[1]" :isLoading="isLoading">
+  <potential-contact :user="user" :isLoading="isLoading">
     <div class="contact-card__info">
       <span class="contact-card__send-date">{{'09:00'}}</span>
       <div class="contact-card__new-message">{{5}}</div>
@@ -17,8 +17,14 @@ export default {
   },
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      user: {}
     };
+  },
+  watch: {
+    conversation(value) {
+      this.user = value.participants[1];
+    }
   },
   props: {
     conversation: {

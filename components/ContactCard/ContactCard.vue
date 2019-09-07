@@ -83,15 +83,9 @@
         />
       </template>
     </ul>
-    <spring-spinner
-      v-else
-      class="contact-card__center"
-      :animation-duration="1000"
-      :size="50"
-      color="#fcd87d"
-    />
+    <spring-spinner v-else class="center" :animation-duration="1000" :size="50" color="#fcd87d" />
     <h4
-      class="contact-card__center"
+      class="center"
       v-if="filteredViewModels.length === 0 && filteredConversations.length === 0 && !isLoading"
     >{{$t('contact-card-no-result')}}</h4>
   </div>

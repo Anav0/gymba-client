@@ -51,13 +51,7 @@
       margin-top: 5px;
     }
   }
-  &__center {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-    top: 25%;
-    bottom: 0;
-  }
+
   &__suggestions {
     display: flex;
     align-items: center;

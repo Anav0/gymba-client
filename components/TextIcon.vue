@@ -1,5 +1,5 @@
 <template>
-  <div class="text-icon">
+  <div class="text-icon" :class="{'text-icon__bounce' : isLoading}">
     <fa-icon class="text-icon__icon" :icon="icon"></fa-icon>
     <span class="capitalize">{{text}}</span>
   </div>
@@ -8,6 +8,10 @@
 <script>
 export default {
   props: {
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
     icon: {
       type: String,
       default: "times"
@@ -32,7 +36,10 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
+  &__bounce {
+    animation: jello-horizontal 1s infinite;
+    pointer-events: none;
+  }
   &__icon {
     font-size: $icon-size-extra-medium;
     margin-bottom: 5px;

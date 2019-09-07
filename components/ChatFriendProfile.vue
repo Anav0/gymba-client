@@ -1,33 +1,33 @@
 <template>
   <div class="chat-friend-profile">
-    <div class="chat-friend-profile__image-wrapper">
+    <div v-if="!isLoading" class="chat-friend-profile__image-wrapper">
       <h3 class="chat-friend-profile__fullname">{{user.fullname}}</h3>
       <img class="chat-friend-profile__avatar" src="https://source.unsplash.com/random/" />
     </div>
     <!-- <avatar v-if="!user.avatarUrl" :initials="user.fullname | getInitials" /> -->
-    <div class="chat-friend-profile__content">
+    <div v-if="!isLoading" class="chat-friend-profile__content">
       <blockquote>{{user.desc}}</blockquote>
       <div class="chat-friend-profile__stats">
         <conversation-stat
           icon="envelope"
-          v-if="exchangedMessages.length > 0"
           :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${exchangedMessages.length} ${$i18n.t('chat-friend-profile-exchanged-messages')}`"
         />
         <conversation-stat
           icon="keyboard"
-          v-if="exchangedMessages.length > 0"
-          :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${numberOfWordsExchanged} ${$i18n.t('chat-friend-profile-exchange-words')}`"
+          :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${numberOfWordsExchanged} ${$i18n.t('chat-friend-profile-exchanged-words')}`"
         />
         <conversation-stat
           icon="heart"
-          v-if="isFriend"
+          v-if="isInvited"
           :text="`${$i18n.t('chat-friend-profile-friends-for')} ${friendsFor} ${$i18n.t('chat-friend-profile-days')}`"
         />
       </div>
       <div class="chat-friend-profile__actions">
         <text-icon
-          :icon="isFriend ? 'heart-broken' : 'heart'"
-          :text="$i18n.t(`chat-friend-profile-${isFriend ? 'unfriend' : 'invite'}`)"
+          :icon="isInvited ? 'heart-broken' : 'heart'"
+          :text="$i18n.t(`chat-friend-profile-${isInvited ? 'unfriend' : 'invite'}`)"
+          @click.native="invite"
+          :isLoading="isInviting"
         />
         <text-icon
           :icon="isBlocked ? 'lock-open' : 'ban'"
@@ -39,6 +39,13 @@
         />
       </div>
     </div>
+    <spring-spinner
+      v-if="isLoading"
+      class="center"
+      :animation-duration="1000"
+      :size="50"
+      color="#fcd87d"
+    />
   </div>
 </template>
 
@@ -47,25 +54,119 @@ import api from "../api";
 import Avatar from "./Avatars/Avatar";
 import TextIcon from "./TextIcon";
 import ConversationStat from "./ConversationStat";
+import { setTimeout } from "timers";
+import { SpringSpinner } from "epic-spinners";
 
 export default {
   components: {
     Avatar,
     TextIcon,
-    ConversationStat
+    ConversationStat,
+    SpringSpinner
   },
   async mounted() {
     try {
       await this.fillUser();
       await this.fillExchangedMessages();
       await this.fillWords();
+      await this.fillisInvited();
     } catch (err) {
       console.error(err);
     } finally {
       this.isLoading = false;
     }
   },
+
+  data() {
+    return {
+      user: {},
+      isLoading: true,
+      isInviting: false,
+      isInvited: false,
+      exchangedMessages: [],
+      numberOfWordsExchanged: 0
+    };
+  },
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    isMuted() {
+      return false;
+    },
+    isBlocked() {
+      return false;
+    },
+    friendsFor() {
+      return 10;
+    }
+  },
   methods: {
+    async invite() {
+      if (!this.isInvited) await this.sendInvite();
+      else await this.removeFriend();
+    },
+    async sendInvite() {
+      try {
+        this.isInviting = true;
+        await api.invite.postInvitation(this.user._id);
+        const response = await api.user.getAuthUser();
+        if (response.data) {
+          await this.$store.dispatch("auth/login", response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.isInviting = false;
+      }
+    },
+    async removeFriend() {
+      try {
+        this.isInviting = true;
+        await api.user.removeFriend(this.user._id);
+        const response = await api.user.getAuthUser();
+        if (response.data) {
+          await store.dispatch("auth/login", response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.isInviting = false;
+      }
+    },
+    async fillisInvited() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const user = this.$store.getters["auth/user"];
+
+          if (user.friends.includes(this.user._id)) {
+            this.isInvited = true;
+            return resolve();
+          }
+
+          let response = await api.invite.getSendInvitations("");
+          if (response.data.some(invite => invite.target == this.user._id)) {
+            this.isInvited = true;
+            return resolve();
+          }
+
+          response = await api.invite.getRecivedInvitations("");
+          if (response.data.some(invite => invite.sender == this.user._id)) {
+            this.isInvited = true;
+            return resolve();
+          }
+
+          this.isInvited = false;
+          resolve();
+        } catch (err) {
+          console.error(err);
+          reject(err);
+        }
+      });
+    },
     async fillUser() {
       return new Promise(async (resolve, reject) => {
         try {
@@ -86,7 +187,7 @@ export default {
             this.user._id,
             2
           );
-          if (!response.data) return;
+          if (!response.data || response.data.length === 0) return resolve();
           if (response.data.length > 1)
             throw new Error("There is more results than one");
           this.exchangedMessages = response.data[0].messages;
@@ -106,35 +207,6 @@ export default {
         }
       });
     }
-  },
-  data() {
-    return {
-      user: {},
-      isLoading: true,
-      exchangedMessages: [],
-      numberOfWordsExchanged: 0
-    };
-  },
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  computed: {
-    isMuted() {
-      return false;
-    },
-    isBlocked() {
-      return false;
-    },
-    friendsFor() {
-      return 10;
-    },
-    isFriend() {
-      const user = this.$store.getters["auth/user"];
-      return user.friends.includes(this.user._id);
-    }
   }
 };
 </script>
@@ -149,11 +221,17 @@ export default {
   height: 100%;
   width: 100%;
   color: $White;
-
+  position: relative;
   blockquote {
     width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
-
+  &__spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
   &__image-wrapper {
     position: relative;
     width: 100%;

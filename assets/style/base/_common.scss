@@ -25,3 +25,11 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+.center {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 25%;
+  bottom: 0;
+}

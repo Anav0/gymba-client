@@ -38,12 +38,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.potential-contact:hover {
+  //TODO: Add a nice animation
+}
 .potential-contact {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
   height: 48px;
+
   &__avatar {
     min-width: 48px;
     min-height: 48px;
