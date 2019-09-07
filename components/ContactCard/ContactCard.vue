@@ -35,6 +35,7 @@
         class="contact-card__suggestion"
         v-for="(user, i) in suggestedUsers"
         :key="`contact-card-${user._id}`"
+        @click="showUserProfile(user._id)"
       >
         <avatar
           :avatarUrl="i % 3 === 0 ? 'https://source.unsplash.com/random' : null"
@@ -65,7 +66,7 @@
         <contact-card-invitation
           v-for="viewmodel in filteredViewModels"
           :key="'contact-card-invitation'+viewmodel.user._id"
-          @wasClicked="showUserProfile(viewmodel.user)"
+          @wasClicked="showUserProfile(viewmodel.user._id)"
           :invitationId="viewmodel.invitationId"
           :user="viewmodel.user"
           @invitationSend="(id)=>viewmodel.invitationId = id"
@@ -74,7 +75,7 @@
       <template v-if="selectedTab===2">
         <contact-card-decide
           v-for="viewmodel in filteredViewModels"
-          @wasClicked="showUserProfile(viewmodel.user)"
+          @wasClicked="showUserProfile(viewmodel.user._id)"
           :key="'contact-card-decide'+viewmodel.user._id"
           :user="viewmodel.user"
           :invitationId="viewmodel.invitationId"
@@ -163,9 +164,8 @@ export default {
       this.filteredViewModels = this.viewmodels;
       this.filteredConversations = this.conversations;
     },
-    showUserProfile(user) {
-      console.log(user);
-      this.$router.push({ name: "chatFriend", params: { id: user._id } });
+    showUserProfile(id) {
+      this.$router.push({ name: "chatFriend", params: { id } });
     },
     sort(selected) {
       this.filteredViewModels.sort(
