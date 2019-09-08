@@ -73,14 +73,19 @@ export default {
       this.suggesstions = [];
     },
     loadConversations() {
-      this.isLoading = true;
-      this.clearData();
-      const conversationIds = this.$store.getters["auth/user"].conversations;
-      conversationIds.forEach(async id => {
-        const response = await api.conversation.getConversation(id);
-        this.conversations.push(response.data);
-      });
-      this.isLoading = false;
+      try {
+        this.isLoading = true;
+        this.clearData();
+        const conversationIds = this.$store.getters["auth/user"].conversations;
+        conversationIds.forEach(async id => {
+          const response = await api.conversation.getConversation(id);
+          this.conversations.push(response.data);
+        });
+      } catch (err) {
+        console.error(er);
+      } finally {
+        this.isLoading = false;
+      }
     },
     async loadPotentialFriends() {
       try {

@@ -56,18 +56,27 @@ export const router = new Router({
 				{
 					path: '',
 					name: "chatContacts",
-					component: ChatContacts,
+					components: {
+						default: ChatContacts,
+						rightSidePanel: ChatUserProfile
+					},
 				},
 				{
 					path: 'profile',
 					name: 'chatProfile',
-					component: ChatUserProfile,
+					components: {
+						default: ChatContacts,
+						rightSidePanel: ChatUserProfile
+					},
 				},
 				{
 					path: 'friend',
 					name: 'chatFriend',
-					component: ChatFriendProfile,
-					props: true
+					components: {
+						default: ChatContacts,
+						rightSidePanel: ChatFriendProfile
+					},
+					props: { rightSidePanel: true }
 				},
 			]
 		}

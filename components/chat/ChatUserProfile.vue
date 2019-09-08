@@ -84,11 +84,6 @@ export default {
   color: $user-profile-color;
   padding: 30px 20px;
 
-  @media (min-width: $md) {
-    background: $White;
-    color: $MainFontColor;
-  }
-
   &__icons {
     display: flex;
     position: absolute;

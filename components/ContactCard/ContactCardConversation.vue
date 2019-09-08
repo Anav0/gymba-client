@@ -21,6 +21,9 @@ export default {
       user: {}
     };
   },
+  mounted() {
+    this.user = this.conversation.participants[1];
+  },
   watch: {
     conversation(value) {
       this.user = value.participants[1];

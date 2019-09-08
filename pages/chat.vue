@@ -9,6 +9,7 @@
     <chat-side-nav class="chat-side-nav--desktop" />
     <router-view />
     <conversation class="conversation--desktop" />
+    <router-view name="rightSidePanel" />
   </div>
 </template>
 <script>
@@ -26,12 +27,11 @@ export default {
 .chat {
   position: relative;
   display: grid;
-  grid-template-columns: 75px 2fr 7fr;
+  grid-template-columns: 75px 2fr 5fr 2fr;
   width: 100%;
   height: 100%;
   @media (max-width: $md) {
     grid-template-columns: 100%;
-
     .chat-side-nav--desktop,
     .conversation--desktop,
     .chat-friend-profile--desktop,
