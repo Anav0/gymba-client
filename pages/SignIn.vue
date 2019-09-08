@@ -60,11 +60,13 @@ export default {
   },
   watch: {
     isLoggedIn(isLoggedIn) {
-      if (isLoggedIn) this.$router.push("/chat");
+      if (isLoggedIn)
+        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
     }
   },
   mounted() {
-    if (this.isLoggedIn) this.$router.push("/chat");
+    if (this.isLoggedIn)
+      this.$router.push({ name: "chatContacts", params: { tab: 0 } });
   },
   methods: {
     async login() {
@@ -77,7 +79,7 @@ export default {
         this.isLoading = true;
         const response = await api.auth.login(this.credentials);
         this.$store.dispatch("auth/login", response.data.user);
-        this.$router.push("/chat");
+        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
       } catch (err) {
         this.errors = err.response.data.errors;
       } finally {

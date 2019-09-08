@@ -115,11 +115,13 @@ export default {
   },
   watch: {
     isLoggedIn(isLoggedIn) {
-      if (isLoggedIn) this.$router.push("/chat");
+      if (isLoggedIn)
+        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
     }
   },
   mounted() {
-    if (this.isLoggedIn) this.$router.push("/chat");
+    if (this.isLoggedIn)
+      this.$router.push({ name: "chatContacts", params: { tab: 0 } });
   },
   methods: {
     async submit() {

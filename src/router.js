@@ -46,7 +46,7 @@ export const router = new Router({
 			component: signUp,
 		},
 		{
-			path: '/chat',
+			path: '/chat/:tab?',
 			alias: '/messanger',
 			component: chat,
 			meta: {
@@ -54,7 +54,7 @@ export const router = new Router({
 			},
 			children: [
 				{
-					path: '/:tab',
+					path: '',
 					name: "chatContacts",
 					component: ChatContacts,
 				},

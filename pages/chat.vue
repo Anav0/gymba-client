@@ -1,29 +1,23 @@
 <template>
   <div class="chat">
     <fa-icon
-      v-if="this.$route.path !== '/chat'"
+      v-if="this.$route.name != 'chatContacts'"
       class="chat__go-back-arrow"
       icon="angle-left"
       @click="$router.go(-1)"
     />
-    <chat-side-nav />
+    <chat-side-nav class="chat-side-nav--desktop" />
     <router-view />
-    <conversation />
-    <chat-user-profile />
+    <conversation class="conversation--desktop" />
   </div>
 </template>
-
 <script>
 import ChatSideNav from "../components/chat/ChatSideNav";
 import conversation from "../components/chat/conversation";
-import ChatFriendProfile from "../components/chat/ChatFriendProfile";
-import ChatUserProfile from "../components/chat/ChatUserProfile";
 export default {
   components: {
     conversation,
-    ChatSideNav,
-    ChatFriendProfile,
-    ChatUserProfile
+    ChatSideNav
   }
 };
 </script>
@@ -32,10 +26,19 @@ export default {
 .chat {
   position: relative;
   display: grid;
-  grid-template-columns: 75px 2fr 5fr 2fr;
+  grid-template-columns: 75px 2fr 7fr;
   width: 100%;
   height: 100%;
+  @media (max-width: $md) {
+    grid-template-columns: 100%;
 
+    .chat-side-nav--desktop,
+    .conversation--desktop,
+    .chat-friend-profile--desktop,
+    .chat-user-profile--desktop {
+      display: none;
+    }
+  }
   &__go-back-arrow {
     @media (min-width: $md) {
       display: none;

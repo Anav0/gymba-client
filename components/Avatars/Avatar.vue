@@ -47,6 +47,7 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: $AccentColor2;
+
   &__initials {
     font-size: inherit;
   }

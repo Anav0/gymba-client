@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     isChat() {
-      return this.$route.matched.some(route => route.path === "/chat");
+      return this.$route.matched.some(route => route.path.includes("/chat"));
     },
     dynamicBackground() {
       return this.fillRoutes.includes(this.$route.name)

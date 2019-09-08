@@ -258,11 +258,7 @@ export default {
   width: 100%;
   color: $White;
   position: relative;
-  blockquote {
-    width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
+
   &__spinner {
     position: absolute;
     top: 0;
@@ -275,6 +271,11 @@ export default {
     img {
       box-shadow: $box-shadow-button-user-image;
     }
+  }
+  blockquote {
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__content {
     padding: 0px 20px;

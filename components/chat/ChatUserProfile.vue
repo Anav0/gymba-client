@@ -1,24 +1,24 @@
 <template>
-  <div class="user-profile">
-    <h3 class="user-profile__header">{{$t('user-profile-header')}}</h3>
+  <div class="chat-user-profile">
+    <h3 class="chat-user-profile__header">{{$t('chat-user-profile-header')}}</h3>
 
-    <div class="user-profile__avatar">
+    <div class="chat-user-profile__avatar">
       <avatar alt="user's profile picture" :initials="user.fullname | getInitials" />
       <h4>{{user.fullname}}</h4>
     </div>
-    <div class="user-profile__infos">
-      <span>{{$t('user-profile-joined')}}:</span>
+    <div class="chat-user-profile__infos">
+      <span>{{$t('chat-user-profile-joined')}}:</span>
       <span>{{new Date(user.creationDate).toLocaleDateString(isoLanguage,dateDisplayOption)}}</span>
-      <span>{{$t('user-profile-username')}}:</span>
+      <span>{{$t('chat-user-profile-username')}}:</span>
       <span>{{user.username}}</span>
-      <span>{{$t('user-profile-email')}}:</span>
+      <span>{{$t('chat-user-profile-email')}}:</span>
       <span>{{user.email}}</span>
-      <span v-if="user.bio">{{$t('user-profile-bio')}}:</span>
+      <span v-if="user.bio">{{$t('chat-user-profile-bio')}}:</span>
       <p v-if="user.bio">{{user.desc}}</p>
     </div>
-    <div class="user-profile__icons">
-      <fa-icon class="user-profile__icon" icon="trash" @click="deleteAccount" />
-      <fa-icon class="user-profile__icon" icon="sign-out-alt" @click="logout" />
+    <div class="chat-user-profile__icons">
+      <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
+      <fa-icon class="chat-user-profile__icon" icon="sign-out-alt" @click="logout" />
     </div>
   </div>
 </template>
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-profile {
+.chat-user-profile {
   display: flex;
   position: relative;
   flex-direction: column;
@@ -83,6 +83,11 @@ export default {
   height: 100%;
   color: $user-profile-color;
   padding: 30px 20px;
+
+  @media (min-width: $md) {
+    background: $White;
+    color: $MainFontColor;
+  }
 
   &__icons {
     display: flex;
@@ -110,6 +115,7 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     cursor: auto;
 
     h4 {

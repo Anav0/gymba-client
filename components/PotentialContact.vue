@@ -68,6 +68,10 @@ export default {
   .btn {
     color: $White;
     font-size: $font-size-regular;
+
+    @media (min-width: $sm){
+      color: $MainFontColor;
+    }
   }
 
   .btn,

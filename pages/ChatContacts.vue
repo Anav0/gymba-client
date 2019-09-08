@@ -3,9 +3,9 @@
     <avatar-wrapper
       avatarUrl="https://source.unsplash.com/random/96x96"
       class="chat-contacts__avatar-wrapper"
-      :initials="initials"
+      :initials="fullname | getInitials"
     >
-      <router-link tag="h4" to="/chat/profile">{{name}}</router-link>
+      <router-link tag="h4" :to="`/chat/${activeTab}/profile`">{{name}}</router-link>
     </avatar-wrapper>
     <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
     <contact-card
@@ -33,13 +33,22 @@ export default {
     TabSwitcher,
     ContactCard
   },
+  mounted() {
+    if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
+    else this.switchTabs(0);
+  },
   computed: {
     name() {
       return this.$store.getters["auth/user"].fullname.split(" ")[0];
     },
-    initials() {
-      const split = this.$store.getters["auth/user"].fullname.split(" ");
-      return `${split[0][0]}${split[split.length - 1][0]}`;
+    fullname() {
+      return this.$store.getters["auth/user"].fullname;
+    }
+  },
+  watch: {
+    $route(to, from) {
+      console.log(to.params.tab);
+      if (to.params.tab) this.switchTabs(+to.params.tab);
     }
   },
   data() {
@@ -48,9 +57,9 @@ export default {
       isLoading: true,
       contactCardHeader: "",
       tabs: [
-        { name: this.$i18n.t("chat-tab-contact"), isActive: false },
-        { name: this.$i18n.t("chat-tab-new-friends"), isActive: false },
-        { name: this.$i18n.t("chat-tab-invites"), isActive: false }
+        this.$i18n.t("chat-tab-contact"),
+        this.$i18n.t("chat-tab-new-friends"),
+        this.$i18n.t("chat-tab-invites")
       ],
       friends: [],
       conversations: [],
@@ -100,7 +109,6 @@ export default {
         this.isLoading = false;
       }
     },
-
     async loadInvites() {
       try {
         this.isLoading = true;
@@ -146,14 +154,23 @@ export default {
   width: 100%;
   height: 100%;
   overflow-y: hidden;
-
+  @media (min-width: $md) {
+    padding-top: 20px;
+    min-width: 328px;
+  }
   &__avatar-wrapper {
     cursor: pointer;
     max-width: 100%;
     width: 125px;
     margin: 20px;
+    @media (min-width: $md) {
+      display: none;
+    }
   }
   &__tab-switcher {
+    @media (min-width: $md) {
+      display: none;
+    }
     margin: 30px 0;
   }
   &__contact-card {
