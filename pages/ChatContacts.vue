@@ -11,7 +11,7 @@
     <contact-card
       :viewmodels="friends"
       :conversations="conversations"
-      :suggestedUsers="suggesstions"
+      :suggestedUsers="suggestions"
       :header="contactCardHeader"
       :selectedTab="activeTab"
       @reloadInvitations="loadInvites"
@@ -63,14 +63,14 @@ export default {
       ],
       friends: [],
       conversations: [],
-      suggesstions: []
+      suggestions: []
     };
   },
   methods: {
     clearData() {
       this.friends = [];
       this.conversations = [];
-      this.suggesstions = [];
+      this.suggestions = [];
     },
     loadConversations() {
       try {
@@ -100,7 +100,7 @@ export default {
           });
         });
         response = await api.user.getSuggestedContacts();
-        this.suggesstions = response.data;
+        this.suggestions = response.data;
         response.data.forEach(user => {
           this.friends.push({
             isLoading: false,
