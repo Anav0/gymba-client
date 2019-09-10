@@ -46,7 +46,7 @@ export const router = new Router({
 			component: signUp,
 		},
 		{
-			path: '/chat/:tab?',
+			path: '/chat/:tab',
 			alias: '/messanger',
 			component: chat,
 			meta: {

@@ -7,7 +7,7 @@
       icon="cog"
     />
     <ul class="chat-side-nav__icon-container">
-      <router-link exact v-for="link in navLinks" :key="link.icon" :to="link.route">
+      <router-link v-for="link in navLinks" :key="link.icon" :to="link.route">
         <fa-icon class="chat-side-nav__icon" :icon="link.icon"></fa-icon>
       </router-link>
     </ul>
