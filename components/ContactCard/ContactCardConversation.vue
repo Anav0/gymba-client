@@ -22,17 +22,25 @@ export default {
     };
   },
   mounted() {
-    this.user = this.conversation.participants[1];
+    this.fillUserVM(this.conversation);
   },
   watch: {
     conversation(value) {
-      this.user = value.participants[1];
+      this.fillUserVM(value);
     }
   },
   props: {
     conversation: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    fillUserVM(value) {
+      const currentuser = this.$store.getters["auth/user"];
+      this.user = value.participants.find(
+        participant => participant._id !== currentuser._id
+      );
     }
   }
 };
