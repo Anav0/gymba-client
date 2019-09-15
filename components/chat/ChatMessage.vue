@@ -5,13 +5,13 @@
       :initials="sender.fullname | getInitials"
       :avatarUrl="sender.avatarUrl"
       :text="sender.fullname"
-      v-if="sender"
+      v-if="user._id!==sender._id"
     >
-      <span class="chat-message__send-time">09:00</span>
+      <span class="chat-message__send-time">{{ formatedDate }}</span>
     </avatar-wrapper>
     <div
       class="chat-message__bubble"
-      :class="sender ? 'chat-message__bubble--received' : 'chat-message__bubble--send'"
+      :class="user._id!==sender._id ? 'chat-message__bubble--received' : 'chat-message__bubble--send'"
     >
       <slot></slot>
       <div
@@ -24,6 +24,7 @@
 
 <script>
 import AvatarWrapper from "../Avatars/AvatarWrapper";
+import moment from "moment";
 
 export default {
   components: {
@@ -34,9 +35,21 @@ export default {
       type: Object,
       default: {}
     },
+    sendDate: {
+      type: String,
+      default: ""
+    },
     seenStatus: {
       type: String,
       validator: val => ["send", "seen", "recived"].includes(val)
+    }
+  },
+  computed: {
+    formatedDate() {
+      return moment(this.sendDate).fromNow();
+    },
+    user() {
+      return this.$store.getters["auth/user"];
     }
   }
 };
@@ -44,23 +57,27 @@ export default {
 
 <style lang="scss" scoped>
 .chat-message {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-
+  display: grid;
+  grid-template-columns: 125px auto;
+  width: 100%;
   .avatar-wrapper {
     flex-direction: column;
   }
   &__bubble {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: $White;
     box-shadow: 2px 4px 2px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    padding: 25px;
+    padding: 15px;
     margin-left: 50px;
+    height: auto;
+    grid-column: 2/3;
 
     &--send {
-      background: $AccentColor1;
+      background: $AccentColor2;
     }
     &--received {
     }

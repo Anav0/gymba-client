@@ -58,6 +58,7 @@
       <template v-if="selectedTab===0">
         <contact-card-conversation
           v-for="conversation in filteredConversations"
+          @click.native="showConversation(conversation)"
           :key="`contact-card-conversation-${conversation._id}`"
           :conversation="conversation"
         />
@@ -163,6 +164,13 @@ export default {
       this.searchPhrase = "";
       this.filteredViewModels = this.viewmodels;
       this.filteredConversations = this.conversations;
+    },
+    async showConversation(conversation) {
+      // const { data: fetchedConversation } = await api.conversation.getConversation(
+      //   conversation._id
+      // );
+
+      this.$store.dispatch("conversation/setActiveConversation", conversation);
     },
     showUserProfile(id) {
       this.$router.push({ name: "chatFriend", params: { id } });
