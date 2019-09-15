@@ -20,6 +20,19 @@ export default {
   components: {
     navbar
   },
+  async mounted() {
+    try {
+      const {
+        data: lastConversation
+      } = await api.conversation.getLastConversation();
+      this.$store.dispatch(
+        "conversation/setActiveConversation",
+        lastConversation
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  },
   data() {
     return {
       fillRoutes: ["noPage"]

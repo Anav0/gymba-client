@@ -31,7 +31,6 @@ export default {
   height: 100%;
   @media (max-width: $md) {
     grid-template-columns: 100%;
-
     .chat-side-nav--desktop,
     .conversation--desktop,
     .chat-friend-profile--desktop,
