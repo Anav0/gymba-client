@@ -1,15 +1,19 @@
 <template>
   <potential-contact :user="user" :isLoading="isLoading">
     <div class="contact-card__info">
-      <span class="contact-card__send-date">{{'09:00'}}</span>
-      <div class="contact-card__new-message">{{5}}</div>
+      <span class="contact-card__send-date">{{lastMessageRecivedAt}}</span>
+      <div
+        class="contact-card__new-message"
+        v-if="unreadMessages.length>0"
+      >{{unreadMessages.length}}</div>
     </div>
   </potential-contact>
 </template>
 
 <script>
 import PotentialContact from "../PotentialContact";
-import conversation from "../../api/conversation";
+import api from "../../api";
+import moment from "moment";
 //TODO: make :user binding better
 export default {
   components: {
@@ -18,15 +22,18 @@ export default {
   data() {
     return {
       isLoading: false,
+      unreadMessages: [],
       user: {}
     };
   },
-  mounted() {
+  async mounted() {
     this.fillUserVM(this.conversation);
+    this.fillUnreadMessages();
   },
   watch: {
     conversation(value) {
       this.fillUserVM(value);
+      this.fillUnreadMessages();
     }
   },
   props: {
@@ -35,7 +42,28 @@ export default {
       required: true
     }
   },
+  computed: {
+    lastMessageRecivedAt() {
+      const lastUnreadMessage = this.unreadMessages.pop();
+      if (lastUnreadMessage)
+        return moment(lastUnreadMessage.sendDate).format("HH:mm");
+
+      return "";
+    }
+  },
   methods: {
+    //TODO: this does not returnes proper number of unread messages
+    async fillUnreadMessages() {
+      try {
+        const {
+          data: unreadMessages
+        } = await api.conversation.getUnreadMessages(this.conversation._id);
+        this.unreadMessages = unreadMessages;
+        console.log(this.unreadMessages);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     fillUserVM(value) {
       const currentuser = this.$store.getters["auth/user"];
       this.user = value.participants.find(

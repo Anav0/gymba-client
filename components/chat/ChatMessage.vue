@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     formatedDate() {
-      return moment(this.sendDate).fromNow();
+      return moment(this.sendDate).format("HH:mm");
     },
     user() {
       return this.$store.getters["auth/user"];

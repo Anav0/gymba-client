@@ -18,7 +18,7 @@
       </chat-message>
     </div>
     <div class="conversation__input-box">
-      <input v-model="message" @keyup.enter="sendMessage" placeholder="Type your messsage..." />
+      <input v-model.trim="message" @keyup.enter="sendMessage" placeholder="Type your messsage..." />
       <fa-icon class="conversation__action-icon" icon="smile" />
       <fa-icon class="conversation__action-icon" icon="paperclip" />
       <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
@@ -96,6 +96,8 @@ export default {
       });
     },
     sendMessage() {
+      if (!this.message) return;
+
       this.chat.emit("private message", {
         roomId: this.conversation.roomId,
         userId: this.user._id,
