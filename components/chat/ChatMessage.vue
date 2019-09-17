@@ -46,7 +46,12 @@ export default {
   },
   computed: {
     formatedDate() {
-      return moment(this.sendDate).format("HH:mm");
+      const sendDate = moment(this.sendDate);
+      const today = moment();
+      const diff = today.diff(sendDate, "hours");
+      if (diff < 24) return sendDate.format("HH:mm");
+      else if (diff / 24 < 7) return sendDate.format("dddd HH:mm");
+      else return sendDate.format("HH:mm DD MMM 'YY");
     },
     user() {
       return this.$store.getters["auth/user"];
