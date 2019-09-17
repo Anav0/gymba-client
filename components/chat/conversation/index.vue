@@ -1,5 +1,8 @@
 <template>
   <div class="conversation">
+    <transition v-if="isTyping" name="slide">
+      <div class="conversation__typing-bubble jello-horizontal">{{typer.fullname | getFirstname}}</div>
+    </transition>
     <div class="conversation__upper">
       <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
         <h4 class="conversation__target-name">{{target.fullname}}</h4>
@@ -48,6 +51,8 @@ export default {
       target: {},
       message: "",
       messages: [],
+      isTyping: false,
+      typer: {},
       chat: {}
     };
   },
@@ -67,11 +72,15 @@ export default {
     });
 
     this.chat.on("user join room", message => {});
-    this.chat.on("user is typing", data => {
-      console.log(data);
+
+    this.chat.on("user is typing", user => {
+      console.log(this.typer);
+      this.isTyping = true;
+      this.typer = user;
     });
-    this.chat.on("user stoped typing", data => {
-      console.log(data);
+
+    this.chat.on("user stoped typing", user => {
+      this.isTyping = false;
     });
   },
   watch: {
@@ -104,19 +113,25 @@ export default {
     stopedTyping: debounce(function() {
       console.log("stoped typing");
       this.chat.emit("stoped typing", {
-        user: { fullname: this.user.fullname, _id: this.user._id },
+        user: {
+          fullname: this.user.fullname,
+          _id: this.user._id
+        },
         roomId: this.conversation.roomId
       });
-    }, 1000),
+    }, 500),
     typing: debounce(
       function() {
         console.log("typing...");
         this.chat.emit("is typing", {
-          user: { fullname: this.user.fullname, _id: this.user._id },
+          user: {
+            fullname: this.user.fullname,
+            _id: this.user._id
+          },
           roomId: this.conversation.roomId
         });
       },
-      1000,
+      500,
       true
     ),
     scrollToBottom() {
@@ -158,6 +173,21 @@ export default {
   position: relative;
   overflow: hidden;
 
+  &__typing-bubble {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 90px;
+    right: 50%;
+    width: 60px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: $White;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.25);
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+  }
   &__upper {
     background-color: $White;
     box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.25);
