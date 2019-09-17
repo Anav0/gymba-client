@@ -18,7 +18,13 @@
       </chat-message>
     </div>
     <div class="conversation__input-box">
-      <input v-model.trim="message" @keyup.enter="sendMessage" placeholder="Type your messsage..." />
+      <input
+        v-model.trim="message"
+        @keyup="stopedTyping"
+        @keydown="typing"
+        @keyup.enter="sendMessage"
+        placeholder="Type your messsage..."
+      />
       <fa-icon class="conversation__action-icon" icon="smile" />
       <fa-icon class="conversation__action-icon" icon="paperclip" />
       <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
@@ -31,7 +37,7 @@ import AvatarWrapper from "../../Avatars/AvatarWrapper";
 import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import io from "socket.io-client";
-
+import { debounce } from "debounce";
 export default {
   components: {
     AvatarWrapper,
@@ -61,6 +67,12 @@ export default {
     });
 
     this.chat.on("user join room", message => {});
+    this.chat.on("user is typing", data => {
+      console.log(data);
+    });
+    this.chat.on("user stoped typing", data => {
+      console.log(data);
+    });
   },
   watch: {
     async conversation(conversation) {
@@ -89,6 +101,24 @@ export default {
     }
   },
   methods: {
+    stopedTyping: debounce(function() {
+      console.log("stoped typing");
+      this.chat.emit("stoped typing", {
+        user: { fullname: this.user.fullname, _id: this.user._id },
+        roomId: this.conversation.roomId
+      });
+    }, 1000),
+    typing: debounce(
+      function() {
+        console.log("typing...");
+        this.chat.emit("is typing", {
+          user: { fullname: this.user.fullname, _id: this.user._id },
+          roomId: this.conversation.roomId
+        });
+      },
+      1000,
+      true
+    ),
     scrollToBottom() {
       this.$refs.chatMessages.scroll({
         top: this.$refs.chatMessages.scrollHeight,
