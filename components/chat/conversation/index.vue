@@ -74,7 +74,6 @@ export default {
     this.chat.on("user join room", message => {});
 
     this.chat.on("user is typing", user => {
-      console.log(this.typer);
       this.isTyping = true;
       this.typer = user;
     });
@@ -111,7 +110,6 @@ export default {
   },
   methods: {
     stopedTyping: debounce(function() {
-      console.log("stoped typing");
       this.chat.emit("stoped typing", {
         user: {
           fullname: this.user.fullname,
@@ -122,7 +120,6 @@ export default {
     }, 500),
     typing: debounce(
       function() {
-        console.log("typing...");
         this.chat.emit("is typing", {
           user: {
             fullname: this.user.fullname,

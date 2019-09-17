@@ -59,7 +59,6 @@ export default {
           data: unreadMessages
         } = await api.conversation.getUnreadMessages(this.conversation._id);
         this.unreadMessages = unreadMessages;
-        console.log(this.unreadMessages);
       } catch (error) {
         console.error(error);
       }

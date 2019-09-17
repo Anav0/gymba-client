@@ -47,7 +47,6 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(to.params.tab);
       if (to.params.tab) this.switchTabs(+to.params.tab);
     }
   },
