@@ -166,6 +166,8 @@ export default {
 .conversation {
   width: 100%;
   height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   background-color: $WhiteSmoke;
   position: relative;
   overflow: hidden;
@@ -198,8 +200,6 @@ export default {
     grid-row-gap: 10px;
     grid-auto-rows: auto;
     overflow: auto;
-    margin-bottom: 80px;
-    max-height: 84vh;
     padding: 0 50px;
     .chat-message {
       margin: 10px;
@@ -229,9 +229,6 @@ export default {
     transition: color $transition-duration-quick ease-in-out;
   }
   &__input-box {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr repeat(3, 20px);
