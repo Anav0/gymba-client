@@ -41,6 +41,7 @@ import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import io from "socket.io-client";
 import { debounce } from "debounce";
+
 export default {
   components: {
     AvatarWrapper,
@@ -82,6 +83,15 @@ export default {
       this.isTyping = false;
     });
   },
+
+  computed: {
+    conversation() {
+      return this.$store.getters["conversation/activeConversation"];
+    },
+    user() {
+      return this.$store.getters["auth/user"];
+    }
+  },
   watch: {
     async conversation(conversation) {
       await new Promise(async resolve => {
@@ -98,14 +108,6 @@ export default {
       });
 
       this.scrollToBottom();
-    }
-  },
-  computed: {
-    conversation() {
-      return this.$store.getters["conversation/activeConversation"];
-    },
-    user() {
-      return this.$store.getters["auth/user"];
     }
   },
   methods: {
