@@ -195,7 +195,6 @@ export default {
     align-items: center;
     justify-content: center;
   }
-  //test change
   &__messages {
     display: grid;
     grid-row-gap: 10px;
