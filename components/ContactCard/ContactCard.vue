@@ -166,10 +166,6 @@ export default {
       this.filteredConversations = this.conversations;
     },
     async showConversation(conversation) {
-      // const { data: fetchedConversation } = await api.conversation.getConversation(
-      //   conversation._id
-      // );
-
       this.$store.dispatch("conversation/setActiveConversation", conversation);
     },
     showUserProfile(id) {
