@@ -9,14 +9,16 @@
       <span class="potential-contact__fullname bold ellipsis">{{user.fullname}}</span>
       <p v-if="user.desc" class="potential-contact__desc ellipsis">{{user.desc}}</p>
     </div>
-    <slot v-if="!isLoading" />
-    <spring-spinner
-      class="potential-contact__spinner"
-      v-else
-      :animation-duration="1000"
-      :size="40"
-      color="#fcd87d"
-    />
+    <div class="potential-contact__spinner-wrapper">
+      <slot v-if="!isLoading" />
+      <spring-spinner
+        class="potential-contact__spinner"
+        v-else
+        :animation-duration="1000"
+        :size="40"
+        color="#fcd87d"
+      />
+    </div>
   </div>
 </template>
 
@@ -69,11 +71,16 @@ export default {
     color: $White;
     font-size: $font-size-regular;
 
-    @media (min-width: $sm){
+    @media (min-width: $sm) {
       color: $MainFontColor;
     }
   }
-
+  &__spinner-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+  }
   .btn,
   &__spinner {
     width: 95px;
