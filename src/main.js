@@ -9,7 +9,6 @@ import { i18n } from '../plugins';
 import './registerServiceWorker';
 import store from '../store';
 import '../assets/style/styles.scss';
-import api from "../api";
 import * as filters from '../filters';
 Vue.component('fa-icon', FontAwesomeIcon);
 library.add({ faUser, faSmile, faPaperclip, faPaperPlane, faEnvelopeOpenText, faUserFriends, faCog, faEraser, faTint, faCheckCircle, faHeartBroken, faCheck, faLockOpen, faComment, faCommentAlt, faEnvelope, faKeyboard, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown, faHeart, faCommentSlash, faBan });
@@ -18,18 +17,6 @@ Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
-
-const setAuthUser = async () => {
-  try {
-    const response = await api.user.getAuthUser();
-    if (response.data) {
-      await store.dispatch("auth/login", response.data);
-    }
-  } catch (err) {
-    console.error(err);
-  }
-};
-setAuthUser();
 
 new Vue({
   router,
