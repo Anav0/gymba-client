@@ -9,7 +9,7 @@ import ChatContacts from '../pages/ChatContacts';
 import ChatUserProfile from '../components/chat/ChatUserProfile';
 import ChatFriendProfile from '../components/chat/ChatFriendProfile';
 import store from "../store";
-
+import api from "../api";
 Vue.use(Router);
 
 export const router = new Router({
@@ -73,13 +73,38 @@ export const router = new Router({
 		}
 	],
 });
-router.beforeEach((to, from, next) => {
-	if (
-		to.matched.some(route => route.meta.requiresAuth) &&
-		!store.getters["auth/loginStatus"]
-	) {
-		next('/sign-in');
-	}
-	else
+
+const getLoggedUser = () => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const response = await api.user.getAuthUser();
+			if (response.data) {
+				await store.dispatch("auth/login", response.data);
+			}
+
+			resolve(response.data);
+		} catch (err) {
+			console.error(err);
+			reject(err);
+		}
+	});
+}
+
+router.beforeEach(async (to, from, next) => {
+	try {
+		const user = await getLoggedUser();
+		if (
+			to.matched.some(route => route.meta.requiresAuth) &&
+			!user
+		) {
+			next('/sign-in');
+		}
+		else
+			next();
+	} catch (err) {
+		if (to.matched.some(route => route.meta.requiresAuth))
+			next('/sign-in')
 		next();
+	}
+
 });

@@ -59,14 +59,14 @@ export default {
     }
   },
   watch: {
-    isLoggedIn(isLoggedIn) {
-      if (isLoggedIn)
-        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-    }
+    // isLoggedIn(isLoggedIn) {
+    //   if (isLoggedIn)
+    //     this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+    // }
   },
   mounted() {
-    if (this.isLoggedIn)
-      this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+    // if (this.isLoggedIn)
+    //   this.$router.push({ name: "chatContacts", params: { tab: 0 } });
   },
   methods: {
     async login() {
