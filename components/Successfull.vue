@@ -56,7 +56,9 @@ export default {
         const response = await api.auth.resendVerificationEmail(this.userId);
         consoe.log(response);
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
         this.errors = err.response.data.errors;
       } finally {
         this.isLoading = false;

@@ -41,6 +41,7 @@ import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import io from "socket.io-client";
 import { debounce } from "debounce";
+
 export default {
   components: {
     AvatarWrapper,
@@ -68,7 +69,7 @@ export default {
     });
 
     this.chat.on("failed to send message", async message => {
-      console.error("Failed to send message", message);
+      //display error message
     });
 
     this.chat.on("user join room", message => {});
@@ -81,6 +82,15 @@ export default {
     this.chat.on("user stoped typing", user => {
       this.isTyping = false;
     });
+  },
+
+  computed: {
+    conversation() {
+      return this.$store.getters["conversation/activeConversation"];
+    },
+    user() {
+      return this.$store.getters["auth/user"];
+    }
   },
   watch: {
     async conversation(conversation) {
@@ -98,14 +108,6 @@ export default {
       });
 
       this.scrollToBottom();
-    }
-  },
-  computed: {
-    conversation() {
-      return this.$store.getters["conversation/activeConversation"];
-    },
-    user() {
-      return this.$store.getters["auth/user"];
     }
   },
   methods: {
@@ -195,7 +197,6 @@ export default {
     align-items: center;
     justify-content: center;
   }
-  //test change
   &__messages {
     display: grid;
     grid-row-gap: 10px;

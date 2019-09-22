@@ -148,7 +148,9 @@ export default {
           this.isSuccessfull = true;
         }
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
         const errors = err.response.data.errors;
         for (let error in errors) {
           this.errors.push(errors[error].message);

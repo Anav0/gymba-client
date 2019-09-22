@@ -39,7 +39,9 @@ export default {
         this.$store.dispatch("auth/logout");
         this.$router.push("/sign-in");
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       }
     }
   },

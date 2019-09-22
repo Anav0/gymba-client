@@ -42,7 +42,9 @@ export default {
         const response = await api.invite.postInvitation(this.user._id);
         this.$emit("invitationSend", response.data._id);
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isLoading = false;
       }
@@ -53,7 +55,9 @@ export default {
         await api.invite.rejectInvitation(this.invitationId);
         this.$emit("invitationSend", null);
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isLoading = false;
       }

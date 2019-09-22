@@ -2,6 +2,7 @@ import user from "./user";
 import users from "./users";
 import invite from "./invite";
 import auth from "./auth";
+import opinion from "./opinion";
 import conversation from "./conversation";
 
 export default {
@@ -10,4 +11,5 @@ export default {
     conversation,
     user,
     users,
+    opinion
 };

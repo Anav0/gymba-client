@@ -14,10 +14,25 @@
 <script>
 import ChatSideNav from "../components/chat/ChatSideNav";
 import conversation from "../components/chat/conversation";
+import api from "../api";
+
 export default {
   components: {
     conversation,
     ChatSideNav
+  },
+  async mounted() {
+    try {
+      const {
+        data: lastConversation
+      } = await api.conversation.getLastConversation();
+      this.$store.dispatch(
+        "conversation/setActiveConversation",
+        lastConversation
+      );
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 </script>
