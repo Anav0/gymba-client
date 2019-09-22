@@ -74,7 +74,9 @@ export default {
       await this.fillIsFriend();
       await this.fillInvitationId();
     } catch (err) {
-      console.error(err);
+      this.$toasted.show(err.message, {
+        className: "error-toast"
+      });
     } finally {
       this.isLoading = false;
     }
@@ -127,7 +129,9 @@ export default {
         this.isInvited = false;
         this.invitationId = null;
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isInviting = false;
       }
@@ -139,7 +143,9 @@ export default {
         this.invitationId = response.data._id;
         this.isInvited = true;
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isInviting = false;
       }
@@ -149,7 +155,9 @@ export default {
         this.isInviting = true;
         await api.user.removeFriend(this.user._id);
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isInviting = false;
       }
@@ -161,7 +169,9 @@ export default {
           if (user.friends.includes(this.user._id)) this.isFriend = true;
           resolve();
         } catch (err) {
-          console.error(err);
+          this.$toasted.show(err.message, {
+            className: "error-toast"
+          });
           reject(err);
         }
       });
@@ -186,7 +196,9 @@ export default {
           this.isInvited = false;
           resolve();
         } catch (err) {
-          console.error(err);
+          this.$toasted.show(err.message, {
+            className: "error-toast"
+          });
           reject(err);
         }
       });
@@ -238,7 +250,9 @@ export default {
           this.invitationId = response.data._id;
           resolve();
         } catch (err) {
-          console.error(err);
+          this.$toasted.show(err.message, {
+            className: "error-toast"
+          });
           reject(err);
         }
       });

@@ -9,9 +9,15 @@ import { i18n } from '../plugins';
 import './registerServiceWorker';
 import store from '../store';
 import '../assets/style/styles.scss';
+import Toasted from 'vue-toasted';
 import * as filters from '../filters';
+Vue.use(Toasted, {
+  position: 'bottom-right',
+  duration: 5000
+});
 Vue.component('fa-icon', FontAwesomeIcon);
 library.add({ faUser, faSmile, faPaperclip, faPaperPlane, faEnvelopeOpenText, faUserFriends, faCog, faEraser, faTint, faCheckCircle, faHeartBroken, faCheck, faLockOpen, faComment, faCommentAlt, faEnvelope, faKeyboard, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown, faHeart, faCommentSlash, faBan });
+
 
 Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;

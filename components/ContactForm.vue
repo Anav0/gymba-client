@@ -56,7 +56,9 @@ export default {
         this.message.sender = "";
         this.message.content = "";
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
         //TODO: show snackbar
       } finally {
         this.isLoading = false;

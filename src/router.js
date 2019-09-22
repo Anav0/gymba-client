@@ -84,7 +84,10 @@ const getLoggedUser = () => {
 
 			resolve(response.data);
 		} catch (err) {
-			console.error(err);
+			this.$toasted.show(err.message, {
+
+				className: "error-toast"
+			});
 			reject(err);
 		}
 	});
