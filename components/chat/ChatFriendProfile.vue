@@ -16,11 +16,11 @@
           icon="keyboard"
           :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${numberOfWordsExchanged} ${$i18n.t('chat-friend-profile-exchanged-words')}`"
         />
-        <conversation-stat
+        <!-- <conversation-stat
           icon="heart"
           v-if="isFriend"
           :text="`${$i18n.t('chat-friend-profile-friends-for')} ${friendsFor} ${$i18n.t('chat-friend-profile-days')}`"
-        />
+        />-->
       </div>
       <div class="chat-friend-profile__actions">
         <text-icon

@@ -64,7 +64,7 @@ export const router = new Router({
 					component: ChatUserProfile,
 				},
 				{
-					path: 'friend',
+					path: 'friend/:id',
 					name: 'chatFriend',
 					component: ChatFriendProfile,
 					props: true
