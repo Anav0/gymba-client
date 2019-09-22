@@ -80,6 +80,7 @@ export default {
     align-items: center;
     justify-content: center;
     width: 150px;
+    height: 100%;
   }
   .btn,
   &__spinner {
