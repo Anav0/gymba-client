@@ -64,5 +64,6 @@
     "chat-friend-profile-block": "zablokuj",
     "chat-friend-profile-unblock": "odblokuj",
     "chat-friend-profile-mute": "wycisz",
-    "chat-friend-profile-unmute": "włącz powiadomienia"
+    "chat-friend-profile-unmute": "włącz powiadomienia",
+    "successfull-submit": "Twoja wiadomość została wysłana"
 }

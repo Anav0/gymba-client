@@ -67,5 +67,6 @@
     "chat-friend-profile-exchanged-messages": "messages",
     "chat-friend-profile-exchanged-words": "words",
     "chat-friend-profile-days": "days",
-    "chat-friend-profile-friends-for": "Friends for"
+    "chat-friend-profile-friends-for": "Friends for",
+    "successfull-submit": "Your message was send"
 }

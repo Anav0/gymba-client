@@ -14,7 +14,7 @@
     />
     <div class="contact-form__transitions">
       <transition name="fade" v-if="!isLoading">
-        <button @click="submit" class="btn btn--default">{{$t('contact-form-btn')}}</button>
+        <button class="btn btn--default">{{$t('contact-form-btn')}}</button>
       </transition>
       <transition name="fade" v-else>
         <flower-spinner
@@ -46,20 +46,20 @@ export default {
     };
   },
   methods: {
-    async submit(e) {
-      e.preventDefault();
+    async submit() {
       try {
         this.isLoading = true;
-        //TODO: show snackbar
         if (!this.message.sender || !this.message.content) return;
         await api.opinion.postOpinion(this.message);
         this.message.sender = "";
         this.message.content = "";
+        this.$toasted.show(this.$i18n.t("successfull-submit"), {
+          className: "info-toast"
+        });
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
         });
-        //TODO: show snackbar
       } finally {
         this.isLoading = false;
       }
