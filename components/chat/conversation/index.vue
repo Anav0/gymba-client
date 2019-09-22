@@ -3,7 +3,7 @@
     <transition v-if="isTyping" name="slide">
       <div class="conversation__typing-bubble jello-horizontal">{{typer.fullname | getFirstname}}</div>
     </transition>
-    <div class="conversation__upper">
+    <div class="conversation__upper" @click="showUserProfile(target._id)">
       <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
         <h4 class="conversation__target-name">{{target.fullname}}</h4>
       </avatar-wrapper>
@@ -111,6 +111,9 @@ export default {
     }
   },
   methods: {
+    showUserProfile(id) {
+      this.$router.push({ name: "chatFriend", params: { id } });
+    },
     stopedTyping: debounce(function() {
       this.chat.emit("stoped typing", {
         user: {

@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     inviteStatus() {
-      if (this.isFriend) return { i18n: "friend", icon: "heart-broken" };
+      if (this.isFriend) return { i18n: "unfriend", icon: "heart-broken" };
       if (this.isInvited) return { i18n: "uninvite", icon: "eraser" };
       else return { i18n: "invite", icon: "heart" };
     },
