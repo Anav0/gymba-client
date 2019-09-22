@@ -18,6 +18,13 @@
         v-if="seenStatus"
         :class="`chat-message__seen-indicator chat-message__seen-indicator--${seenStatus}`"
       ></div>
+      <div
+        v-if="seenStatus=='received'"
+        class="chat-message__seen-indicator chat-message__seen-indicator--received"
+      >
+        <img v-if="user.avatarUrl" :src="user.avatarUrl" />
+        <span v-else>{{user.fullname | getInitials}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +48,7 @@ export default {
     },
     seenStatus: {
       type: String,
-      validator: val => ["send", "seen", "recived"].includes(val)
+      validator: val => ["send", "delivered", "received"].includes(val)
     }
   },
   computed: {
@@ -65,6 +72,7 @@ export default {
   display: grid;
   grid-template-columns: 125px auto;
   width: 100%;
+
   .avatar-wrapper {
     flex-direction: column;
   }
@@ -84,8 +92,6 @@ export default {
     &--send {
       background: $AccentColor2;
     }
-    &--received {
-    }
   }
   &__seen-indicator {
     position: absolute;
@@ -96,18 +102,35 @@ export default {
     border-radius: 50%;
     border: 1px solid #f5f5f5;
 
-    &--seen {
-      display: none;
-    }
     &--send {
       background-color: transparent;
       border-color: $MainFontColorLight;
     }
-    &--recived {
+    &--delivered {
       background-color: $LightGray;
+      border-color: $WhiteSmoke;
+    }
+    &--received {
+      background-color: $AccentColor2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      span {
+        font-size: 8px !important;
+      }
     }
   }
   &__sender-avatar {
+    .avatar .avatar-wrapper__avatar {
+      width: 36px !important;
+      height: 36px !important;
+    }
   }
 
   &__send-time {

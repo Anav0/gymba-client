@@ -1,9 +1,12 @@
 <template>
   <div class="chat-user-profile">
     <h3 class="chat-user-profile__header">{{$t('chat-user-profile-header')}}</h3>
-
     <div class="chat-user-profile__avatar">
-      <avatar alt="user's profile picture" :initials="user.fullname | getInitials" />
+      <avatar
+        alt="user's profile picture"
+        :avatarUrl="user.avatarUrl"
+        :initials="user.fullname | getInitials"
+      />
       <h4>{{user.fullname}}</h4>
     </div>
     <div class="chat-user-profile__infos">

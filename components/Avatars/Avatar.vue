@@ -47,6 +47,8 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: $AccentColor2;
+  width: 48px;
+  height: 48px;
 
   &__initials {
     font-size: inherit;
@@ -55,6 +57,7 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   &__image:empty {
