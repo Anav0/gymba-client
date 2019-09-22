@@ -222,6 +222,7 @@ export default {
   }
   &__target-name {
     margin-left: 10px;
+    cursor: pointer;
   }
   &__action-icon:hover {
     color: $AccentColor2;

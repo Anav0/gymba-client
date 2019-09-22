@@ -49,6 +49,7 @@ export default {
   justify-content: flex-start;
   width: 100%;
   height: 48px;
+  cursor: pointer;
 
   &__avatar {
     min-width: 48px;

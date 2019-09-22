@@ -12,10 +12,10 @@
           icon="envelope"
           :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${exchangedMessages.length} ${$i18n.t('chat-friend-profile-exchanged-messages')}`"
         />
-        <conversation-stat
+        <!-- <conversation-stat
           icon="keyboard"
           :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${numberOfWordsExchanged} ${$i18n.t('chat-friend-profile-exchanged-words')}`"
-        />
+        />-->
         <!-- <conversation-stat
           icon="heart"
           v-if="isFriend"
