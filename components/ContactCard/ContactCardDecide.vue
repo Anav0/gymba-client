@@ -37,7 +37,9 @@ export default {
         await api.invite.rejectInvitation(this.invitationId);
         this.$emit("reloadInvitations");
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isLoading = false;
       }
@@ -48,7 +50,9 @@ export default {
         await api.invite.acceptInvitation(this.invitationId);
         this.$emit("reloadInvitations");
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isLoading = false;
       }

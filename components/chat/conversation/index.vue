@@ -69,7 +69,7 @@ export default {
     });
 
     this.chat.on("failed to send message", async message => {
-      console.error("Failed to send message", message);
+      //display error message
     });
 
     this.chat.on("user join room", message => {});

@@ -103,7 +103,9 @@ export default {
           });
         });
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isLoading = false;
       }
@@ -121,7 +123,9 @@ export default {
           });
         });
       } catch (err) {
-        console.error(err);
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
       } finally {
         this.isLoading = false;
       }
