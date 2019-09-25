@@ -11,6 +11,7 @@ import store from '../store';
 import '../assets/style/styles.scss';
 import Toasted from 'vue-toasted';
 import * as filters from '../filters';
+
 Vue.use(Toasted, {
   position: 'bottom-right',
   duration: 5000

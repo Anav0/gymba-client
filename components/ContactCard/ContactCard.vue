@@ -4,19 +4,21 @@
       <h4 class="contact-card__header">{{header}}</h4>
       <div class="contact-card__toolbar">
         <div class="contact-card__select-wrapper">
+          <!-- TODO: Add i18n -->
           <fa-icon
             class="contact-card__icon"
             icon="sort-amount-up-alt"
             @click="isFiltering=!isFiltering"
           ></fa-icon>
-          <transition v-if="isFiltering" name="fade">
-            <g-select
-              :options="[{name: 'Name', data: 'fullname'},{name: 'Bio', data: 'desc'}]"
-              icon="angle-down"
-              placeholder="Filter by..."
-              @selectionChanged="sort"
-            />
-          </transition>
+          <g-select
+            v-if="isFiltering"
+            :options="sortingOptions"
+            :selectedOptionIndex.sync="selectedSortingOptionIndex"
+            icon="angle-down"
+            placeholder="Filter by..."
+            @clickOutside="isFiltering=!isFiltering"
+            @selectionChanged="sort"
+          />
         </div>
 
         <fa-icon
@@ -140,6 +142,11 @@ export default {
   data() {
     return {
       searchPhrase: "",
+      selectedSortingOptionIndex: 0,
+      sortingOptions: [
+        { name: "Name", data: "fullname" },
+        { name: "Bio", data: "desc" }
+      ],
       isSearching: false,
       isFiltering: false,
       filteredViewModels: [],

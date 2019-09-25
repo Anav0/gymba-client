@@ -1,7 +1,7 @@
 <template>
-  <div class="g-select">
+  <div class="g-select" v-on-clickaway="close">
     <div @click="isExpanded = !isExpanded" class="g-select__selection card">
-      <span>{{selected.name}}</span>
+      <span>{{options[selectedOptionIndex].name}}</span>
       <fa-icon class="g-select__caret" :icon="icon" />
     </div>
     <transition v-if="isExpanded" name="fade">
@@ -10,8 +10,8 @@
           <li
             class="g-select__option"
             v-for="(option,i) in options"
-            @click="selectItem(i)"
             :key="option.name+option.data"
+            @click="selectItem(i)"
           >{{option.name}}</li>
         </ul>
       </div>
@@ -20,24 +20,30 @@
 </template>
 
 <script>
+import { mixin as clickaway } from "vue-clickaway";
+
 export default {
-  mounted() {
-    this.selected.name = this.placeholder;
-  },
+  mixins: [clickaway],
   methods: {
+    close() {
+      this.$emit("clickOutside");
+    },
     selectItem(i) {
-      this.selected = this.options[i];
-      this.$emit("selectionChanged", this.selected);
+      this.$emit("update:selectedOptionIndex", i);
+      this.$emit("selectionChanged", this.options[i]);
       this.isExpanded = false;
     }
   },
   data() {
     return {
-      isExpanded: false,
-      selected: {}
+      isExpanded: false
     };
   },
   props: {
+    selectedOptionIndex: {
+      type: Number,
+      default: 0
+    },
     icon: {
       type: String,
       default: "caret-down"

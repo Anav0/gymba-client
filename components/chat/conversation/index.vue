@@ -1,36 +1,42 @@
 <template>
   <div class="conversation">
-    <transition v-if="isTyping" name="slide">
-      <div class="conversation__typing-bubble jello-horizontal">{{typer.fullname | getFirstname}}</div>
-    </transition>
-    <div class="conversation__upper" @click="showUserProfile(target._id)">
-      <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
-        <h4 class="conversation__target-name">{{target.fullname}}</h4>
-      </avatar-wrapper>
+    <div class="conversation__placeholder" v-if="!conversation._id">
+      <fa-icon class="conversation__placeholder-icon" icon="comment-alt"></fa-icon>
+      <h3>No conversation selected</h3>
     </div>
-    <div ref="chatMessages" class="conversation__messages">
-      <chat-message
-        v-for="message in messages"
-        :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
-        :sender="message.sender"
-        :seenStatus="message.status"
-        :sendDate="message.sendDate"
-        :key="message._id"
-      >
-        <p>{{message.content}}</p>
-      </chat-message>
-    </div>
-    <div class="conversation__input-box">
-      <input
-        v-model.trim="message"
-        @keyup="stopedTyping"
-        @keydown="typing"
-        @keyup.enter="sendMessage"
-        placeholder="Type your messsage..."
-      />
-      <fa-icon class="conversation__action-icon" icon="smile" />
-      <fa-icon class="conversation__action-icon" icon="paperclip" />
-      <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+    <div v-else class="conversation__content">
+      <transition v-if="isTyping" name="slide">
+        <div class="conversation__typing-bubble jello-horizontal">{{typer.fullname | getFirstname}}</div>
+      </transition>
+      <div class="conversation__upper" @click="showUserProfile(target._id)">
+        <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
+          <h4 class="conversation__target-name">{{target.fullname}}</h4>
+        </avatar-wrapper>
+      </div>
+      <div ref="chatMessages" class="conversation__messages">
+        <chat-message
+          v-for="message in messages"
+          :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
+          :sender="message.sender"
+          :seenStatus="message.status"
+          :sendDate="message.sendDate"
+          :key="message._id"
+        >
+          <p>{{message.content}}</p>
+        </chat-message>
+      </div>
+      <div class="conversation__input-box">
+        <input
+          v-model.trim="message"
+          @keyup="stopedTyping"
+          @keydown="typing"
+          @keyup.enter="sendMessage"
+          placeholder="Type your messsage..."
+        />
+        <fa-icon class="conversation__action-icon" icon="smile" />
+        <fa-icon class="conversation__action-icon" icon="paperclip" />
+        <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+      </div>
     </div>
   </div>
 </template>
@@ -169,14 +175,30 @@ export default {
 
 <style lang="scss" scoped>
 .conversation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  background-color: $WhiteSmoke;
-  position: relative;
-  overflow: hidden;
-
+  overflow: auto;
+  &__content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: $WhiteSmoke;
+    position: relative;
+    overflow: hidden;
+  }
+  &__placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &__placeholder-icon {
+    font-size: $icon-size-extra-large;
+    margin-right: 20px;
+  }
   &__typing-bubble {
     display: flex;
     align-items: center;
