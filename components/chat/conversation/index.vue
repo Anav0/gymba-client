@@ -25,17 +25,19 @@
           <p>{{message.content}}</p>
         </chat-message>
       </div>
-      <div class="conversation__input-box">
-        <input
-          v-model.trim="message"
-          @keyup="stopedTyping"
-          @keydown="typing"
-          @keyup.enter="sendMessage"
-          placeholder="Type your messsage..."
-        />
-        <fa-icon class="conversation__action-icon" icon="smile" />
-        <fa-icon class="conversation__action-icon" icon="paperclip" />
-        <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+      <div @click="showInfo">
+        <div class="conversation__input-box" :class="{'disabled': !isFriend}">
+          <input
+            v-model.trim="message"
+            @keyup="stopedTyping"
+            @keydown="typing"
+            @keyup.enter="sendMessage"
+            placeholder="Type your messsage..."
+          />
+          <fa-icon class="conversation__action-icon" icon="smile" />
+          <fa-icon class="conversation__action-icon" icon="paperclip" />
+          <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+        </div>
       </div>
     </div>
   </div>
@@ -91,6 +93,9 @@ export default {
   },
 
   computed: {
+    isFriend() {
+      return this.user.friends.includes(this.target._id);
+    },
     conversation() {
       return this.$store.getters["conversation/activeConversation"];
     },
@@ -117,6 +122,18 @@ export default {
     }
   },
   methods: {
+    showInfo() {
+      if (this.isFriend) return;
+
+      this.$toasted.show(
+        `To talk to ${
+          this.target.fullname.split(" ")[0]
+        }, thay need to be your friend`,
+        {
+          className: "info-toast"
+        }
+      );
+    },
     showUserProfile(id) {
       this.$router.push({ name: "chatFriend", params: { id } });
     },
@@ -226,6 +243,7 @@ export default {
     display: grid;
     grid-row-gap: 10px;
     grid-auto-rows: auto;
+    grid-template-rows: repeat(20, auto);
     overflow: auto;
     padding: 0 50px;
     .chat-message {

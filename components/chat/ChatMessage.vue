@@ -88,7 +88,6 @@ export default {
     margin-left: 50px;
     height: auto;
     grid-column: 2/3;
-
     &--send {
       background: $AccentColor2;
     }

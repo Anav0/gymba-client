@@ -52,7 +52,7 @@ export default {
     }
   },
   methods: {
-    //TODO: this does not returnes proper number of unread messages
+    //TODO: this does not returns proper number of unread messages
     async fillUnreadMessages() {
       try {
         const {
