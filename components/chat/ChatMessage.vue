@@ -1,16 +1,16 @@
 <template>
   <div class="chat-message">
-    <avatar-wrapper
+    <avatar
       class="chat-message__sender-avatar"
-      :initials="sender.fullname | getInitials"
+      alt="message sender profile picture"
       :avatarUrl="sender.avatarUrl"
-      :text="sender.fullname"
+      :initials="sender.fullname | getInitials"
       v-if="user._id!==sender._id"
-    >
-      <span class="chat-message__send-time">{{ formatedDate }}</span>
-    </avatar-wrapper>
+    />
+    <!-- <img :src="sender.avatarUrl" class="chat-message__sender-avatar" /> -->
     <div
       class="chat-message__bubble"
+      @click="isSendDateVisible=!isSendDateVisible"
       :class="user._id!==sender._id ? 'chat-message__bubble--received' : 'chat-message__bubble--send'"
     >
       <slot></slot>
@@ -26,16 +26,27 @@
         <span v-else>{{user.fullname | getInitials}}</span>
       </div>
     </div>
+    <transition name="fade" v-if="isSendDateVisible">
+      <span
+        class="chat-message__send-time"
+        :class="user._id!==sender._id ? 'chat-message__send-time' : 'chat-message__send-time--send'"
+      >{{ formatedDate }}</span>
+    </transition>
   </div>
 </template>
 
 <script>
-import AvatarWrapper from "../Avatars/AvatarWrapper";
+import Avatar from "../Avatars/Avatar";
 import moment from "moment";
 
 export default {
   components: {
-    AvatarWrapper
+    Avatar
+  },
+  data() {
+    return {
+      isSendDateVisible: false
+    };
   },
   props: {
     sender: {
@@ -67,10 +78,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .chat-message {
   display: grid;
-  grid-template-columns: 125px auto;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr auto;
   width: 100%;
 
   .avatar-wrapper {
@@ -85,11 +97,14 @@ export default {
     box-shadow: 2px 4px 2px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     padding: 15px;
-    margin-left: 50px;
     height: auto;
+    place-self: start;
     grid-column: 2/3;
+    grid-row: 1/2;
+
     &--send {
       background: $AccentColor2;
+      place-self: end;
     }
   }
   &__seen-indicator {
@@ -126,14 +141,31 @@ export default {
     }
   }
   &__sender-avatar {
-    .avatar .avatar-wrapper__avatar {
-      width: 36px !important;
-      height: 36px !important;
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 10px;
+    grid-column: 1/2;
+    grid-row: 1/2;
+    place-self: end center;
+    margin-right: 10px;
+
+    @media (min-width: $lg) {
+      width: 35px !important;
+      height: 35px !important;
+      font-size: 14px;
+      margin-right: 15px;
     }
   }
 
   &__send-time {
     margin-top: 10px;
+    margin-left: 5px;
+    grid-column: 2/3;
+    grid-row: 2/3;
+    place-self: start;
+    &--send {
+      place-self: end;
+    }
   }
 }
 </style>

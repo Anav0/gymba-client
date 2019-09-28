@@ -58,16 +58,6 @@ export default {
       return this.$store.getters["auth/loginStatus"];
     }
   },
-  watch: {
-    // isLoggedIn(isLoggedIn) {
-    //   if (isLoggedIn)
-    //     this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-    // }
-  },
-  mounted() {
-    // if (this.isLoggedIn)
-    //   this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-  },
   methods: {
     async login() {
       this.errors = [];
@@ -80,8 +70,14 @@ export default {
         const response = await api.auth.login(this.credentials);
         this.$store.dispatch("auth/login", response.data.user);
 
+        if (window.innerWidth < 400)
+          return this.$router.push({
+            name: "chatContactsMobile",
+            params: { tab: 0 }
+          });
         this.$router.push({ name: "chatContacts", params: { tab: 0 } });
       } catch (err) {
+        if (!err.response.data.errors) throw err;
         this.errors = err.response.data.errors;
       } finally {
         this.isLoading = false;

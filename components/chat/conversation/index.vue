@@ -90,6 +90,8 @@ export default {
     this.chat.on("user stoped typing", user => {
       this.isTyping = false;
     });
+
+    await this.init();
   },
 
   computed: {
@@ -105,23 +107,27 @@ export default {
   },
   watch: {
     async conversation(conversation) {
+      await this.init();
+    }
+  },
+  methods: {
+    async init() {
       await new Promise(async resolve => {
         this.fillTarget();
         this.chat.emit("join", {
-          roomId: conversation.roomId,
+          roomId: this.conversation.roomId,
           username: this.user.fullname
         });
         const {
           data: messages
-        } = await api.conversation.getConversationMessages(conversation._id);
+        } = await api.conversation.getConversationMessages(
+          this.conversation._id
+        );
         this.messages = messages;
         resolve();
       });
-
       this.scrollToBottom();
-    }
-  },
-  methods: {
+    },
     showInfo() {
       if (this.isFriend) return;
 
@@ -135,6 +141,9 @@ export default {
       );
     },
     showUserProfile(id) {
+      if (window.innerWidth < 400)
+        return this.$router.push({ name: "chatFriendMobile", params: { id } });
+
       this.$router.push({ name: "chatFriend", params: { id } });
     },
     stopedTyping: debounce(function() {

@@ -172,10 +172,15 @@ export default {
       this.filteredViewModels = this.viewmodels;
       this.filteredConversations = this.conversations;
     },
-    async showConversation(conversation) {
+    showConversation(conversation) {
       this.$store.dispatch("conversation/setActiveConversation", conversation);
+
+      if (window.innerWidth < 400)
+        this.$router.push({ name: "chatConversationMobile" });
     },
     showUserProfile(id) {
+      if (window.innerWidth < 400)
+        return this.$router.push({ name: "chatFriendMobile", params: { id } });
       this.$router.push({ name: "chatFriend", params: { id } });
     },
     sort(selected) {

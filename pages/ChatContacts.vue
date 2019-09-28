@@ -1,11 +1,12 @@
 <template>
   <div class="chat-contacts">
     <avatar-wrapper
+      @click.native="goToUserProfile"
       avatarUrl="https://source.unsplash.com/random/96x96"
       class="chat-contacts__avatar-wrapper"
       :initials="fullname | getInitials"
     >
-      <router-link tag="h4" :to="`/chat/${activeTab}/profile`">{{name}}</router-link>
+      <h4>{{name}}</h4>
     </avatar-wrapper>
     <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
     <contact-card
@@ -66,6 +67,13 @@ export default {
     };
   },
   methods: {
+    goToUserProfile() {
+      console.log(window.innerWidth);
+      if (window.innerWidth < 480)
+        return this.$router.push({ name: "chatProfileMobile" });
+
+      return this.$router.push({ name: "chatProfile" });
+    },
     clearData() {
       this.friends = [];
       this.conversations = [];

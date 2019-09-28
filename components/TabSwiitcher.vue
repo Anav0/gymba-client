@@ -4,7 +4,7 @@
       class="btn btn--raw capitalize"
       v-for="(tab,i) in tabs"
       :key="tab"
-      :to="`/chat/${i}`"
+      :to="`/${ windowWidth < 400 ? 'chat-mobile' : 'chat'}/${i}`"
     >{{tab}}</router-link>
   </ul>
 </template>
@@ -15,6 +15,11 @@ export default {
     tabs: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    windowWidth() {
+      return window.innerWidth;
     }
   }
 };

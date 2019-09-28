@@ -115,15 +115,24 @@ export default {
   },
   watch: {
     isLoggedIn(isLoggedIn) {
-      if (isLoggedIn)
-        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+      this.redirect(isLoggedIn);
     }
   },
   mounted() {
-    if (this.isLoggedIn)
-      this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+    this.redirect(this.isLoggedIn);
   },
   methods: {
+    redirect(isLoggedIn) {
+      if (isLoggedIn) {
+        if (window.innerWidth < 400)
+          return this.$router.push({
+            name: "chatContactsMobile",
+            params: { tab: 0 }
+          });
+        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+      }
+    },
+
     async submit() {
       try {
         this.isLoading = true;
@@ -148,10 +157,8 @@ export default {
           this.isSuccessfull = true;
         }
       } catch (err) {
-        this.$toasted.show(err.message, {
-          className: "error-toast"
-        });
         const errors = err.response.data.errors;
+        if (!errors) throw err;
         for (let error in errors) {
           this.errors.push(errors[error].message);
         }

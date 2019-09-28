@@ -8,6 +8,7 @@ import chat from '../pages/chat';
 import ChatContacts from '../pages/ChatContacts';
 import ChatUserProfile from '../components/chat/ChatUserProfile';
 import ChatFriendProfile from '../components/chat/ChatFriendProfile';
+import conversation from '../components/chat/conversation';
 import store from "../store";
 import api from "../api";
 Vue.use(Router);
@@ -48,7 +49,10 @@ export const router = new Router({
 		{
 			path: '/chat/:tab',
 			alias: '/messanger',
-			component: chat,
+			components: {
+				default: chat,
+				conversation: conversation
+			},
 			meta: {
 				requiresAuth: true,
 			},
@@ -56,16 +60,59 @@ export const router = new Router({
 				{
 					path: '',
 					name: "chatContacts",
-					component: ChatContacts,
+					components: {
+						default: ChatContacts,
+						conversation: conversation
+					},
 				},
 				{
 					path: 'profile',
 					name: 'chatProfile',
-					component: ChatUserProfile,
+					components: {
+						default: ChatUserProfile,
+						conversation: conversation
+					},
+
 				},
 				{
 					path: 'friend/:id',
 					name: 'chatFriend',
+					components: {
+						default: ChatFriendProfile,
+						conversation: conversation
+					},
+
+					props: true
+				},
+			]
+		},
+		{
+			path: '/chat-mobile/:tab',
+			alias: '/messanger-mobile',
+			component: chat,
+			meta: {
+				requiresAuth: true,
+			},
+			children: [
+				{
+					path: '',
+					name: "chatContactsMobile",
+					component: ChatContacts,
+				},
+				{
+					path: 'talk',
+					name: "chatConversationMobile",
+					component: conversation,
+				},
+				{
+					path: 'profile',
+					name: 'chatProfileMobile',
+					component: ChatUserProfile
+
+				},
+				{
+					path: 'friend/:id',
+					name: 'chatFriendMobile',
 					component: ChatFriendProfile,
 					props: true
 				},
@@ -81,7 +128,6 @@ const getLoggedUser = () => {
 			if (response.data) {
 				await store.dispatch("auth/login", response.data);
 			}
-
 			resolve(response.data);
 		} catch (err) {
 			reject(err);
