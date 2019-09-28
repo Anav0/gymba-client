@@ -134,18 +134,20 @@ const getLoggedUser = () => {
 		}
 	});
 }
-
 router.beforeEach(async (to, from, next) => {
 	try {
-		const user = await getLoggedUser();
-		if (
-			to.matched.some(route => route.meta.requiresAuth) &&
-			!user
-		) {
-			next('/sign-in');
+		if (to.matched.some(route => route.meta.requiresAuth)) {
+			let user = store.getters['auth/user'];
+			if (!user._id) user = await getLoggedUser();
+			if (!user._id)
+				next('/sign-in');
+			else
+				next();
 		}
-		else
+		else {
 			next();
+		}
+
 	} catch (err) {
 		if (to.matched.some(route => route.meta.requiresAuth))
 			next('/sign-in')

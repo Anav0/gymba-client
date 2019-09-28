@@ -14,15 +14,34 @@
 </template>
 <script>
 import navbar from "../components/NavBar";
+import api from "../api";
 
 export default {
   components: {
     navbar
   },
+  async mounted() {
+    await this.getLoggedUser();
+  },
   data() {
     return {
       fillRoutes: ["noPage"]
     };
+  },
+  methods: {
+    getLoggedUser() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const response = await api.user.getAuthUser();
+          if (response.data) {
+            await this.$store.dispatch("auth/login", response.data);
+          }
+          resolve(response.data);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
   },
   computed: {
     isChat() {
