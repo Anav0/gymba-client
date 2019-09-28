@@ -68,5 +68,6 @@
     "chat-friend-profile-exchanged-words": "words",
     "chat-friend-profile-days": "days",
     "chat-friend-profile-friends-for": "Friends for",
-    "successfull-submit": "Your message was send"
+    "successfull-submit": "Your message was send",
+    "unavilable-function": "This functionality is not yet ready"
 }

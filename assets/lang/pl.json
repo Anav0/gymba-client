@@ -65,5 +65,6 @@
     "chat-friend-profile-unblock": "odblokuj",
     "chat-friend-profile-mute": "wycisz",
     "chat-friend-profile-unmute": "włącz powiadomienia",
-    "successfull-submit": "Twoja wiadomość została wysłana"
+    "successfull-submit": "Twoja wiadomość została wysłana",
+    "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona"
 }

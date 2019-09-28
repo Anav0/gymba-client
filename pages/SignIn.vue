@@ -28,7 +28,7 @@
               class="btn btn--default capitalize"
               @click.stop.prevent="login"
             >{{$t('sign-in')}}</button>
-            <button class="btn btn--raw">{{$t('sign-in-forget')}}</button>
+            <button @click="resetPassword" class="btn btn--raw">{{$t('sign-in-forget')}}</button>
           </div>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
         </form>
@@ -59,6 +59,11 @@ export default {
     }
   },
   methods: {
+    async resetPassword() {
+      this.$toasted.show(this.$i18n.t("unavilable-function"), {
+        className: "info-toast"
+      });
+    },
     async login() {
       this.errors = [];
 
