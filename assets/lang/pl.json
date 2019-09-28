@@ -66,5 +66,7 @@
     "chat-friend-profile-mute": "wycisz",
     "chat-friend-profile-unmute": "włącz powiadomienia",
     "successfull-submit": "Twoja wiadomość została wysłana",
-    "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona"
+    "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona",
+    "to-talk-to": "Aby porozmawiać z",
+    "they-need-to": "on/ona musi być twoim znajomym"
 }

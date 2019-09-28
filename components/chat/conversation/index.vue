@@ -32,7 +32,7 @@
             @keyup="stopedTyping"
             @keydown="typing"
             @keyup.enter="sendMessage"
-            placeholder="Type your messsage..."
+            placeholder="Type your message..."
           />
           <fa-icon class="conversation__action-icon" icon="smile" />
           <fa-icon class="conversation__action-icon" icon="paperclip" />
@@ -132,9 +132,9 @@ export default {
       if (this.isFriend) return;
 
       this.$toasted.show(
-        `To talk to ${
+        `${this.$i18n.t("to-talk-to")} ${
           this.target.fullname.split(" ")[0]
-        }, thay need to be your friend`,
+        }, ${this.$i18n.t("they-need-to")}`,
         {
           className: "info-toast"
         }

@@ -11,13 +11,22 @@
     </div>
     <div class="chat-user-profile__infos">
       <span>{{$t('chat-user-profile-joined')}}:</span>
-      <span>{{new Date(user.creationDate).toLocaleDateString(isoLanguage,dateDisplayOption)}}</span>
+      <span>{{formattedCreationDate}}</span>
       <span>{{$t('chat-user-profile-username')}}:</span>
       <span>{{user.username}}</span>
       <span>{{$t('chat-user-profile-email')}}:</span>
       <span>{{user.email}}</span>
       <span v-if="user.bio">{{$t('chat-user-profile-bio')}}:</span>
       <p v-if="user.bio">{{user.desc}}</p>
+    </div>
+    <div>
+      <img
+      v-for="locale in locales"
+      :key="locale.code"
+      class="chat-user-profile__flag"
+      @click="switchLang(locale)"
+      :src="require(`../../assets/icons/${locale.code}.svg`)"
+      />
     </div>
     <div class="chat-user-profile__icons">
       <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
@@ -29,6 +38,7 @@
 <script>
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
+import moment from "moment";
 
 export default {
   components: {
@@ -36,6 +46,10 @@ export default {
   },
   data() {
     return {
+      locales:[
+        {code: 'pl',iso:'pl-PL',name: 'Polski'},
+        {code: 'en',iso:'en-US',name: 'English'}
+      ],
       dateDisplayOption: {
         weekday: "long",
         year: "numeric",
@@ -45,6 +59,9 @@ export default {
     };
   },
   computed: {
+    formattedCreationDate(){
+      return moment(this.user.creationDate).format("DD MMMM YYYY")
+    },
     user() {
       return this.$store.getters["auth/user"];
     },
@@ -54,6 +71,10 @@ export default {
     }
   },
   methods: {
+    switchLang(locale) {
+      this.$root.$i18n.locale = locale.code;
+      localStorage.locale = JSON.stringify(locale);
+    },
     async logout() {
       try {
         await api.auth.logout();
@@ -95,7 +116,16 @@ export default {
     background: $White;
     color: $MainFontColor;
   }
-
+  &__flag:hover {
+    transform: scale(1.1);
+  }
+  &__flag {
+    width: 96px;
+    height: 96px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
   &__icons {
     display: flex;
     position: absolute;
