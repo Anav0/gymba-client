@@ -5,15 +5,18 @@
       <h3>No conversation selected</h3>
     </div>
     <div v-else class="conversation__content">
-      <transition v-if="isTyping" name="slide">
-        <div class="conversation__typing-bubble jello-horizontal">{{typer.fullname | getFirstname}}</div>
+      <transition name="slide">
+        <div
+          v-if="isTyping"
+          class="conversation__typing-bubble jello-horizontal"
+        >{{typer.fullname | getFirstname}}</div>
       </transition>
       <div class="conversation__upper" @click="showUserProfile(target._id)">
         <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
           <h4 class="conversation__target-name">{{target.fullname}}</h4>
         </avatar-wrapper>
       </div>
-      <div ref="chatMessages" class="conversation__messages">
+      <div ref="chatMessages" :class="{'dimmed': isLoading}" class="conversation__messages">
         <chat-message
           v-for="message in messages"
           :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
@@ -25,6 +28,13 @@
           <p>{{message.content}}</p>
         </chat-message>
       </div>
+      <spring-spinner
+        class="center conversation__spinner"
+        v-if="isLoading"
+        :animation-duration="1000"
+        :size="64"
+        color="#fcd87d"
+      />
       <div @click="showInfo">
         <div class="conversation__input-box" :class="{'disabled': !isFriend}">
           <input
@@ -34,7 +44,11 @@
             @keyup.enter="sendMessage"
             placeholder="Type your message..."
           />
-          <fa-icon class="conversation__action-icon" icon="smile" />
+          <fa-icon
+            class="conversation__action-icon"
+            @click="isEmojiPickerVisible=!isEmojiPickerVisible"
+            icon="smile"
+          />
           <fa-icon class="conversation__action-icon" icon="paperclip" />
           <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
         </div>
@@ -49,17 +63,20 @@ import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import io from "socket.io-client";
 import { debounce } from "debounce";
+import { SpringSpinner } from "epic-spinners";
 
 export default {
   components: {
     AvatarWrapper,
-    ChatMessage
+    ChatMessage,
+    SpringSpinner
   },
   data() {
     return {
       target: {},
       message: "",
       messages: [],
+      isLoading: true,
       isTyping: false,
       typer: {},
       chat: {}
@@ -111,8 +128,12 @@ export default {
     }
   },
   methods: {
+    emojiSelected(emoji) {
+      console.log(emoji);
+    },
     async init() {
       await new Promise(async resolve => {
+        this.isLoading = true;
         this.fillTarget();
         this.chat.emit("join", {
           roomId: this.conversation.roomId,
@@ -124,6 +145,7 @@ export default {
           this.conversation._id
         );
         this.messages = messages;
+        this.isLoading = false;
         resolve();
       });
       this.scrollToBottom();
@@ -207,6 +229,9 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
+  &__spinner {
+    z-index: 2;
+  }
   &__content {
     width: 100%;
     height: 100%;
@@ -293,7 +318,7 @@ export default {
     background-color: $White;
     box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.25);
     min-height: 70px;
-
+    z-index: 2;
     input {
       border: none;
       height: 100%;

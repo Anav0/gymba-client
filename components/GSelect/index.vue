@@ -4,8 +4,8 @@
       <span>{{options[selectedOptionIndex].name}}</span>
       <fa-icon class="g-select__caret" :icon="icon" />
     </div>
-    <transition v-if="isExpanded" name="fade">
-      <div class="g-select__options card">
+    <transition name="fade">
+      <div v-if="isExpanded" class="g-select__options card">
         <ul>
           <li
             class="g-select__option"

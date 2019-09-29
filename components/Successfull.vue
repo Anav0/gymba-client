@@ -9,8 +9,8 @@
       <li v-for="error in errors" :key="error">{{error}}</li>
     </ul>
     <div class="successfull__transitions">
-      <transition name="fade" v-if="!isLoading">
-        <div class="successfull__buttons">
+      <transition name="fade">
+        <div v-if="!isLoading" class="successfull__buttons">
           <router-link
             tag="button"
             to="sign-in"
@@ -22,8 +22,8 @@
           >{{$t('successfull-resend')}}</button>
         </div>
       </transition>
-      <transition name="fade" v-else>
-        <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" />
+      <transition name="fade">
+        <flower-spinner v-if="isLoading" :animation-duration="1500" :size="60" color="#fa8072" />
       </transition>
     </div>
   </div>

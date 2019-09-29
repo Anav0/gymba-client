@@ -1,8 +1,8 @@
 `<template>
   <div class="sign-up landing-page-section">
     <div class="card">
-      <transition v-if="!isSuccessfull" name="slide">
-        <form class="sign-up__form">
+      <transition name="slide">
+        <form v-if="!isSuccessfull" class="sign-up__form">
           <h1 class="sign-up__title capitalize">{{$t('sign-up')}}</h1>
           <input
             max="250"
@@ -59,8 +59,13 @@
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
         </form>
       </transition>
-      <transition v-else name="slide">
-        <successfull :userId="createdUserId" class="sign-up__form" style="transition-delay: 0.3s;" />
+      <transition name="slide">
+        <successfull
+          v-if="isSuccessfull"
+          :userId="createdUserId"
+          class="sign-up__form"
+          style="transition-delay: 0.3s;"
+        />
       </transition>
     </div>
   </div>

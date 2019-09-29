@@ -19,23 +19,23 @@
   opacity: 0.5;
   pointer-events: none;
 }
-.info-toast.toasted.toasted-primary{
-  background-color:$AccentColor1 !important;
+.info-toast.toasted.toasted-primary {
+  background-color: $AccentColor1 !important;
   font-weight: bold !important;
   border-radius: 5px !important;
 }
-.info-toast.toasted.outline{
+.info-toast.toasted.outline {
   border-color: $AccentColor1 !important;
   color: $AccentColor1 !important;
 }
-.error-toast.toasted.toasted-primary{
-  background-color: darken($Alert,10%) !important;
+.error-toast.toasted.toasted-primary {
+  background-color: darken($Alert, 10%) !important;
   font-weight: bold !important;
   border-radius: 5px !important;
 }
-.error-toast.toasted.outline{
-  border-color:darken($Alert,10%) !important;
-  color: darken($Alert,10%) !important;
+.error-toast.toasted.outline {
+  border-color: darken($Alert, 10%) !important;
+  color: darken($Alert, 10%) !important;
 }
 .bold {
   font-weight: $font-weight-bold;
@@ -46,7 +46,10 @@
   white-space: nowrap;
   overflow: hidden;
 }
-
+.dimmed {
+  opacity: 0.5;
+  transition: opacity $transition-duration-quick ease-in-out;
+}
 .center {
   position: absolute;
   left: 50%;
@@ -54,7 +57,7 @@
   top: 25%;
   bottom: 0;
 }
-.disabled{
+.disabled {
   pointer-events: none;
   opacity: 0.5;
 }

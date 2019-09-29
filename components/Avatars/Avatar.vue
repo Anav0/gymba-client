@@ -2,11 +2,14 @@
   <div class="avatar">
     <img class="avatar__image" v-if="avatarUrl" :src="avatarUrl" :alt="alt" />
     <h4 v-else class="avatar__initials">{{initials}}</h4>
-    <transition v-if="isOnline && !icon" name="fade">
-      <div class="avatar__active-indicator avatar__active-indicator--online"></div>
+    <transition name="fade">
+      <div
+        v-if="isOnline && !icon"
+        class="avatar__active-indicator avatar__active-indicator--online"
+      ></div>
     </transition>
-    <transition v-if="icon && !isOnline" name="fade">
-      <fa-icon class="avatar__active-indicator" :icon="icon"></fa-icon>
+    <transition name="fade">
+      <fa-icon v-if="icon && !isOnline" class="avatar__active-indicator" :icon="icon"></fa-icon>
     </transition>
   </div>
 </template>
