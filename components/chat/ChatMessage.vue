@@ -26,8 +26,9 @@
         <span v-else>{{user.fullname | getInitials}}</span>
       </div>
     </div>
-    <transition name="fade" v-if="isSendDateVisible">
+    <transition name="fade">
       <span
+        v-if="isSendDateVisible"
         class="chat-message__send-time"
         :class="user._id!==sender._id ? 'chat-message__send-time' : 'chat-message__send-time--send'"
       >{{ formatedDate }}</span>

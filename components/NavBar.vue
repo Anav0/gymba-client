@@ -16,15 +16,21 @@
         to="/sign-up"
         class="btn btn--long"
       >{{$t('sign-up')}}</router-link>
-      <transition v-if="user.fullname">
-        <router-link class="navbar__user-wrapper btn btn--raw" tag="button" to="/chat/0">
+      <transition>
+        <router-link
+          v-if="user.fullname"
+          class="navbar__user-wrapper btn btn--raw"
+          tag="button"
+          to="/chat/0"
+        >
           <fa-icon class="navbar__user-icon" icon="user" />
           <span class="navbar__user-fullname">{{user.fullname}}</span>
         </router-link>
       </transition>
     </div>
-    <transition v-if="user.fullname">
+    <transition>
       <router-link
+        v-if="user.fullname"
         class="navbar__user-wrapper--mobile btn btn--raw"
         tag="button"
         to="/chat-mobile/0"
