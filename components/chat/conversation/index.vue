@@ -1,30 +1,23 @@
 <template>
-  <div class="conversation-wrapper">
-    <spring-spinner
-      class="center conversation__spinner"
-      v-if="isLoading"
-      :animation-duration="1000"
-      :size="64"
-      color="#fcd87d"
-    />
-    <div class="conversation" v-else>
-      <div class="conversation__placeholder" v-if="!conversation._id">
-        <fa-icon class="conversation__placeholder-icon" icon="comment-alt"></fa-icon>
-        <h3>No conversation selected</h3>
+  <div class="conversation">
+    <div class="conversation__placeholder" v-if="!conversation._id">
+      <fa-icon class="conversation__placeholder-icon" icon="comment-alt"></fa-icon>
+      <h3>No conversation selected</h3>
+    </div>
+    <div v-else class="conversation__content">
+      <transition name="slide">
+        <div
+          v-if="isTyping"
+          class="conversation__typing-bubble jello-horizontal"
+        >{{typer.fullname | getFirstname}}</div>
+      </transition>
+      <div class="conversation__upper" @click="showUserProfile(target._id)">
+        <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
+          <h4 class="conversation__target-name">{{target.fullname}}</h4>
+        </avatar-wrapper>
       </div>
-      <div v-else class="conversation__content">
-        <transition name="slide">
-          <div
-            v-if="isTyping"
-            class="conversation__typing-bubble jello-horizontal"
-          >{{typer.fullname | getFirstname}}</div>
-        </transition>
-        <div class="conversation__upper" @click="showUserProfile(target._id)">
-          <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
-            <h4 class="conversation__target-name">{{target.fullname}}</h4>
-          </avatar-wrapper>
-        </div>
-        <div ref="chatMessages" class="conversation__messages">
+      <div ref="chatMessages" class="conversation__messages">
+        <div v-if="!isLoading">
           <chat-message
             v-for="message in messages"
             :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
@@ -36,23 +29,26 @@
             <p>{{message.content}}</p>
           </chat-message>
         </div>
-        <div @click="showInfo">
-          <div class="conversation__input-box" :class="{'disabled': !isFriend}">
-            <input
-              v-model.trim="message"
-              @keyup="stopedTyping"
-              @keydown="typing"
-              @keyup.enter="sendMessage"
-              placeholder="Type your message..."
-            />
-            <fa-icon
-              class="conversation__action-icon"
-              @click="isEmojiPickerVisible=!isEmojiPickerVisible"
-              icon="smile"
-            />
-            <fa-icon class="conversation__action-icon" icon="paperclip" />
-            <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
-          </div>
+        <spring-spinner
+          class="center conversation__spinner"
+          v-else
+          :animation-duration="1000"
+          :size="64"
+          color="#fcd87d"
+        />
+      </div>
+      <div @click="showInfo">
+        <div class="conversation__input-box" :class="{'disabled': !isFriend}">
+          <input
+            v-model.trim="message"
+            @keyup="stopedTyping"
+            @keydown="typing"
+            @keyup.enter="sendMessage"
+            placeholder="Type your message..."
+          />
+          <fa-icon class="conversation__action-icon" icon="smile" />
+          <fa-icon class="conversation__action-icon" icon="paperclip" />
+          <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
         </div>
       </div>
     </div>
@@ -130,9 +126,6 @@ export default {
     }
   },
   methods: {
-    emojiSelected(emoji) {
-      console.log(emoji);
-    },
     async init() {
       await new Promise(async resolve => {
         this.isLoading = true;
@@ -256,12 +249,13 @@ export default {
     margin-right: 20px;
   }
   &__typing-bubble {
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
     position: fixed;
     bottom: 90px;
-    right: 50%;
+    left: 20px;
     width: 60px;
     height: 40px;
     border-radius: 8px;

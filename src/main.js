@@ -25,6 +25,7 @@ axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
 
+
 new Vue({
   router,
   store,

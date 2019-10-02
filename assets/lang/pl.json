@@ -54,7 +54,7 @@
     "chat-user-profile-bio": "Opis",
     "chat-user-profile-joined": "Dołączono",
     "chat-tab-contact": "kontakty",
-    "chat-tab-new-friends": "znajdź nowych przyjaciół",
+    "chat-tab-new-friends": "Zaproś",
     "chat-tab-invites": "zaproszenia",
     "contact-card-no-result": "Brak wyników",
     "contact-card-search": "Szukaj w kontaktach...",
@@ -68,5 +68,8 @@
     "successfull-submit": "Twoja wiadomość została wysłana",
     "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona",
     "to-talk-to": "Aby porozmawiać z",
-    "they-need-to": "on/ona musi być twoim znajomym"
+    "they-need-to": "on/ona musi być twoim znajomym",
+    "contacts-invites-header": "Otrzymane zaproszenia",
+    "contacts-conversations-header": "Znajomi",
+    "contacts-friends-header": "Inni użytkownicy"
 }

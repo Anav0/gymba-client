@@ -180,19 +180,11 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           const user = this.$store.getters["auth/user"];
-
-          let response = await api.invite.getSendInvitations("");
-          if (response.data.some(invite => invite.target == this.user._id)) {
+          let response = await api.invite.getInviteInvolving(this.user._id);
+          if (response.data) {
             this.isInvited = true;
             return resolve();
           }
-
-          response = await api.invite.getRecivedInvitations("");
-          if (response.data.some(invite => invite.sender == this.user._id)) {
-            this.isInvited = true;
-            return resolve();
-          }
-
           this.isInvited = false;
           resolve();
         } catch (err) {

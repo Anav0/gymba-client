@@ -81,8 +81,10 @@ export const router = new Router({
 						default: ChatFriendProfile,
 						conversation: conversation
 					},
-
-					props: true
+					props: {
+						default: true,
+						conversation: false
+					}
 				},
 			]
 		},
