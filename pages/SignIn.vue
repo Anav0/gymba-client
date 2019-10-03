@@ -81,9 +81,8 @@ export default {
             params: { tab: 0 }
           });
         this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-      } catch (err) {
-        if (!err.response.data.errors) throw err;
-        this.errors = err.response.data.errors;
+      } catch (errors) {
+        this.errors = errors;
       } finally {
         this.isLoading = false;
       }

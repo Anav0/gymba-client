@@ -24,6 +24,23 @@ Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
+axios.interceptors.response.use((response) => {
+  return response;
+}, function (error) {
+  console.log(error.response)
+  if (error.response) {
+    const errors = error.response.data.errors;
+    for (error of errors) {
+      Vue.toasted.show(error, {
+        className: 'error-toast'
+      });
+    }
+    return Promise.reject(errors);
+  }
+  else {
+    return Promise.reject(error);
+  }
+});
 
 new Vue({
   router,

@@ -77,12 +77,11 @@ export const router = new Router({
 				{
 					path: 'friend/:id',
 					name: 'chatFriend',
+					props: { default: true, conversation: false },
 					components: {
 						default: ChatFriendProfile,
 						conversation: conversation
 					},
-
-					props: true
 				},
 			]
 		},

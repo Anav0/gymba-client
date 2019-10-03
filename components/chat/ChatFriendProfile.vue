@@ -154,6 +154,8 @@ export default {
       try {
         this.isInviting = true;
         await api.user.removeFriend(this.user._id);
+        this.isInvited = false;
+        this.isFriend = false;
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
