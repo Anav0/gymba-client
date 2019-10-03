@@ -143,15 +143,17 @@ export default {
       switch (this.activeTab) {
         default:
         case 0:
-          this.contactCardHeader = "Favorite contacts";
+          this.contactCardHeader = this.$i18n.t(
+            "contacts-conversations-header"
+          );
           this.loadConversations();
           break;
         case 1:
-          this.contactCardHeader = "Users you might know";
+          this.contactCardHeader = this.$i18n.t("contacts-friends-header");
           this.loadPotentialFriends();
           break;
         case 2:
-          this.contactCardHeader = "Recived invitations";
+          this.contactCardHeader = this.$i18n.t("contacts-invites-header");
           this.loadInvites();
           break;
       }

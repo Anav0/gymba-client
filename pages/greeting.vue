@@ -60,7 +60,11 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
+    margin-top: 20px;
+    > :first-child {
+      margin-bottom: 100px;
+    }
 
     @media (min-width: $sm) {
       justify-content: flex-start;
@@ -75,15 +79,15 @@ export default {
   }
 
   &__buttons {
-    display: none;
-    @media (max-width: $sm) {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      * {
-        margin-bottom: 25px;
-      }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    * {
+      margin-bottom: 25px;
+    }
+    @media (min-width: $sm) {
+      display: none;
     }
   }
   &__marketing {

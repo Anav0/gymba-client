@@ -1,5 +1,5 @@
 <template>
-  <div class="g-select" v-on-clickaway="close">
+  <div class="g-select" :class="{'g-select--border': border}" v-on-clickaway="close">
     <div @click="isExpanded = !isExpanded" class="g-select__selection card">
       <span>{{options[selectedOptionIndex].name}}</span>
       <fa-icon class="g-select__caret" :icon="icon" />
@@ -40,6 +40,10 @@ export default {
     };
   },
   props: {
+    border: {
+      type: Boolean,
+      default: false
+    },
     selectedOptionIndex: {
       type: Number,
       default: 0
@@ -67,6 +71,19 @@ export default {
   cursor: pointer;
   z-index: 100;
 
+  &:hover {
+    .g-select__caret {
+      color: $AccentColor1 !important;
+    }
+  }
+
+  &--border {
+    * {
+      box-shadow: none;
+      border-width: 1px;
+    }
+  }
+
   &__selection {
     width: 100%;
     height: 100%;
@@ -78,6 +95,7 @@ export default {
   &__caret {
     font-size: $icon-size-medium;
     margin-left: 10px;
+    transition: color $transition-duration-quick ease-in-out;
   }
   &__option:hover {
     color: $AccentColor1;

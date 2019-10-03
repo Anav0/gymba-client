@@ -222,6 +222,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.conversation-wrapper {
+  position: relative;
+}
 .conversation {
   display: flex;
   align-items: center;
@@ -251,12 +254,13 @@ export default {
     margin-right: 20px;
   }
   &__typing-bubble {
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
     position: fixed;
     bottom: 90px;
-    right: 50%;
+    left: 20px;
     width: 60px;
     height: 40px;
     border-radius: 8px;

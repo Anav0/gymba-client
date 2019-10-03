@@ -71,5 +71,8 @@
     "successfull-submit": "Your message was send",
     "unavilable-function": "This functionality is not yet ready",
     "to-talk-to": "To talk to",
-    "they-need-to": "they need to be your friend"
+    "they-need-to": "they need to be your friend",
+    "contacts-invites-header": "Recived invitations",
+    "contacts-conversations-header": "Contacts",
+    "contacts-friends-header": "Users you might know"
 }

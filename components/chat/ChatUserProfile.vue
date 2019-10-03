@@ -19,15 +19,13 @@
       <span v-if="user.bio">{{$t('chat-user-profile-bio')}}:</span>
       <p v-if="user.bio">{{user.desc}}</p>
     </div>
-    <div>
-      <img
-      v-for="locale in locales"
-      :key="locale.code"
-      class="chat-user-profile__flag"
-      @click="switchLang(locale)"
-      :src="require(`../../assets/icons/${locale.code}.svg`)"
-      />
-    </div>
+    <g-select
+      border
+      class="chat-user-profile__lang-switcher"
+      @selectionChanged="switchLang"
+      :options="locales"
+      :selectedOptionIndex="selectedLangIndex"
+    />
     <div class="chat-user-profile__icons">
       <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
       <fa-icon class="chat-user-profile__icon" icon="sign-out-alt" @click="logout" />
@@ -39,41 +37,35 @@
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
 import moment from "moment";
+import GSelect from "../GSelect";
 
 export default {
   components: {
-    Avatar
+    Avatar,
+    GSelect
   },
   data() {
     return {
-      locales:[
-        {code: 'pl',iso:'pl-PL',name: 'Polski'},
-        {code: 'en',iso:'en-US',name: 'English'}
-      ],
-      dateDisplayOption: {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }
+      selectedLangIndex: 0,
+      locales: [
+        { code: "pl", iso: "pl-PL", name: "Polski" },
+        { code: "en", iso: "en-US", name: "English" }
+      ]
     };
   },
   computed: {
-    formattedCreationDate(){
-      return moment(this.user.creationDate).format("DD MMMM YYYY")
+    formattedCreationDate() {
+      return moment(this.user.creationDate).format("DD MMMM YYYY");
     },
     user() {
       return this.$store.getters["auth/user"];
-    },
-    isoLanguage() {
-      //TODO: Add language iso code when translation is ready
-      return "en-US";
     }
   },
   methods: {
     switchLang(locale) {
       this.$root.$i18n.locale = locale.code;
       localStorage.locale = JSON.stringify(locale);
+      this.selectedLangIndex = this.locales.findIndex(lang => lang == locale);
     },
     async logout() {
       try {
@@ -96,6 +88,12 @@ export default {
         });
       }
     }
+  },
+  mounted() {
+    const selectedLocaleCode = this.$root.$i18n.locale;
+    this.selectedLangIndex = this.locales.findIndex(
+      locale => locale.code == selectedLocaleCode
+    );
   }
 };
 </script>
@@ -115,6 +113,9 @@ export default {
   @media (min-width: $md) {
     background: $White;
     color: $MainFontColor;
+  }
+  &__lang-switcher {
+    align-self: flex-start;
   }
   &__flag:hover {
     transform: scale(1.1);
@@ -170,12 +171,11 @@ export default {
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
+    grid-gap: 50px;
     width: 100%;
     max-height: 100%;
-    grid-gap: 20px;
     overflow: auto;
-    margin-bottom: 75px;
   }
 }
 </style>

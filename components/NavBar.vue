@@ -96,8 +96,6 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-evenly;
-    }
-    @media (min-width: $md) {
       width: 500px;
     }
     @media (min-width: $lg) {

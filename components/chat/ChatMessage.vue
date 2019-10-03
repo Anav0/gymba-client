@@ -102,7 +102,10 @@ export default {
     place-self: start;
     grid-column: 2/3;
     grid-row: 1/2;
-
+    max-width: 100%;
+    @media (min-width: $sm) {
+      max-width: 50%;
+    }
     &--send {
       background: $AccentColor2;
       place-self: end;
