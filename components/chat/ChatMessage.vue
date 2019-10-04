@@ -7,7 +7,6 @@
       :initials="sender.fullname | getInitials"
       v-if="user._id!==sender._id"
     />
-    <!-- <img :src="sender.avatarUrl" class="chat-message__sender-avatar" /> -->
     <div
       class="chat-message__bubble"
       @click="isSendDateVisible=!isSendDateVisible"
@@ -99,7 +98,8 @@ export default {
     border-radius: 10px;
     padding: 15px;
     height: auto;
-    place-self: start;
+    place-self: center start;
+    align-self: end;
     grid-column: 2/3;
     grid-row: 1/2;
     max-width: 100%;
