@@ -74,5 +74,8 @@
     "they-need-to": "they need to be your friend",
     "contacts-invites-header": "Recived invitations",
     "contacts-conversations-header": "Contacts",
-    "contacts-friends-header": "Users you might know"
+    "contacts-friends-header": "Users you might know",
+    "resend-link-success": "Resend link send successfully",
+    "resend-link": "Resend activation link",
+    "email-verification-modal-header": "Insert your account email"
 }

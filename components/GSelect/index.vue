@@ -69,7 +69,7 @@ export default {
   color: $select-color;
   position: relative;
   cursor: pointer;
-  z-index: 100;
+  z-index: 9;
 
   &:hover {
     .g-select__caret {

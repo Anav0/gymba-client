@@ -53,8 +53,10 @@ export default {
     async resendVerificationEmail() {
       try {
         this.isLoading = true;
-        const response = await api.auth.resendVerificationEmail(this.userId);
-        consoe.log(response);
+        await api.auth.resendVerificationEmail(this.userId);
+        this.$toasted.show(this.$i18n.t("resend-link-success"), {
+          className: "info-toast"
+        });
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"

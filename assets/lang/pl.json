@@ -71,5 +71,8 @@
     "they-need-to": "on/ona musi być twoim znajomym",
     "contacts-invites-header": "Otrzymane zaproszenia",
     "contacts-conversations-header": "Znajomi",
-    "contacts-friends-header": "Inni użytkownicy"
+    "contacts-friends-header": "Inni użytkownicy",
+    "resend-link-success": "Link aktywacyjny został wysłany",
+    "resend-link": "Wyślij ponownie link aktywacyjny",
+    "email-verification-modal-header": "Wprowadź swój adres email"
 }

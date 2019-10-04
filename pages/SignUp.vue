@@ -51,12 +51,17 @@
           <ul class="error-list">
             <li v-for="error in errors" :key="error">{{error}}</li>
           </ul>
+
           <button
             class="btn btn--default capitalize"
             v-if="!isLoading"
             @click.stop.prevent="submit"
           >{{$t('sign-up-submit')}}</button>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+          <button
+            @click.stop.prevent="isResendModalVisible = true"
+            class="btn btn--raw capitalize"
+          >{{$t('resend-link')}}</button>
         </form>
       </transition>
       <transition name="slide">
@@ -67,6 +72,22 @@
           style="transition-delay: 0.3s;"
         />
       </transition>
+      <g-modal v-if="isResendModalVisible" @close="isResendModalVisible=false">
+        <template v-slot:header>
+          <h2>{{$t('email-verification-modal-header')}}</h2>
+        </template>
+        <template v-slot:body>
+          <input
+            class="sign-up__modal-input"
+            :placeholder="$i18n.t('sign-up-email')"
+            required
+            type="email"
+          />
+        </template>
+        <template v-slot:footer>
+          <button class="btn btn--outline sign-up__modal-btn capitalize">{{$t('send')}}</button>
+        </template>
+      </g-modal>
     </div>
   </div>
 </template>
@@ -76,13 +97,15 @@ import api from "../api";
 import { FlowerSpinner } from "epic-spinners";
 import Successfull from "../components/Successfull";
 import { setInterval } from "timers";
+import GModal from "../components/GModal";
 
 export default {
-  components: { FlowerSpinner, Successfull },
+  components: { FlowerSpinner, Successfull, GModal },
   data() {
     return {
       isLoading: false,
       isSuccessfull: false,
+      isResendModalVisible: false,
       errors: [],
       rules: {
         username: [
@@ -184,6 +207,14 @@ export default {
   align-items: center;
   @media (max-width: $xsm) {
     margin-top: 5rem;
+  }
+  &__modal-btn {
+    color: $AccentColor1;
+    border-color: $AccentColor1;
+    box-shadow: none;
+  }
+  &__modal-input {
+    width: 100%;
   }
   .btn--raw {
     color: $MainFontColor;
