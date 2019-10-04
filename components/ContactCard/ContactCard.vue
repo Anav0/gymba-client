@@ -4,7 +4,6 @@
       <h4 class="contact-card__header">{{header}}</h4>
       <div class="contact-card__toolbar">
         <div class="contact-card__select-wrapper">
-          <!-- TODO: Add i18n -->
           <fa-icon
             class="contact-card__icon"
             icon="sort-amount-up-alt"
@@ -40,7 +39,7 @@
         @click="showUserProfile(user._id)"
       >
         <avatar
-          :avatarUrl="i % 3 === 0 ? 'https://source.unsplash.com/random' : null"
+          :avatarUrl="user.avatarUrl"
           :initials="user.fullname | getInitials"
           :isOnline="i % 2 === 0 ? true : false"
         />

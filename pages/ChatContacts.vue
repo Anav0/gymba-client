@@ -2,7 +2,7 @@
   <div class="chat-contacts">
     <avatar-wrapper
       @click.native="goToUserProfile"
-      avatarUrl="https://source.unsplash.com/random/96x96"
+      :avatarUrl="avatarUrl"
       class="chat-contacts__avatar-wrapper"
       :initials="fullname | getInitials"
     >
@@ -44,6 +44,9 @@ export default {
     },
     fullname() {
       return this.$store.getters["auth/user"].fullname;
+    },
+    avatarUrl() {
+      return this.$store.getters["auth/user"].avatarUrl;
     }
   },
   watch: {

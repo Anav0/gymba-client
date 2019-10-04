@@ -3,6 +3,7 @@
     <avatar
       @click="$emit('wasClicked')"
       class="potential-contact__avatar"
+      :avatarUrl="user.avatarUrl"
       :initials="user.fullname | getInitials"
     />
     <div @click="$emit('wasClicked')" class="potential-contact__middle">

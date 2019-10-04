@@ -12,7 +12,7 @@
         >{{typer.fullname | getFirstname}}</div>
       </transition>
       <div class="conversation__upper" @click="showUserProfile(target._id)">
-        <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
+        <avatar-wrapper :initials="target.fullname | getInitials" :avatarUrl="target.avatarUrl">
           <h4 class="conversation__target-name">{{target.fullname}}</h4>
         </avatar-wrapper>
       </div>
