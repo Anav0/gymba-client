@@ -72,22 +72,31 @@
           style="transition-delay: 0.3s;"
         />
       </transition>
-      <g-modal v-if="isResendModalVisible" @close="isResendModalVisible=false">
-        <template v-slot:header>
-          <h2>{{$t('email-verification-modal-header')}}</h2>
-        </template>
-        <template v-slot:body>
-          <input
-            class="sign-up__modal-input"
-            :placeholder="$i18n.t('sign-up-email')"
-            required
-            type="email"
-          />
-        </template>
-        <template v-slot:footer>
-          <button class="btn btn--outline sign-up__modal-btn capitalize">{{$t('send')}}</button>
-        </template>
-      </g-modal>
+      <transition name="fade">
+        <g-modal v-if="isResendModalVisible" @close="isResendModalVisible=false">
+          <template v-slot:header>
+            <h2>{{$t('email-verification-modal-header')}}</h2>
+          </template>
+          <template v-slot:body>
+            <input
+              ref="resendEmailInput"
+              class="sign-up__modal-input"
+              :placeholder="$i18n.t('sign-up-email')"
+              type="email"
+              v-model="resendEmail"
+              required
+            />
+          </template>
+          <template v-slot:footer>
+            <button
+              v-if="!isResendingEmail"
+              @click="resendActivationEmail"
+              class="btn btn--outline sign-up__modal-btn capitalize"
+            >{{$t('send')}}</button>
+            <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+          </template>
+        </g-modal>
+      </transition>
     </div>
   </div>
 </template>
@@ -106,6 +115,7 @@ export default {
       isLoading: false,
       isSuccessfull: false,
       isResendModalVisible: false,
+      isResendingEmail: false,
       errors: [],
       rules: {
         username: [
@@ -126,6 +136,7 @@ export default {
         ]
       },
       createdUserId: "",
+      resendEmail: "",
       user: {
         fullname: "",
         username: "",
@@ -150,6 +161,29 @@ export default {
     this.redirect(this.isLoggedIn);
   },
   methods: {
+    async resendActivationEmail() {
+      try {
+        this.isResendingEmail = true;
+        if (!this.$refs.resendEmailInput.checkValidity())
+          return this.$toasted.show(this.$i18n.t("invalid-email"), {
+            className: "error-toast"
+          });
+        await api.auth.resendVerificationByEmail(this.resendEmail);
+        this.$toasted.show(this.$i18n.t("successfull-resend"), {
+          className: "success-toast"
+        });
+
+        this.resendEmail = "";
+      } catch (error) {
+        for (let error in error.response.data.errors) {
+          this.$toasted.show(error, {
+            className: "error-toast"
+          });
+        }
+      } finally {
+        this.isResendingEmail = false;
+      }
+    },
     redirect(isLoggedIn) {
       if (isLoggedIn) {
         if (window.innerWidth < 400)
@@ -185,11 +219,7 @@ export default {
           this.isSuccessfull = true;
         }
       } catch (err) {
-        const errors = err.response.data.errors;
-        if (!errors) throw err;
-        for (let error in errors) {
-          this.errors.push(errors[error].message);
-        }
+        this.errors = err.response.data.errors;
       } finally {
         this.isLoading = false;
       }

@@ -1,5 +1,5 @@
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-    getUser: (id) => axios.get(`/users/${id}`),
-}
+  getUser: (id) => axios.get(`/users/${id}`),
+};

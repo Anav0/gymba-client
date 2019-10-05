@@ -17,9 +17,9 @@
             class="successfull__success-btn btn btn--outline capitalize"
           >{{$t('sign-in')}}</router-link>
           <button
-            @click="resendVerificationEmail"
+            @click="resendVerificationById"
             class="btn btn--raw capitalize"
-          >{{$t('successfull-resend')}}</button>
+          >{{$t('successfull-resend-header')}}</button>
         </div>
       </transition>
       <transition name="fade">
@@ -50,10 +50,10 @@ export default {
     };
   },
   methods: {
-    async resendVerificationEmail() {
+    async resendVerificationById() {
       try {
         this.isLoading = true;
-        await api.auth.resendVerificationEmail(this.userId);
+        await api.auth.resendVerificationById(this.userId);
         this.$toasted.show(this.$i18n.t("resend-link-success"), {
           className: "info-toast"
         });

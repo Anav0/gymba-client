@@ -19,6 +19,15 @@
   opacity: 0.5;
   pointer-events: none;
 }
+.success-toast.toasted.toasted-primary {
+  background-color: $Grass !important;
+  font-weight: bold !important;
+  border-radius: 5px !important;
+}
+.success-toast.toasted.outline {
+  border-color: $Grass !important;
+  color: $Grass !important;
+}
 .info-toast.toasted.toasted-primary {
   background-color: $AccentColor1 !important;
   font-weight: bold !important;

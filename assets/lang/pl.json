@@ -42,7 +42,7 @@
     "sign-in-password": "Hasło",
     "sign-in-require": "Nazwa użytkownika i hasło są wymagane",
     "sign-in-submit": "Wyślij",
-    "successfull-resend": "Wyślij ponownie",
+    "successfull-resend-header": "Wyślij ponownie",
     "successfull-success": "sukces",
     "successfull-info": "Aby się zalogować, musisz zweryfikować swoje konto, klikając w link, wysłany na podaną przez ciebie skrzynkę mailową.",
     "no-page-take-me-home": "Zabierz mnie stąd",
@@ -74,5 +74,7 @@
     "contacts-friends-header": "Inni użytkownicy",
     "resend-link-success": "Link aktywacyjny został wysłany",
     "resend-link": "Wyślij ponownie link aktywacyjny",
-    "email-verification-modal-header": "Wprowadź swój adres email"
+    "email-verification-modal-header": "Wprowadź swój adres email",
+    "invalid-email": "Nieprawidłowy email",
+    "successfull-resend": "Email został wysłany"
 }

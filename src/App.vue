@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <div v-if="!isChat" class="background" :class="dynamicBackground" />
-    <navbar v-if="!isChat"></navbar>
+    <div
+      v-if="!isChat"
+      class="background"
+      :class="dynamicBackground"
+    />
+    <navbar v-if="!isChat" />
     <transition name="fade">
       <router-view class="app-content" />
     </transition>
@@ -13,20 +17,30 @@
   </div>
 </template>
 <script>
-import navbar from "../components/NavBar";
-import api from "../api";
+import navbar from '../components/NavBar';
+import api from '../api';
 
 export default {
   components: {
-    navbar
-  },
-  async mounted() {
-    await this.getLoggedUser();
+    navbar,
   },
   data() {
     return {
-      fillRoutes: ["noPage"]
+      fillRoutes: ['noPage'],
     };
+  },
+  computed: {
+    isChat() {
+      return this.$route.matched.some((route) => route.path.includes('/chat'));
+    },
+    dynamicBackground() {
+      return this.fillRoutes.includes(this.$route.name)
+        ? 'background--fill'
+        : '';
+    },
+  },
+  async mounted() {
+    await this.getLoggedUser();
   },
   methods: {
     getLoggedUser() {
@@ -34,25 +48,15 @@ export default {
         try {
           const response = await api.user.getAuthUser();
           if (response.data) {
-            await this.$store.dispatch("auth/login", response.data);
+            await this.$store.dispatch('auth/login', response.data);
           }
           resolve(response.data);
         } catch (err) {
           reject(err);
         }
       });
-    }
-  },
-  computed: {
-    isChat() {
-      return this.$route.matched.some(route => route.path.includes("/chat"));
     },
-    dynamicBackground() {
-      return this.fillRoutes.includes(this.$route.name)
-        ? "background--fill"
-        : "";
-    }
-  }
+  },
 };
 </script>
 
