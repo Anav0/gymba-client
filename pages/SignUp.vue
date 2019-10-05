@@ -92,7 +92,7 @@
               v-if="!isResendingEmail"
               @click="resendActivationEmail"
               class="btn btn--outline sign-up__modal-btn capitalize"
-            >{{$t('send')}}</button>
+            >{{$t('sign-up-submit')}}</button>
             <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
           </template>
         </g-modal>
@@ -215,11 +215,12 @@ export default {
         }
         if (isValid) {
           const response = await api.user.postUser(this.user);
+
           this.createdUserId = response.data._id;
           this.isSuccessfull = true;
         }
-      } catch (err) {
-        this.errors = err.response.data.errors;
+      } catch (errors) {
+        this.errors = errors;
       } finally {
         this.isLoading = false;
       }

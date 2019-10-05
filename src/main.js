@@ -24,7 +24,6 @@ library.add({
   faUser, faSmile, faPaperclip, faPaperPlane, faEnvelopeOpenText, faUserFriends, faCog, faEraser, faTint, faCheckCircle, faHeartBroken, faCheck, faLockOpen, faComment, faCommentAlt, faEnvelope, faKeyboard, faSearch, faSortAmountUpAlt, faTrash, faSignOutAlt, faAngleLeft, faTimes, faCaretDown, faAngleDown, faHeart, faCommentSlash, faBan,
 });
 
-
 Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
@@ -40,7 +39,8 @@ axios.interceptors.response.use((response) => response, (error) => {
     });
   }
   if (errors.length > 0) return Promise.reject(errors);
-  return Promise.reject(error);
+  // eslint-disable-next-line prefer-promise-reject-errors
+  return Promise.reject([error.message]);
 });
 
 
