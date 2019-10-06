@@ -15,6 +15,6 @@ module.exports = {
     'max-len': 0,
     'no-param-reassign': 0,
     'no-undef': 0,
-    'arrow-parens': 0
+    'arrow-parens': 0,
   },
 };
