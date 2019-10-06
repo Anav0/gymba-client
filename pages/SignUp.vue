@@ -1,8 +1,8 @@
 `<template>
   <div class="sign-up landing-page-section">
     <div class="card">
-      <transition v-if="!isSuccessfull" name="slide">
-        <form class="sign-up__form">
+      <transition name="slide">
+        <form v-if="!isSuccessfull" class="sign-up__form">
           <h1 class="sign-up__title capitalize">{{$t('sign-up')}}</h1>
           <input
             max="250"
@@ -51,16 +51,51 @@
           <ul class="error-list">
             <li v-for="error in errors" :key="error">{{error}}</li>
           </ul>
+
           <button
             class="btn btn--default capitalize"
             v-if="!isLoading"
             @click.stop.prevent="submit"
           >{{$t('sign-up-submit')}}</button>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+          <button
+            @click.stop.prevent="isResendModalVisible = true"
+            class="btn btn--raw capitalize"
+          >{{$t('resend-link')}}</button>
         </form>
       </transition>
-      <transition v-else name="slide">
-        <successfull :userId="createdUserId" class="sign-up__form" style="transition-delay: 0.3s;" />
+      <transition name="slide">
+        <successfull
+          v-if="isSuccessfull"
+          :userId="createdUserId"
+          class="sign-up__form"
+          style="transition-delay: 0.3s;"
+        />
+      </transition>
+      <transition name="fade">
+        <g-modal v-if="isResendModalVisible" @close="isResendModalVisible=false">
+          <template v-slot:header>
+            <h2>{{$t('email-verification-modal-header')}}</h2>
+          </template>
+          <template v-slot:body>
+            <input
+              ref="resendEmailInput"
+              class="sign-up__modal-input"
+              :placeholder="$i18n.t('sign-up-email')"
+              type="email"
+              v-model="resendEmail"
+              required
+            />
+          </template>
+          <template v-slot:footer>
+            <button
+              v-if="!isResendingEmail"
+              @click="resendActivationEmail"
+              class="btn btn--outline sign-up__modal-btn capitalize"
+            >{{$t('sign-up-submit')}}</button>
+            <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+          </template>
+        </g-modal>
       </transition>
     </div>
   </div>
@@ -71,13 +106,16 @@ import api from "../api";
 import { FlowerSpinner } from "epic-spinners";
 import Successfull from "../components/Successfull";
 import { setInterval } from "timers";
+import GModal from "../components/GModal";
 
 export default {
-  components: { FlowerSpinner, Successfull },
+  components: { FlowerSpinner, Successfull, GModal },
   data() {
     return {
       isLoading: false,
       isSuccessfull: false,
+      isResendModalVisible: false,
+      isResendingEmail: false,
       errors: [],
       rules: {
         username: [
@@ -98,6 +136,7 @@ export default {
         ]
       },
       createdUserId: "",
+      resendEmail: "",
       user: {
         fullname: "",
         username: "",
@@ -115,15 +154,47 @@ export default {
   },
   watch: {
     isLoggedIn(isLoggedIn) {
-      if (isLoggedIn)
-        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+      this.redirect(isLoggedIn);
     }
   },
   mounted() {
-    if (this.isLoggedIn)
-      this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+    this.redirect(this.isLoggedIn);
   },
   methods: {
+    async resendActivationEmail() {
+      try {
+        this.isResendingEmail = true;
+        if (!this.$refs.resendEmailInput.checkValidity())
+          return this.$toasted.show(this.$i18n.t("invalid-email"), {
+            className: "error-toast"
+          });
+        await api.auth.resendVerificationByEmail(this.resendEmail);
+        this.$toasted.show(this.$i18n.t("successfull-resend"), {
+          className: "success-toast"
+        });
+
+        this.resendEmail = "";
+      } catch (error) {
+        for (let error in error.response.data.errors) {
+          this.$toasted.show(error, {
+            className: "error-toast"
+          });
+        }
+      } finally {
+        this.isResendingEmail = false;
+      }
+    },
+    redirect(isLoggedIn) {
+      if (isLoggedIn) {
+        if (window.innerWidth < 400)
+          return this.$router.push({
+            name: "chatContactsMobile",
+            params: { tab: 0 }
+          });
+        this.$router.push({ name: "chatContacts", params: { tab: 0 } });
+      }
+    },
+
     async submit() {
       try {
         this.isLoading = true;
@@ -144,17 +215,12 @@ export default {
         }
         if (isValid) {
           const response = await api.user.postUser(this.user);
+
           this.createdUserId = response.data._id;
           this.isSuccessfull = true;
         }
-      } catch (err) {
-        this.$toasted.show(err.message, {
-          className: "error-toast"
-        });
-        const errors = err.response.data.errors;
-        for (let error in errors) {
-          this.errors.push(errors[error].message);
-        }
+      } catch (errors) {
+        this.errors = errors;
       } finally {
         this.isLoading = false;
       }
@@ -172,6 +238,14 @@ export default {
   align-items: center;
   @media (max-width: $xsm) {
     margin-top: 5rem;
+  }
+  &__modal-btn {
+    color: $AccentColor1;
+    border-color: $AccentColor1;
+    box-shadow: none;
+  }
+  &__modal-input {
+    width: 100%;
   }
   .btn--raw {
     color: $MainFontColor;

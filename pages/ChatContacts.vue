@@ -1,11 +1,12 @@
 <template>
   <div class="chat-contacts">
     <avatar-wrapper
-      avatarUrl="https://source.unsplash.com/random/96x96"
+      @click.native="goToUserProfile"
+      :avatarUrl="avatarUrl"
       class="chat-contacts__avatar-wrapper"
       :initials="fullname | getInitials"
     >
-      <router-link tag="h4" :to="`/chat/${activeTab}/profile`">{{name}}</router-link>
+      <h4>{{name}}</h4>
     </avatar-wrapper>
     <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
     <contact-card
@@ -43,6 +44,9 @@ export default {
     },
     fullname() {
       return this.$store.getters["auth/user"].fullname;
+    },
+    avatarUrl() {
+      return this.$store.getters["auth/user"].avatarUrl;
     }
   },
   watch: {
@@ -66,6 +70,13 @@ export default {
     };
   },
   methods: {
+    goToUserProfile() {
+      console.log(window.innerWidth);
+      if (window.innerWidth < 480)
+        return this.$router.push({ name: "chatProfileMobile" });
+
+      return this.$router.push({ name: "chatProfile" });
+    },
     clearData() {
       this.friends = [];
       this.conversations = [];
@@ -135,15 +146,17 @@ export default {
       switch (this.activeTab) {
         default:
         case 0:
-          this.contactCardHeader = "Favorite contacts";
+          this.contactCardHeader = this.$i18n.t(
+            "contacts-conversations-header"
+          );
           this.loadConversations();
           break;
         case 1:
-          this.contactCardHeader = "Users you might know";
+          this.contactCardHeader = this.$i18n.t("contacts-friends-header");
           this.loadPotentialFriends();
           break;
         case 2:
-          this.contactCardHeader = "Recived invitations";
+          this.contactCardHeader = this.$i18n.t("contacts-invites-header");
           this.loadInvites();
           break;
       }

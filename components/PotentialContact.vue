@@ -3,6 +3,7 @@
     <avatar
       @click="$emit('wasClicked')"
       class="potential-contact__avatar"
+      :avatarUrl="user.avatarUrl"
       :initials="user.fullname | getInitials"
     />
     <div @click="$emit('wasClicked')" class="potential-contact__middle">
@@ -49,6 +50,7 @@ export default {
   justify-content: flex-start;
   width: 100%;
   height: 48px;
+  cursor: pointer;
 
   &__avatar {
     min-width: 48px;

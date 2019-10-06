@@ -1,36 +1,36 @@
 export default {
-    namespaced: true,
+  namespaced: true,
 
-    state: () => ({
-        loginStatus: false,
-        user: {},
-    }),
+  state: () => ({
+    loginStatus: false,
+    user: {},
+  }),
 
-    mutations: {
-        SET_LOGIN_STATUS(state, status) {
-            state.loginStatus = status;
-        },
-
-        SET_USER(state, data) {
-            state.user = data;
-        },
+  mutations: {
+    SET_LOGIN_STATUS(state, status) {
+      state.loginStatus = status;
     },
 
-    actions: {
-        login({ commit }, user) {
-            commit('SET_LOGIN_STATUS', true);
-            commit('SET_USER', user);
-        },
+    SET_USER(state, data) {
+      state.user = data;
+    },
+  },
 
-        logout({ commit }) {
-            commit('SET_LOGIN_STATUS', false);
-            commit('SET_USER', {});
-        },
-
+  actions: {
+    login({ commit }, user) {
+      commit('SET_LOGIN_STATUS', true);
+      commit('SET_USER', user);
     },
 
-    getters: {
-        loginStatus: (state) => state.loginStatus,
-        user: (state) => state.user,
-    }
-}
+    logout({ commit }) {
+      commit('SET_LOGIN_STATUS', false);
+      commit('SET_USER', {});
+    },
+
+  },
+
+  getters: {
+    loginStatus: (state) => state.loginStatus,
+    user: (state) => state.user,
+  },
+};

@@ -1,36 +1,58 @@
 <template>
   <div class="conversation">
-    <transition v-if="isTyping" name="slide">
-      <div class="conversation__typing-bubble jello-horizontal">{{typer.fullname | getFirstname}}</div>
-    </transition>
-    <div class="conversation__upper">
-      <avatar-wrapper :initials="target.fullname | getInitials" :avatarURL="target.avatarURL">
-        <h4 class="conversation__target-name">{{target.fullname}}</h4>
-      </avatar-wrapper>
+    <div class="conversation__placeholder" v-if="!conversation._id">
+      <fa-icon class="conversation__placeholder-icon" icon="comment-alt"></fa-icon>
+      <h3>No conversation selected</h3>
     </div>
-    <div ref="chatMessages" class="conversation__messages">
-      <chat-message
-        v-for="message in messages"
-        :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
-        :sender="message.sender"
-        :seenStatus="message.status"
-        :sendDate="message.sendDate"
-        :key="message._id"
-      >
-        <p>{{message.content}}</p>
-      </chat-message>
-    </div>
-    <div class="conversation__input-box">
-      <input
-        v-model.trim="message"
-        @keyup="stopedTyping"
-        @keydown="typing"
-        @keyup.enter="sendMessage"
-        placeholder="Type your messsage..."
+    <div v-else class="conversation__content">
+      <transition name="slide">
+        <div
+          v-if="isTyping"
+          class="conversation__typing-bubble jello-horizontal"
+        >{{typer.fullname | getFirstname}}</div>
+      </transition>
+      <div class="conversation__upper" @click="showUserProfile(target._id)">
+        <avatar-wrapper :initials="target.fullname | getInitials" :avatarUrl="target.avatarUrl">
+          <h4 class="conversation__target-name">{{target.fullname}}</h4>
+        </avatar-wrapper>
+      </div>
+      <div ref="chatMessages" :class="{'dimmed': isLoading}" class="conversation__messages">
+        <chat-message
+          v-for="message in messages"
+          :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
+          :sender="message.sender"
+          :seenStatus="message.status"
+          :sendDate="message.sendDate"
+          :key="message._id"
+        >
+          <p>{{message.content}}</p>
+        </chat-message>
+      </div>
+      <spring-spinner
+        class="center conversation__spinner"
+        v-if="isLoading"
+        :animation-duration="1000"
+        :size="64"
+        color="#fcd87d"
       />
-      <fa-icon class="conversation__action-icon" icon="smile" />
-      <fa-icon class="conversation__action-icon" icon="paperclip" />
-      <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+      <div @click="showInfo">
+        <div class="conversation__input-box" :class="{'disabled': !isFriend}">
+          <input
+            v-model.trim="message"
+            @keyup="stopedTyping"
+            @keydown="typing"
+            @keyup.enter="sendMessage"
+            placeholder="Type your message..."
+          />
+          <fa-icon
+            class="conversation__action-icon"
+            @click="isEmojiPickerVisible=!isEmojiPickerVisible"
+            icon="smile"
+          />
+          <fa-icon class="conversation__action-icon" icon="paperclip" />
+          <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,17 +63,20 @@ import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import io from "socket.io-client";
 import { debounce } from "debounce";
+import { SpringSpinner } from "epic-spinners";
 
 export default {
   components: {
     AvatarWrapper,
-    ChatMessage
+    ChatMessage,
+    SpringSpinner
   },
   data() {
     return {
       target: {},
       message: "",
       messages: [],
+      isLoading: true,
       isTyping: false,
       typer: {},
       chat: {}
@@ -82,9 +107,14 @@ export default {
     this.chat.on("user stoped typing", user => {
       this.isTyping = false;
     });
+
+    await this.init();
   },
 
   computed: {
+    isFriend() {
+      return this.user.friends.includes(this.target._id);
+    },
     conversation() {
       return this.$store.getters["conversation/activeConversation"];
     },
@@ -94,23 +124,50 @@ export default {
   },
   watch: {
     async conversation(conversation) {
+      await this.init();
+    }
+  },
+  methods: {
+    emojiSelected(emoji) {
+      console.log(emoji);
+    },
+    async init() {
       await new Promise(async resolve => {
+        this.isLoading = true;
         this.fillTarget();
         this.chat.emit("join", {
-          roomId: conversation.roomId,
+          roomId: this.conversation.roomId,
           username: this.user.fullname
         });
         const {
           data: messages
-        } = await api.conversation.getConversationMessages(conversation._id);
+        } = await api.conversation.getConversationMessages(
+          this.conversation._id
+        );
         this.messages = messages;
+        this.isLoading = false;
         resolve();
       });
-
       this.scrollToBottom();
-    }
-  },
-  methods: {
+    },
+    showInfo() {
+      if (this.isFriend) return;
+
+      this.$toasted.show(
+        `${this.$i18n.t("to-talk-to")} ${
+          this.target.fullname.split(" ")[0]
+        }, ${this.$i18n.t("they-need-to")}`,
+        {
+          className: "info-toast"
+        }
+      );
+    },
+    showUserProfile(id) {
+      if (window.innerWidth < 400)
+        return this.$router.push({ name: "chatFriendMobile", params: { id } });
+
+      this.$router.push({ name: "chatFriend", params: { id } });
+    },
     stopedTyping: debounce(function() {
       this.chat.emit("stoped typing", {
         user: {
@@ -165,22 +222,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.conversation-wrapper {
+  position: relative;
+}
 .conversation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  background-color: $WhiteSmoke;
-  position: relative;
-  overflow: hidden;
-
+  overflow: auto;
+  &__spinner {
+    z-index: 2;
+  }
+  &__content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: $WhiteSmoke;
+    position: relative;
+    overflow: hidden;
+  }
+  &__placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &__placeholder-icon {
+    font-size: $icon-size-extra-large;
+    margin-right: 20px;
+  }
   &__typing-bubble {
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
     position: fixed;
     bottom: 90px;
-    right: 50%;
+    left: 20px;
     width: 60px;
     height: 40px;
     border-radius: 8px;
@@ -201,6 +281,7 @@ export default {
     display: grid;
     grid-row-gap: 10px;
     grid-auto-rows: auto;
+    grid-template-rows: repeat(20, auto);
     overflow: auto;
     padding: 0 50px;
     .chat-message {
@@ -219,6 +300,7 @@ export default {
   }
   &__target-name {
     margin-left: 10px;
+    cursor: pointer;
   }
   &__action-icon:hover {
     color: $AccentColor2;
@@ -240,7 +322,7 @@ export default {
     background-color: $White;
     box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.25);
     min-height: 70px;
-
+    z-index: 2;
     input {
       border: none;
       height: 100%;

@@ -1,7 +1,7 @@
 <template>
   <div class="chat-side-nav">
     <avatar
-      @click.native="$router.push({name: 'chatProfile'})"
+      @click.native="goToUserProfile"
       :avatarUrl="user.avatarUrl"
       :initials="user.fullname | getInitials"
       icon="cog"
@@ -33,6 +33,13 @@ export default {
     };
   },
   methods: {
+    goToUserProfile() {
+      console.log(window.innerWidth);
+      if (window.innerWidth < 480)
+        return this.$router.push({ name: "chatProfileMobile" });
+
+      return this.$router.push({ name: "chatProfile" });
+    },
     async logout() {
       try {
         await api.auth.logout();

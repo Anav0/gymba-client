@@ -1,10 +1,13 @@
 <template>
   <div class="chat-friend-profile">
-    <div v-if="!isLoading" class="chat-friend-profile__image-wrapper">
+    <div v-if="!isLoading && user.avatarUrl" class="chat-friend-profile__image-wrapper">
       <h3 class="chat-friend-profile__fullname">{{user.fullname}}</h3>
-      <img class="chat-friend-profile__avatar" src="https://source.unsplash.com/random/" />
+      <img class="chat-friend-profile__avatar" :src="user.avatarUrl" />
     </div>
-    <!-- <avatar v-if="!user.avatarUrl" :initials="user.fullname | getInitials" /> -->
+    <div class="chat-friend-profile__avatar-wrapper" v-if="!isLoading && !user.avatarUrl">
+      <avatar class="chat-friend-profile__avatar-initials" :initials="user.fullname | getInitials" />
+      <h3 class="chat-friend-profile__fullname-initials">{{user.fullname}}</h3>
+    </div>
     <div v-if="!isLoading" class="chat-friend-profile__content">
       <blockquote>{{user.desc}}</blockquote>
       <div class="chat-friend-profile__stats">
@@ -12,15 +15,15 @@
           icon="envelope"
           :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${exchangedMessages.length} ${$i18n.t('chat-friend-profile-exchanged-messages')}`"
         />
-        <conversation-stat
+        <!-- <conversation-stat
           icon="keyboard"
           :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${numberOfWordsExchanged} ${$i18n.t('chat-friend-profile-exchanged-words')}`"
-        />
-        <conversation-stat
+        />-->
+        <!-- <conversation-stat
           icon="heart"
           v-if="isFriend"
           :text="`${$i18n.t('chat-friend-profile-friends-for')} ${friendsFor} ${$i18n.t('chat-friend-profile-days')}`"
-        />
+        />-->
       </div>
       <div class="chat-friend-profile__actions">
         <text-icon
@@ -102,7 +105,7 @@ export default {
   },
   computed: {
     inviteStatus() {
-      if (this.isFriend) return { i18n: "friend", icon: "heart-broken" };
+      if (this.isFriend) return { i18n: "unfriend", icon: "heart-broken" };
       if (this.isInvited) return { i18n: "uninvite", icon: "eraser" };
       else return { i18n: "invite", icon: "heart" };
     },
@@ -154,6 +157,8 @@ export default {
       try {
         this.isInviting = true;
         await api.user.removeFriend(this.user._id);
+        this.isInvited = false;
+        this.isFriend = false;
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -180,19 +185,11 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           const user = this.$store.getters["auth/user"];
-
-          let response = await api.invite.getSendInvitations("");
-          if (response.data.some(invite => invite.target == this.user._id)) {
+          let response = await api.invite.getInviteInvolving(this.user._id);
+          if (response.data) {
             this.isInvited = true;
             return resolve();
           }
-
-          response = await api.invite.getRecivedInvitations("");
-          if (response.data.some(invite => invite.sender == this.user._id)) {
-            this.isInvited = true;
-            return resolve();
-          }
-
           this.isInvited = false;
           resolve();
         } catch (err) {
@@ -208,8 +205,6 @@ export default {
         try {
           const response = await api.users.getUser(this.id);
           this.user = response.data;
-          //TODO: delete this
-          this.user.avatarUrl = "";
           resolve();
         } catch (err) {
           reject(err);
@@ -278,14 +273,7 @@ export default {
     top: 0;
     left: 0;
   }
-  &__image-wrapper {
-    position: relative;
-    width: 100%;
-    min-height: 290px;
-    img {
-      box-shadow: $box-shadow-button-user-image;
-    }
-  }
+
   blockquote {
     width: 100%;
     text-overflow: ellipsis;
@@ -330,11 +318,38 @@ export default {
       margin-bottom: 20px;
     }
   }
+
+  &__avatar-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px 20px;
+  }
+
+  &__avatar-initials {
+    font-size: $font-size-h3;
+  }
+
+  &__fullname-initials {
+    margin-top: 20px;
+  }
+
+  &__image-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 290px;
+    img {
+      box-shadow: $box-shadow-button-user-image;
+    }
+  }
   &__avatar {
     width: 100%;
     height: 100%;
     border-radius: 0 0 75px 0;
     object-fit: cover;
+  }
+  &__avatar-initials {
   }
 
   .avatar {

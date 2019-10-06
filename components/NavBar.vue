@@ -16,13 +16,28 @@
         to="/sign-up"
         class="btn btn--long"
       >{{$t('sign-up')}}</router-link>
-      <transition v-if="user.fullname">
-        <router-link class="navbar__user-wrapper btn btn--raw" tag="button" to="/chat/0">
+      <transition>
+        <router-link
+          v-if="user.fullname"
+          class="navbar__user-wrapper btn btn--raw"
+          tag="button"
+          to="/chat/0"
+        >
           <fa-icon class="navbar__user-icon" icon="user" />
           <span class="navbar__user-fullname">{{user.fullname}}</span>
         </router-link>
       </transition>
     </div>
+    <transition>
+      <router-link
+        v-if="user.fullname"
+        class="navbar__user-wrapper--mobile btn btn--raw"
+        tag="button"
+        to="/chat-mobile/0"
+      >
+        <fa-icon class="navbar__user-icon" icon="user" />
+      </router-link>
+    </transition>
   </nav>
 </template>
 
@@ -43,14 +58,14 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   width: 100%;
   z-index: 1;
-  padding: 50px;
+  padding: 50px 20px;
+  justify-content: space-between;
 
-  @media (max-width: $xsm) {
-    padding: 20px 30px;
+  @media (min-width: $lg) {
+    padding: 50px;
   }
 
   .btn {
@@ -76,9 +91,16 @@ export default {
   }
   &__menu--desktop {
     display: none;
-    align-items: center;
-    justify-content: flex-end;
-
+    width: 400px;
+    @media (min-width: $sm) {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 500px;
+    }
+    @media (min-width: $lg) {
+      width: 600px;
+    }
     .btn--long {
       background-color: $White;
       color: $AccentColor1;
@@ -93,22 +115,21 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &--mobile {
+      display: flex;
+
+      @media (min-width: $sm) {
+        display: none;
+      }
+    }
   }
   &__user-icon {
     font-size: $icon-size-large;
+    margin-right: 20px;
   }
   &__user-fullname {
     font-size: $font-size-larger;
-  }
-  @media (min-width: $sm+100px) {
-    &__menu--desktop {
-      * {
-        margin: 0 10px;
-      }
-      width: 100%;
-      display: flex;
-      justify-content: space-evenly;
-    }
   }
 }
 </style>

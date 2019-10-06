@@ -9,21 +9,21 @@
       <li v-for="error in errors" :key="error">{{error}}</li>
     </ul>
     <div class="successfull__transitions">
-      <transition name="fade" v-if="!isLoading">
-        <div class="successfull__buttons">
+      <transition name="fade">
+        <div v-if="!isLoading" class="successfull__buttons">
           <router-link
             tag="button"
             to="sign-in"
             class="successfull__success-btn btn btn--outline capitalize"
           >{{$t('sign-in')}}</router-link>
           <button
-            @click="resendVerificationEmail"
+            @click="resendVerificationById"
             class="btn btn--raw capitalize"
-          >{{$t('successfull-resend')}}</button>
+          >{{$t('successfull-resend-header')}}</button>
         </div>
       </transition>
-      <transition name="fade" v-else>
-        <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" />
+      <transition name="fade">
+        <flower-spinner v-if="isLoading" :animation-duration="1500" :size="60" color="#fa8072" />
       </transition>
     </div>
   </div>
@@ -50,11 +50,13 @@ export default {
     };
   },
   methods: {
-    async resendVerificationEmail() {
+    async resendVerificationById() {
       try {
         this.isLoading = true;
-        const response = await api.auth.resendVerificationEmail(this.userId);
-        consoe.log(response);
+        await api.auth.resendVerificationById(this.userId);
+        this.$toasted.show(this.$i18n.t("resend-link-success"), {
+          className: "info-toast"
+        });
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"

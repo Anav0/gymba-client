@@ -9,14 +9,15 @@
             icon="sort-amount-up-alt"
             @click="isFiltering=!isFiltering"
           ></fa-icon>
-          <transition v-if="isFiltering" name="fade">
-            <g-select
-              :options="[{name: 'Name', data: 'fullname'},{name: 'Bio', data: 'desc'}]"
-              icon="angle-down"
-              placeholder="Filter by..."
-              @selectionChanged="sort"
-            />
-          </transition>
+          <g-select
+            v-if="isFiltering"
+            :options="sortingOptions"
+            :selectedOptionIndex.sync="selectedSortingOptionIndex"
+            icon="angle-down"
+            placeholder="Filter by..."
+            @clickOutside="isFiltering=!isFiltering"
+            @selectionChanged="sort"
+          />
         </div>
 
         <fa-icon
@@ -38,7 +39,7 @@
         @click="showUserProfile(user._id)"
       >
         <avatar
-          :avatarUrl="i % 3 === 0 ? 'https://source.unsplash.com/random' : null"
+          :avatarUrl="user.avatarUrl"
           :initials="user.fullname | getInitials"
           :isOnline="i % 2 === 0 ? true : false"
         />
@@ -140,6 +141,11 @@ export default {
   data() {
     return {
       searchPhrase: "",
+      selectedSortingOptionIndex: 0,
+      sortingOptions: [
+        { name: "Name", data: "fullname" },
+        { name: "Bio", data: "desc" }
+      ],
       isSearching: false,
       isFiltering: false,
       filteredViewModels: [],
@@ -165,10 +171,15 @@ export default {
       this.filteredViewModels = this.viewmodels;
       this.filteredConversations = this.conversations;
     },
-    async showConversation(conversation) {
+    showConversation(conversation) {
       this.$store.dispatch("conversation/setActiveConversation", conversation);
+
+      if (window.innerWidth < 400)
+        this.$router.push({ name: "chatConversationMobile" });
     },
     showUserProfile(id) {
+      if (window.innerWidth < 400)
+        return this.$router.push({ name: "chatFriendMobile", params: { id } });
       this.$router.push({ name: "chatFriend", params: { id } });
     },
     sort(selected) {

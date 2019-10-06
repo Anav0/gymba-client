@@ -2,7 +2,7 @@
   <section class="greeting landing-page-section">
     <div class="greeting__content">
       <h1 class="greeting__marketing">{{$t('greeting-marketing-pitch')}}</h1>
-      <div class="greeting__buttons">
+      <div v-if="!user.fullname" class="greeting__buttons">
         <router-link tag="button" to="/sign-up" class="btn btn--default">{{$t('sign-up')}}</router-link>
         <router-link tag="button" to="/sign-in" class="btn btn--outline">{{$t('sign-in')}}</router-link>
       </div>
@@ -11,7 +11,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    user() {
+      return this.$store.getters["auth/user"];
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -21,6 +27,18 @@ export default {};
   align-items: center;
   justify-content: space-evenly;
 
+  &__user-wrapper {
+    color: $AccentColor2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__user-icon {
+    font-size: $icon-size-large;
+  }
+  &__user-fullname {
+    font-size: $font-size-larger;
+  }
   @media (min-width: $md) and (max-width: $lg) {
     margin-bottom: 350px;
   }
@@ -42,7 +60,11 @@ export default {};
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
+    margin-top: 20px;
+    > :first-child {
+      margin-bottom: 100px;
+    }
 
     @media (min-width: $sm) {
       justify-content: flex-start;
@@ -57,15 +79,15 @@ export default {};
   }
 
   &__buttons {
-    display: none;
-    @media (max-width: $sm) {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      * {
-        margin-bottom: 25px;
-      }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    * {
+      margin-bottom: 25px;
+    }
+    @media (min-width: $sm) {
+      display: none;
     }
   }
   &__marketing {

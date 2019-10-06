@@ -28,7 +28,7 @@
               class="btn btn--default capitalize"
               @click.stop.prevent="login"
             >{{$t('sign-in')}}</button>
-            <button class="btn btn--raw">{{$t('sign-in-forget')}}</button>
+            <button @click="resetPassword" class="btn btn--raw">{{$t('sign-in-forget')}}</button>
           </div>
           <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
         </form>
@@ -58,17 +58,12 @@ export default {
       return this.$store.getters["auth/loginStatus"];
     }
   },
-  watch: {
-    // isLoggedIn(isLoggedIn) {
-    //   if (isLoggedIn)
-    //     this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-    // }
-  },
-  mounted() {
-    // if (this.isLoggedIn)
-    //   this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-  },
   methods: {
+    async resetPassword() {
+      this.$toasted.show(this.$i18n.t("unavilable-function"), {
+        className: "info-toast"
+      });
+    },
     async login() {
       this.errors = [];
 
@@ -80,9 +75,14 @@ export default {
         const response = await api.auth.login(this.credentials);
         this.$store.dispatch("auth/login", response.data.user);
 
+        if (window.innerWidth < 400)
+          return this.$router.push({
+            name: "chatContactsMobile",
+            params: { tab: 0 }
+          });
         this.$router.push({ name: "chatContacts", params: { tab: 0 } });
-      } catch (err) {
-        this.errors = err.response.data.errors;
+      } catch (errors) {
+        this.errors = errors;
       } finally {
         this.isLoading = false;
       }

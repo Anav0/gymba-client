@@ -1,7 +1,7 @@
-import i18n from "./i18n";
-import error from "./error";
+import i18n from './i18n';
+import moment from './moment';
 
 export {
-    i18n,
-    error
-}
+  i18n,
+  moment,
+};

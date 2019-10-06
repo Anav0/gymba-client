@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <div v-if="!isChat" class="background" :class="dynamicBackground" />
-    <navbar v-if="!isChat"></navbar>
+    <div
+      v-if="!isChat"
+      class="background"
+      :class="dynamicBackground"
+    />
+    <navbar v-if="!isChat" />
     <transition name="fade">
       <router-view class="app-content" />
     </transition>
@@ -13,27 +17,46 @@
   </div>
 </template>
 <script>
-import navbar from "../components/NavBar";
+import navbar from '../components/NavBar';
+import api from '../api';
 
 export default {
   components: {
-    navbar
+    navbar,
   },
   data() {
     return {
-      fillRoutes: ["noPage"]
+      fillRoutes: ['noPage'],
     };
   },
   computed: {
     isChat() {
-      return this.$route.matched.some(route => route.path.includes("/chat"));
+      return this.$route.matched.some((route) => route.path.includes('/chat'));
     },
     dynamicBackground() {
       return this.fillRoutes.includes(this.$route.name)
-        ? "background--fill"
-        : "";
-    }
-  }
+        ? 'background--fill'
+        : '';
+    },
+  },
+  async mounted() {
+    await this.getLoggedUser();
+  },
+  methods: {
+    getLoggedUser() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const response = await api.user.getAuthUser();
+          if (response.data) {
+            await this.$store.dispatch('auth/login', response.data);
+          }
+          resolve(response.data);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -49,7 +72,7 @@ export default {
 .background {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 150%;
   top: 0;
   left: 0;
   right: 0;

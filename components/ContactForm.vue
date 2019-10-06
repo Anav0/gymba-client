@@ -13,11 +13,12 @@
       v-model.trim="message.content"
     />
     <div class="contact-form__transitions">
-      <transition name="fade" v-if="!isLoading">
-        <button class="btn btn--default">{{$t('contact-form-btn')}}</button>
+      <transition name="fade">
+        <button v-if="!isLoading" class="btn btn--default">{{$t('contact-form-btn')}}</button>
       </transition>
-      <transition name="fade" v-else>
+      <transition name="fade">
         <flower-spinner
+          v-if="isLoading"
           class="contact-form__spinner"
           :animation-duration="1500"
           :size="60"

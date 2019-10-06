@@ -1,14 +1,17 @@
 <template>
   <div class="chat-user-profile">
     <h3 class="chat-user-profile__header">{{$t('chat-user-profile-header')}}</h3>
-
     <div class="chat-user-profile__avatar">
-      <avatar alt="user's profile picture" :initials="user.fullname | getInitials" />
+      <avatar
+        alt="user's profile picture"
+        :avatarUrl="user.avatarUrl"
+        :initials="user.fullname | getInitials"
+      />
       <h4>{{user.fullname}}</h4>
     </div>
     <div class="chat-user-profile__infos">
       <span>{{$t('chat-user-profile-joined')}}:</span>
-      <span>{{new Date(user.creationDate).toLocaleDateString(isoLanguage,dateDisplayOption)}}</span>
+      <span>{{formattedCreationDate}}</span>
       <span>{{$t('chat-user-profile-username')}}:</span>
       <span>{{user.username}}</span>
       <span>{{$t('chat-user-profile-email')}}:</span>
@@ -16,6 +19,13 @@
       <span v-if="user.bio">{{$t('chat-user-profile-bio')}}:</span>
       <p v-if="user.bio">{{user.desc}}</p>
     </div>
+    <g-select
+      border
+      class="chat-user-profile__lang-switcher"
+      @selectionChanged="switchLang"
+      :options="locales"
+      :selectedOptionIndex="selectedLangIndex"
+    />
     <div class="chat-user-profile__icons">
       <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
       <fa-icon class="chat-user-profile__icon" icon="sign-out-alt" @click="logout" />
@@ -26,31 +36,37 @@
 <script>
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
+import moment from "moment";
+import GSelect from "../GSelect";
 
 export default {
   components: {
-    Avatar
+    Avatar,
+    GSelect
   },
   data() {
     return {
-      dateDisplayOption: {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }
+      selectedLangIndex: 0,
+      locales: [
+        { code: "pl", iso: "pl-PL", name: "Polski" },
+        { code: "en", iso: "en-US", name: "English" }
+      ]
     };
   },
   computed: {
+    formattedCreationDate() {
+      return moment(this.user.creationDate).format("DD MMMM YYYY");
+    },
     user() {
       return this.$store.getters["auth/user"];
-    },
-    isoLanguage() {
-      //TODO: Add language iso code when translation is ready
-      return "en-US";
     }
   },
   methods: {
+    switchLang(locale) {
+      this.$root.$i18n.locale = locale.code;
+      localStorage.locale = JSON.stringify(locale);
+      this.selectedLangIndex = this.locales.findIndex(lang => lang == locale);
+    },
     async logout() {
       try {
         await api.auth.logout();
@@ -72,6 +88,12 @@ export default {
         });
       }
     }
+  },
+  mounted() {
+    const selectedLocaleCode = this.$root.$i18n.locale;
+    this.selectedLangIndex = this.locales.findIndex(
+      locale => locale.code == selectedLocaleCode
+    );
   }
 };
 </script>
@@ -92,7 +114,19 @@ export default {
     background: $White;
     color: $MainFontColor;
   }
-
+  &__lang-switcher {
+    align-self: flex-start;
+  }
+  &__flag:hover {
+    transform: scale(1.1);
+  }
+  &__flag {
+    width: 96px;
+    height: 96px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
   &__icons {
     display: flex;
     position: absolute;
@@ -137,12 +171,11 @@ export default {
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
+    grid-gap: 50px;
     width: 100%;
     max-height: 100%;
-    grid-gap: 20px;
     overflow: auto;
-    margin-bottom: 75px;
   }
 }
 </style>

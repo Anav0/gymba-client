@@ -1,25 +1,32 @@
 <template>
   <div class="chat">
     <fa-icon
-      v-if="this.$route.name != 'chatContacts'"
+      v-if="isBackArrowVisible"
       class="chat__go-back-arrow"
+      :class="{'chat__go-back-arrow--accent': $route.name==='chatConversationMobile'}"
       icon="angle-left"
       @click="$router.go(-1)"
     />
     <chat-side-nav class="chat-side-nav--desktop" />
     <router-view />
-    <conversation class="conversation--desktop" />
+    <router-view name="conversation" />
   </div>
 </template>
 <script>
 import ChatSideNav from "../components/chat/ChatSideNav";
-import conversation from "../components/chat/conversation";
 import api from "../api";
 
 export default {
   components: {
-    conversation,
     ChatSideNav
+  },
+  computed: {
+    isBackArrowVisible() {
+      return (
+        this.$route.name != "chatContacts" &&
+        this.$route.name != "chatContactsMobile"
+      );
+    }
   },
   async mounted() {
     try {
@@ -54,18 +61,19 @@ export default {
     }
   }
   &__go-back-arrow {
-    @media (min-width: $md) {
+    @media (min-width: $sm) {
       display: none;
+    }
+    &--accent {
+      color: $AccentColor2;
     }
     font-size: $icon-size-extra-large;
     color: $chat-go-back-arrow;
     z-index: 1;
     cursor: pointer;
     position: fixed;
-    left: 0;
-    top: 0;
-    margin-top: 30px;
-    margin-left: 30px;
+    left: 25px;
+    top: 20px;
   }
 }
 </style>
