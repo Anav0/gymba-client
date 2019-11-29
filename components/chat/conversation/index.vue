@@ -110,7 +110,6 @@ export default {
 
     await this.init();
   },
-
   computed: {
     isFriend() {
       return this.user.friends.includes(this.target._id);
@@ -123,18 +122,16 @@ export default {
     }
   },
   watch: {
-    async conversation(conversation) {
+    async conversation() {
       await this.init();
     }
   },
   methods: {
-    emojiSelected(emoji) {
-      console.log(emoji);
-    },
     async init() {
       await new Promise(async resolve => {
         this.isLoading = true;
         this.fillTarget();
+        if (!this.conversation._id) return (this.isLoading = false);
         this.chat.emit("join", {
           roomId: this.conversation.roomId,
           username: this.user.fullname
@@ -209,7 +206,7 @@ export default {
       this.message = "";
     },
     fillTarget() {
-      if (!this.conversation) return;
+      if (!this.conversation._id) return;
       this.target = this.conversation.participants.find(
         participant => participant._id !== this.user._id
       );
@@ -258,7 +255,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: fixed;
+    position: absolute;
     bottom: 90px;
     left: 20px;
     width: 60px;

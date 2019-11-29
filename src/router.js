@@ -5,7 +5,7 @@ import signUp from '../pages/signUp';
 import signIn from '../pages/signIn';
 import noPage from '../pages/noPage';
 import chat from '../pages/chat';
-import ChatContacts from '../pages/ChatContacts';
+import ChatContacts from '../pages/chatContacts';
 import ChatUserProfile from '../components/chat/ChatUserProfile';
 import ChatFriendProfile from '../components/chat/ChatFriendProfile';
 import conversation from '../components/chat/conversation';

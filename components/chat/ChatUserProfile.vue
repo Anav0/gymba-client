@@ -1,30 +1,30 @@
 <template>
   <div class="chat-user-profile">
-    <h3 class="chat-user-profile__header">{{$t('chat-user-profile-header')}}</h3>
+    <h3 class="chat-user-profile__header">{{ $t('chat-user-profile-header') }}</h3>
     <div class="chat-user-profile__avatar">
       <avatar
         alt="user's profile picture"
-        :avatarUrl="user.avatarUrl"
+        :avatar-url="user.avatarUrl"
         :initials="user.fullname | getInitials"
       />
-      <h4>{{user.fullname}}</h4>
+      <h4>{{ user.fullname }}</h4>
     </div>
     <div class="chat-user-profile__infos">
-      <span>{{$t('chat-user-profile-joined')}}:</span>
-      <span>{{formattedCreationDate}}</span>
-      <span>{{$t('chat-user-profile-username')}}:</span>
-      <span>{{user.username}}</span>
-      <span>{{$t('chat-user-profile-email')}}:</span>
-      <span>{{user.email}}</span>
-      <span v-if="user.bio">{{$t('chat-user-profile-bio')}}:</span>
-      <p v-if="user.bio">{{user.desc}}</p>
+      <span>{{ $t('chat-user-profile-joined') }}:</span>
+      <span>{{ formattedCreationDate }}</span>
+      <span>{{ $t('chat-user-profile-username') }}:</span>
+      <span>{{ user.username }}</span>
+      <span>{{ $t('chat-user-profile-email') }}:</span>
+      <span>{{ user.email }}</span>
+      <span v-if="user.bio">{{ $t('chat-user-profile-bio') }}:</span>
+      <p v-if="user.bio">{{ user.desc }}</p>
     </div>
     <g-select
       border
       class="chat-user-profile__lang-switcher"
-      @selectionChanged="switchLang"
       :options="locales"
-      :selectedOptionIndex="selectedLangIndex"
+      :selectedOptionIndex.sync="selectedLangIndex"
+      @selectionChanged="switchLang"
     />
     <div class="chat-user-profile__icons">
       <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
@@ -34,10 +34,10 @@
 </template>
 
 <script>
+import moment from "moment";
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
-import moment from "moment";
-import GSelect from "../GSelect";
+import GSelect from "../misc/GSelect";
 
 export default {
   components: {
@@ -60,6 +60,14 @@ export default {
     user() {
       return this.$store.getters["auth/user"];
     }
+  },
+  mounted() {
+    const selectedLocaleCode = this.$root.$i18n.locale;
+    const pickedLangIndex = this.locales.findIndex(
+      locale => locale.code == selectedLocaleCode
+    );
+    if (pickedLangIndex && pickedLangIndex !== -1)
+      this.selectedLangIndex = pickedLangIndex;
   },
   methods: {
     switchLang(locale) {
@@ -88,12 +96,6 @@ export default {
         });
       }
     }
-  },
-  mounted() {
-    const selectedLocaleCode = this.$root.$i18n.locale;
-    this.selectedLangIndex = this.locales.findIndex(
-      locale => locale.code == selectedLocaleCode
-    );
   }
 };
 </script>
