@@ -1,81 +1,85 @@
 <template>
   <div class="chat-contacts">
     <avatar-wrapper
-      @click.native="goToUserProfile"
-      :avatarUrl="avatarUrl"
+      :avatar-url="avatarUrl"
       class="chat-contacts__avatar-wrapper"
       :initials="fullname | getInitials"
+      @click.native="goToUserProfile"
     >
-      <h4>{{name}}</h4>
+      <h4>{{ name }}</h4>
     </avatar-wrapper>
-    <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
+    <tab-switcher
+      class="chat-contacts__tab-switcher"
+      :tabs="tabs"
+      @tab-switched="switchTabs"
+    />
     <contact-card
       :viewmodels="friends"
       :conversations="conversations"
-      :suggestedUsers="suggestions"
+      :suggested-users="suggestions"
       :header="contactCardHeader"
-      :selectedTab="activeTab"
-      @reloadInvitations="loadInvites"
-      :isLoading="isLoading"
+      :selected-tab="activeTab"
+      :is-loading="isLoading"
       class="chat-contacts__contact-card"
-    ></contact-card>
+      @reloadInvitations="loadInvites"
+    />
   </div>
 </template>
 
 <script>
-import AvatarWrapper from "../components/Avatars/AvatarWrapper";
-import TabSwitcher from "../components/TabSwiitcher";
-import ContactCard from "../components/ContactCard/ContactCard";
-import api from "../api";
+import AvatarWrapper from '../components/Avatars/AvatarWrapper';
+import TabSwitcher from '../components/TabSwiitcher';
+import ContactCard from '../components/ContactCard/ContactCard';
+import api from '../api';
 
 export default {
   components: {
     AvatarWrapper,
     TabSwitcher,
-    ContactCard
-  },
-  mounted() {
-    if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
-    else this.switchTabs(0);
-  },
-  computed: {
-    name() {
-      return this.$store.getters["auth/user"].fullname.split(" ")[0];
-    },
-    fullname() {
-      return this.$store.getters["auth/user"].fullname;
-    },
-    avatarUrl() {
-      return this.$store.getters["auth/user"].avatarUrl;
-    }
-  },
-  watch: {
-    $route(to, from) {
-      if (to.params.tab) this.switchTabs(+to.params.tab);
-    }
+    ContactCard,
   },
   data() {
     return {
       activeTab: 0,
       isLoading: true,
-      contactCardHeader: "",
+      contactCardHeader: '',
       tabs: [
-        this.$i18n.t("chat-tab-contact"),
-        this.$i18n.t("chat-tab-new-friends"),
-        this.$i18n.t("chat-tab-invites")
+        this.$i18n.t('chat-tab-contact'),
+        this.$i18n.t('chat-tab-new-friends'),
+        this.$i18n.t('chat-tab-invites'),
       ],
       friends: [],
       conversations: [],
-      suggestions: []
+      suggestions: [],
     };
+  },
+  computed: {
+    name() {
+      return this.$store.getters['auth/user'].fullname.split(' ')[0];
+    },
+    fullname() {
+      return this.$store.getters['auth/user'].fullname;
+    },
+    avatarUrl() {
+      return this.$store.getters['auth/user'].avatarUrl;
+    },
+  },
+  watch: {
+    $route(to) {
+      if (to.params.tab) this.switchTabs(+to.params.tab);
+    },
+  },
+  mounted() {
+    if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
+    else this.switchTabs(0);
   },
   methods: {
     goToUserProfile() {
       console.log(window.innerWidth);
       if (window.innerWidth < 480)
-        return this.$router.push({ name: "chatProfileMobile" });
+        return this.$router.push({ name: 'chatProfileMobile' });
 
-      return this.$router.push({ name: "chatProfile" });
+      return this.$router.push({ name: 'chatProfile' });
     },
     clearData() {
       this.friends = [];
@@ -85,7 +89,7 @@ export default {
     loadConversations() {
       this.isLoading = true;
       this.clearData();
-      const conversationIds = this.$store.getters["auth/user"].conversations;
+      const conversationIds = this.$store.getters['auth/user'].conversations;
       conversationIds.forEach(async id => {
         const response = await api.conversation.getConversation(id);
         this.conversations.push(response.data);
@@ -96,12 +100,12 @@ export default {
       try {
         this.isLoading = true;
         this.clearData();
-        let response = await api.invite.getSendInvitations("target");
+        let response = await api.invite.getSendInvitations('target');
         response.data.forEach(invitation => {
           this.friends.push({
             isLoading: false,
             invitationId: invitation._id,
-            user: invitation.target
+            user: invitation.target,
           });
         });
         response = await api.user.getSuggestedContacts();
@@ -110,12 +114,12 @@ export default {
           this.friends.push({
             isLoading: false,
             invitationId: null,
-            user
+            user,
           });
         });
       } catch (err) {
         this.$toasted.show(err.message, {
-          className: "error-toast"
+          className: 'error-toast',
         });
       } finally {
         this.isLoading = false;
@@ -125,17 +129,17 @@ export default {
       try {
         this.isLoading = true;
         this.clearData();
-        const response = await api.invite.getRecivedInvitations("sender");
+        const response = await api.invite.getRecivedInvitations('sender');
         response.data.forEach(invitation => {
           this.friends.push({
             isLoading: false,
             invitationId: invitation._id,
-            user: invitation.sender
+            user: invitation.sender,
           });
         });
       } catch (err) {
         this.$toasted.show(err.message, {
-          className: "error-toast"
+          className: 'error-toast',
         });
       } finally {
         this.isLoading = false;
@@ -147,21 +151,21 @@ export default {
         default:
         case 0:
           this.contactCardHeader = this.$i18n.t(
-            "contacts-conversations-header"
+            'contacts-conversations-header',
           );
           this.loadConversations();
           break;
         case 1:
-          this.contactCardHeader = this.$i18n.t("contacts-friends-header");
+          this.contactCardHeader = this.$i18n.t('contacts-friends-header');
           this.loadPotentialFriends();
           break;
         case 2:
-          this.contactCardHeader = this.$i18n.t("contacts-invites-header");
+          this.contactCardHeader = this.$i18n.t('contacts-invites-header');
           this.loadInvites();
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

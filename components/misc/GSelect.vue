@@ -1,18 +1,33 @@
 <template>
-  <div class="g-select" :class="{'g-select--border': border}" v-on-clickaway="close">
-    <div @click="isExpanded = !isExpanded" class="g-select__selection card">
-      <span>{{options[selectedOptionIndex].name}}</span>
-      <fa-icon class="g-select__caret" :icon="icon" />
+  <div
+    v-on-clickaway="close"
+    class="g-select"
+    :class="{'g-select--border': border}"
+  >
+    <div
+      class="g-select__selection card"
+      @click="isExpanded = !isExpanded"
+    >
+      <span>{{ options[selectedOptionIndex].name }}</span>
+      <fa-icon
+        class="g-select__caret"
+        :icon="icon"
+      />
     </div>
     <transition name="fade">
-      <div v-if="isExpanded" class="g-select__options card">
+      <div
+        v-if="isExpanded"
+        class="g-select__options card"
+      >
         <ul>
           <li
-            class="g-select__option"
             v-for="(option,i) in options"
             :key="option.name+option.data"
+            class="g-select__option"
             @click="selectItem(i)"
-          >{{option.name}}</li>
+          >
+            {{ option.name }}
+          </li>
         </ul>
       </div>
     </transition>
@@ -20,47 +35,47 @@
 </template>
 
 <script>
-import { mixin as clickaway } from "vue-clickaway";
+import { mixin as clickaway } from 'vue-clickaway';
 
 export default {
   mixins: [clickaway],
-  methods: {
-    close() {
-      this.$emit("clickOutside");
-    },
-    selectItem(i) {
-      this.$emit("update:selectedOptionIndex", i);
-      this.$emit("selectionChanged", this.options[i]);
-      this.isExpanded = false;
-    }
-  },
-  data() {
-    return {
-      isExpanded: false
-    };
-  },
   props: {
     border: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selectedOptionIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     icon: {
       type: String,
-      default: "caret-down"
+      default: 'caret-down',
     },
     placeholder: {
       type: String,
-      default: "Select item"
+      default: 'Select item',
     },
     options: {
       type: Array,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isExpanded: false,
+    };
+  },
+  methods: {
+    close() {
+      this.$emit('clickOutside');
+    },
+    selectItem(i) {
+      this.$emit('update:selectedOptionIndex', i);
+      this.$emit('selectionChanged', this.options[i]);
+      this.isExpanded = false;
+    },
+  },
 };
 </script>
 

@@ -106,7 +106,7 @@ import api from "../api";
 import { FlowerSpinner } from "epic-spinners";
 import Successfull from "../components/Successfull";
 import { setInterval } from "timers";
-import GModal from "../components/GModal";
+import GModal from "../components/misc/GModal";
 
 export default {
   components: { FlowerSpinner, Successfull, GModal },
