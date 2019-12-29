@@ -1,6 +1,8 @@
 <template>
   <div class="chat-user-profile">
-    <h3 class="chat-user-profile__header">{{ $t('chat-user-profile-header') }}</h3>
+    <h3 class="chat-user-profile__header">
+      {{ $t("chat-user-profile-header") }}
+    </h3>
     <div class="chat-user-profile__avatar">
       <avatar
         alt="user's profile picture"
@@ -10,13 +12,13 @@
       <h4>{{ user.fullname }}</h4>
     </div>
     <div class="chat-user-profile__infos">
-      <span>{{ $t('chat-user-profile-joined') }}:</span>
+      <span>{{ $t("chat-user-profile-joined") }}:</span>
       <span>{{ formattedCreationDate }}</span>
-      <span>{{ $t('chat-user-profile-username') }}:</span>
+      <span>{{ $t("chat-user-profile-username") }}:</span>
       <span>{{ user.username }}</span>
-      <span>{{ $t('chat-user-profile-email') }}:</span>
+      <span>{{ $t("chat-user-profile-email") }}:</span>
       <span>{{ user.email }}</span>
-      <span v-if="user.bio">{{ $t('chat-user-profile-bio') }}:</span>
+      <span v-if="user.bio">{{ $t("chat-user-profile-bio") }}:</span>
       <p v-if="user.bio">{{ user.desc }}</p>
     </div>
     <g-select
@@ -27,8 +29,16 @@
       @selectionChanged="switchLang"
     />
     <div class="chat-user-profile__icons">
-      <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
-      <fa-icon class="chat-user-profile__icon" icon="sign-out-alt" @click="logout" />
+      <fa-icon
+        class="chat-user-profile__icon disable"
+        icon="trash"
+        @click="deleteAccount"
+      />
+      <fa-icon
+        class="chat-user-profile__icon"
+        icon="sign-out-alt"
+        @click="logout"
+      />
     </div>
   </div>
 </template>
