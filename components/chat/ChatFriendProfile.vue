@@ -1,19 +1,34 @@
 <template>
   <div class="chat-friend-profile">
-    <div v-if="!isLoading && user.avatarUrl" class="chat-friend-profile__image-wrapper">
-      <h3 class="chat-friend-profile__fullname">{{user.fullname}}</h3>
+    <div
+      v-if="!isLoading && user.avatarUrl"
+      class="chat-friend-profile__image-wrapper"
+    >
+      <h3 class="chat-friend-profile__fullname">{{ user.fullname }}</h3>
       <img class="chat-friend-profile__avatar" :src="user.avatarUrl" />
     </div>
-    <div class="chat-friend-profile__avatar-wrapper" v-if="!isLoading && !user.avatarUrl">
-      <avatar class="chat-friend-profile__avatar-initials" :initials="user.fullname | getInitials" />
-      <h3 class="chat-friend-profile__fullname-initials">{{user.fullname}}</h3>
+    <div
+      class="chat-friend-profile__avatar-wrapper"
+      v-if="!isLoading && !user.avatarUrl"
+    >
+      <avatar
+        class="chat-friend-profile__avatar-initials"
+        :initials="user.fullname | getInitials"
+      />
+      <h3 class="chat-friend-profile__fullname-initials">
+        {{ user.fullname }}
+      </h3>
     </div>
     <div v-if="!isLoading" class="chat-friend-profile__content">
-      <blockquote>{{user.desc}}</blockquote>
+      <blockquote>{{ user.desc }}</blockquote>
       <div class="chat-friend-profile__stats">
         <conversation-stat
           icon="envelope"
-          :text="`${$i18n.t('chat-friend-profile-you-exchanged')} ${exchangedMessages.length} ${$i18n.t('chat-friend-profile-exchanged-messages')}`"
+          :text="
+            `${$i18n.t('chat-friend-profile-you-exchanged')} ${
+              exchangedMessages.length
+            } ${$i18n.t('chat-friend-profile-exchanged-messages')}`
+          "
         />
         <!-- <conversation-stat
           icon="keyboard"
@@ -35,7 +50,9 @@
         <text-icon
           class="disable"
           :icon="isBlocked ? 'lock-open' : 'ban'"
-          :text="$i18n.t(`chat-friend-profile-${isBlocked ? 'unblock' : 'block'}`)"
+          :text="
+            $i18n.t(`chat-friend-profile-${isBlocked ? 'unblock' : 'block'}`)
+          "
         />
         <text-icon
           class="disable"
@@ -73,9 +90,8 @@ export default {
       await this.fillUser();
       await this.fillExchangedMessages();
       await this.fillWords();
-      await this.fillisInvited();
-      await this.fillIsFriend();
       await this.fillInvitationId();
+      await this.fillIsFriend();
     } catch (err) {
       this.$toasted.show(err.message, {
         className: "error-toast"
@@ -117,6 +133,9 @@ export default {
     },
     friendsFor() {
       return "N";
+    },
+    loggedUser() {
+      return this.$store.getters["auth/user"];
     }
   },
   methods: {
@@ -170,27 +189,7 @@ export default {
     async fillIsFriend() {
       return new Promise(async (resolve, reject) => {
         try {
-          const user = this.$store.getters["auth/user"];
-          if (user.friends.includes(this.user._id)) this.isFriend = true;
-          resolve();
-        } catch (err) {
-          this.$toasted.show(err.message, {
-            className: "error-toast"
-          });
-          reject(err);
-        }
-      });
-    },
-    async fillisInvited() {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const user = this.$store.getters["auth/user"];
-          let response = await api.invite.getInviteInvolving(this.user._id);
-          if (response.data) {
-            this.isInvited = true;
-            return resolve();
-          }
-          this.isInvited = false;
+          this.isFriend = this.loggedUser.friends.includes(this.user._id);
           resolve();
         } catch (err) {
           this.$toasted.show(err.message, {
@@ -242,7 +241,10 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           let response = await api.invite.getInviteInvolving(this.user._id);
-          this.invitationId = response.data._id;
+          if (response.data) {
+            this.invitationId = response.data._id;
+            this.isInvited = true;
+          } else this.isInvited = false;
           resolve();
         } catch (err) {
           this.$toasted.show(err.message, {
@@ -348,8 +350,6 @@ export default {
     height: 100%;
     border-radius: 0 0 75px 0;
     object-fit: cover;
-  }
-  &__avatar-initials {
   }
 
   .avatar {

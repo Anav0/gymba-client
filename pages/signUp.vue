@@ -3,7 +3,7 @@
     <div class="card">
       <transition name="slide">
         <form v-if="!isSuccessfull" class="sign-up__form">
-          <h1 class="sign-up__title capitalize">{{$t('sign-up')}}</h1>
+          <h1 class="sign-up__title capitalize">{{ $t("sign-up") }}</h1>
           <input
             max="250"
             :placeholder="$i18n.t('sign-up-fullname')"
@@ -49,19 +49,28 @@
             v-model="user.desc"
           />
           <ul class="error-list">
-            <li v-for="error in errors" :key="error">{{error}}</li>
+            <li v-for="error in errors" :key="error">{{ error }}</li>
           </ul>
 
           <button
             class="btn btn--default capitalize"
             v-if="!isLoading"
             @click.stop.prevent="submit"
-          >{{$t('sign-up-submit')}}</button>
-          <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+          >
+            {{ $t("sign-up-submit") }}
+          </button>
+          <flower-spinner
+            :animation-duration="1500"
+            :size="60"
+            color="#fa8072"
+            v-else
+          />
           <button
             @click.stop.prevent="isResendModalVisible = true"
             class="btn btn--raw capitalize"
-          >{{$t('resend-link')}}</button>
+          >
+            {{ $t("resend-link") }}
+          </button>
         </form>
       </transition>
       <transition name="slide">
@@ -73,9 +82,12 @@
         />
       </transition>
       <transition name="fade">
-        <g-modal v-if="isResendModalVisible" @close="isResendModalVisible=false">
+        <g-modal
+          v-if="isResendModalVisible"
+          @close="isResendModalVisible = false"
+        >
           <template v-slot:header>
-            <h2>{{$t('email-verification-modal-header')}}</h2>
+            <h2>{{ $t("email-verification-modal-header") }}</h2>
           </template>
           <template v-slot:body>
             <input
@@ -92,8 +104,15 @@
               v-if="!isResendingEmail"
               @click="resendActivationEmail"
               class="btn btn--outline sign-up__modal-btn capitalize"
-            >{{$t('sign-up-submit')}}</button>
-            <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+            >
+              {{ $t("sign-up-submit") }}
+            </button>
+            <flower-spinner
+              :animation-duration="1500"
+              :size="60"
+              color="#fa8072"
+              v-else
+            />
           </template>
         </g-modal>
       </transition>
@@ -149,7 +168,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.$store.getters["auth/loginStatus"];
+      return this.$store.getters["auth/user"]._id;
     }
   },
   watch: {

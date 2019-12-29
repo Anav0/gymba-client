@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <div
-      v-if="!isChat"
-      class="background"
-      :class="dynamicBackground"
-    />
+    <div v-if="!isChat" class="background" :class="dynamicBackground" />
     <navbar v-if="!isChat" />
     <transition name="fade">
       <router-view class="app-content" />
@@ -17,30 +13,35 @@
   </div>
 </template>
 <script>
-import navbar from '../components/NavBar';
-import api from '../api';
+import navbar from "../components/NavBar";
+import api from "../api";
 
 export default {
   components: {
-    navbar,
+    navbar
   },
   data() {
     return {
-      fillRoutes: ['noPage'],
+      fillRoutes: ["noPage"]
     };
   },
   computed: {
     isChat() {
-      return this.$route.matched.some((route) => route.path.includes('/chat'));
+      return this.$route.matched.some(route => route.path.includes("/chat"));
     },
     dynamicBackground() {
       return this.fillRoutes.includes(this.$route.name)
-        ? 'background--fill'
-        : '';
-    },
+        ? "background--fill"
+        : "";
+    }
   },
   async mounted() {
-    await this.getLoggedUser();
+    try {
+      await this.getLoggedUser();
+    } catch (error) {
+      //TODO: Maybe not show this error
+      console.error(error);
+    }
   },
   methods: {
     getLoggedUser() {
@@ -48,15 +49,15 @@ export default {
         try {
           const response = await api.user.getAuthUser();
           if (response.data) {
-            await this.$store.dispatch('auth/login', response.data);
+            await this.$store.dispatch("auth/login", response.data);
           }
           resolve(response.data);
         } catch (err) {
           reject(err);
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -1,20 +1,22 @@
 <template>
   <form class="contact-form">
-    <h3>{{$t('contact-form-header')}}</h3>
+    <h3>{{ $t("contact-form-header") }}</h3>
     <input
+      v-model.trim="message.sender"
       required
       type="email"
       :placeholder="$i18n.t('contact-form-from-placeholder')"
-      v-model.trim="message.sender"
     />
     <textarea
+      v-model.trim="message.content"
       required
       :placeholder="$i18n.t('contact-form-message-placeholder')"
-      v-model.trim="message.content"
     />
     <div class="contact-form__transitions">
       <transition name="fade">
-        <button v-if="!isLoading" class="btn btn--default">{{$t('contact-form-btn')}}</button>
+        <button v-if="!isLoading" class="btn btn--default" @click="submit">
+          {{ $t("contact-form-btn") }}
+        </button>
       </transition>
       <transition name="fade">
         <flower-spinner
@@ -30,8 +32,8 @@
 </template>
 
 <script>
-import api from "../api";
 import { FlowerSpinner } from "epic-spinners";
+import api from "../api";
 
 export default {
   components: {
