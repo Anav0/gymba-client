@@ -1,7 +1,10 @@
 <template>
   <div class="conversation">
     <div class="conversation__placeholder" v-if="!conversation._id">
-      <fa-icon class="conversation__placeholder-icon" icon="comment-alt"></fa-icon>
+      <fa-icon
+        class="conversation__placeholder-icon"
+        icon="comment-alt"
+      ></fa-icon>
       <h3>No conversation selected</h3>
     </div>
     <div v-else class="conversation__content">
@@ -9,23 +12,36 @@
         <div
           v-if="isTyping"
           class="conversation__typing-bubble jello-horizontal"
-        >{{typer.fullname | getFirstname}}</div>
+        >
+          {{ typer.fullname | getFirstname }}
+        </div>
       </transition>
       <div class="conversation__upper" @click="showUserProfile(target._id)">
-        <avatar-wrapper :initials="target.fullname | getInitials" :avatarUrl="target.avatarUrl">
-          <h4 class="conversation__target-name">{{target.fullname}}</h4>
+        <avatar-wrapper
+          :initials="target.fullname | getInitials"
+          :avatarUrl="target.avatarUrl"
+        >
+          <h4 class="conversation__target-name">{{ target.fullname }}</h4>
         </avatar-wrapper>
       </div>
-      <div ref="chatMessages" :class="{'dimmed': isLoading}" class="conversation__messages">
+      <div
+        ref="chatMessages"
+        :class="{ dimmed: isLoading }"
+        class="conversation__messages"
+      >
         <chat-message
           v-for="message in messages"
-          :class="isSendByUser(message) ? 'conversation__message--send' : 'conversation__message--recived'"
+          :class="
+            isSendByUser(message)
+              ? 'conversation__message--send'
+              : 'conversation__message--recived'
+          "
           :sender="message.sender"
           :seenStatus="message.status"
           :sendDate="message.sendDate"
           :key="message._id"
         >
-          <p>{{message.content}}</p>
+          <p>{{ message.content }}</p>
         </chat-message>
       </div>
       <spring-spinner
@@ -36,7 +52,7 @@
         color="#fcd87d"
       />
       <div @click="showInfo">
-        <div class="conversation__input-box" :class="{'disabled': !isFriend}">
+        <div class="conversation__input-box" :class="{ disabled: !isFriend }">
           <input
             v-model.trim="message"
             @keyup="stopedTyping"
@@ -46,11 +62,15 @@
           />
           <fa-icon
             class="conversation__action-icon"
-            @click="isEmojiPickerVisible=!isEmojiPickerVisible"
+            @click="isEmojiPickerVisible = !isEmojiPickerVisible"
             icon="smile"
           />
           <fa-icon class="conversation__action-icon" icon="paperclip" />
-          <fa-icon @click="sendMessage" class="conversation__action-icon" icon="paper-plane" />
+          <fa-icon
+            @click="sendMessage"
+            class="conversation__action-icon"
+            icon="paper-plane"
+          />
         </div>
       </div>
     </div>
@@ -93,8 +113,12 @@ export default {
       this.scrollToBottom();
     });
 
-    this.chat.on("failed to send message", async message => {
-      //display error message
+    this.chat.on("failed to send message", async data => {
+      for (const error of data.errors) {
+        this.$toasted.show(error, {
+          className: "error-toast"
+        });
+      }
     });
 
     this.chat.on("user join room", message => {});
@@ -134,12 +158,14 @@ export default {
         if (!this.conversation._id) return (this.isLoading = false);
         this.chat.emit("join", {
           roomId: this.conversation.roomId,
-          username: this.user.fullname
+          user: this.user
         });
         const {
           data: messages
         } = await api.conversation.getConversationMessages(
-          this.conversation._id
+          this.conversation._id,
+          null,
+          null
         );
         this.messages = messages;
         this.isLoading = false;

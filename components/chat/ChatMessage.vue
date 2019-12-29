@@ -5,32 +5,43 @@
       alt="message sender profile picture"
       :avatarUrl="sender.avatarUrl"
       :initials="sender.fullname | getInitials"
-      v-if="user._id!==sender._id"
+      v-if="user._id !== sender._id"
     />
     <div
       class="chat-message__bubble"
-      @click="isSendDateVisible=!isSendDateVisible"
-      :class="user._id!==sender._id ? 'chat-message__bubble--received' : 'chat-message__bubble--send'"
+      @click="isSendDateVisible = !isSendDateVisible"
+      :class="
+        user._id !== sender._id
+          ? 'chat-message__bubble--received'
+          : 'chat-message__bubble--send'
+      "
     >
       <slot></slot>
       <div
         v-if="seenStatus"
-        :class="`chat-message__seen-indicator chat-message__seen-indicator--${seenStatus}`"
+        :class="
+          `chat-message__seen-indicator chat-message__seen-indicator--${seenStatus}`
+        "
       ></div>
       <div
-        v-if="seenStatus=='received'"
+        v-if="seenStatus == 'received'"
         class="chat-message__seen-indicator chat-message__seen-indicator--received"
       >
         <img v-if="user.avatarUrl" :src="user.avatarUrl" />
-        <span v-else>{{user.fullname | getInitials}}</span>
+        <span v-else>{{ user.fullname | getInitials }}</span>
       </div>
     </div>
     <transition name="fade">
       <span
         v-if="isSendDateVisible"
         class="chat-message__send-time"
-        :class="user._id!==sender._id ? 'chat-message__send-time' : 'chat-message__send-time--send'"
-      >{{ formatedDate }}</span>
+        :class="
+          user._id !== sender._id
+            ? 'chat-message__send-time'
+            : 'chat-message__send-time--send'
+        "
+        >{{ formatedDate }}</span
+      >
     </transition>
   </div>
 </template>
@@ -67,7 +78,7 @@ export default {
       const sendDate = moment(this.sendDate);
       const today = moment();
       const diff = today.diff(sendDate, "hours");
-      if (diff < 24) return sendDate.format("HH:mm");
+      if (diff < 12) return sendDate.format("HH:mm");
       else if (diff / 24 < 7) return sendDate.format("dddd HH:mm");
       else return sendDate.format("HH:mm DD MMM 'YY");
     },
@@ -78,7 +89,7 @@ export default {
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .chat-message {
   display: grid;
   grid-template-columns: auto 1fr;

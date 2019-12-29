@@ -27,47 +27,47 @@
 </template>
 
 <script>
-import AvatarWrapper from '../components/Avatars/AvatarWrapper';
-import TabSwitcher from '../components/TabSwiitcher';
-import ContactCard from '../components/ContactCard/ContactCard';
-import api from '../api';
+import AvatarWrapper from "../components/Avatars/AvatarWrapper";
+import TabSwitcher from "../components/TabSwiitcher";
+import ContactCard from "../components/ContactCard/ContactCard";
+import api from "../api";
 
 export default {
   components: {
     AvatarWrapper,
     TabSwitcher,
-    ContactCard,
+    ContactCard
   },
   data() {
     return {
       activeTab: 0,
       isLoading: true,
-      contactCardHeader: '',
+      contactCardHeader: "",
       tabs: [
-        this.$i18n.t('chat-tab-contact'),
-        this.$i18n.t('chat-tab-new-friends'),
-        this.$i18n.t('chat-tab-invites'),
+        this.$i18n.t("chat-tab-contact"),
+        this.$i18n.t("chat-tab-new-friends"),
+        this.$i18n.t("chat-tab-invites")
       ],
       friends: [],
       conversations: [],
-      suggestions: [],
+      suggestions: []
     };
   },
   computed: {
     name() {
-      return this.$store.getters['auth/user'].fullname.split(' ')[0];
+      return this.$store.getters["auth/user"].fullname.split(" ")[0];
     },
     fullname() {
-      return this.$store.getters['auth/user'].fullname;
+      return this.$store.getters["auth/user"].fullname;
     },
     avatarUrl() {
-      return this.$store.getters['auth/user'].avatarUrl;
-    },
+      return this.$store.getters["auth/user"].avatarUrl;
+    }
   },
   watch: {
     $route(to) {
       if (to.params.tab) this.switchTabs(+to.params.tab);
-    },
+    }
   },
   mounted() {
     if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
@@ -77,9 +77,9 @@ export default {
     goToUserProfile() {
       console.log(window.innerWidth);
       if (window.innerWidth < 480)
-        return this.$router.push({ name: 'chatProfileMobile' });
+        return this.$router.push({ name: "chatProfileMobile" });
 
-      return this.$router.push({ name: 'chatProfile' });
+      return this.$router.push({ name: "chatProfile" });
     },
     clearData() {
       this.friends = [];
@@ -89,7 +89,8 @@ export default {
     loadConversations() {
       this.isLoading = true;
       this.clearData();
-      const conversationIds = this.$store.getters['auth/user'].conversations;
+      const conversationIds = this.$store.getters["auth/user"].conversations;
+
       conversationIds.forEach(async id => {
         const response = await api.conversation.getConversation(id);
         this.conversations.push(response.data);
@@ -100,12 +101,12 @@ export default {
       try {
         this.isLoading = true;
         this.clearData();
-        let response = await api.invite.getSendInvitations('target');
+        let response = await api.invite.getSendInvitations("target");
         response.data.forEach(invitation => {
           this.friends.push({
             isLoading: false,
             invitationId: invitation._id,
-            user: invitation.target,
+            user: invitation.target
           });
         });
         response = await api.user.getSuggestedContacts();
@@ -114,12 +115,12 @@ export default {
           this.friends.push({
             isLoading: false,
             invitationId: null,
-            user,
+            user
           });
         });
       } catch (err) {
         this.$toasted.show(err.message, {
-          className: 'error-toast',
+          className: "error-toast"
         });
       } finally {
         this.isLoading = false;
@@ -129,17 +130,17 @@ export default {
       try {
         this.isLoading = true;
         this.clearData();
-        const response = await api.invite.getRecivedInvitations('sender');
+        const response = await api.invite.getRecivedInvitations("sender");
         response.data.forEach(invitation => {
           this.friends.push({
             isLoading: false,
             invitationId: invitation._id,
-            user: invitation.sender,
+            user: invitation.sender
           });
         });
       } catch (err) {
         this.$toasted.show(err.message, {
-          className: 'error-toast',
+          className: "error-toast"
         });
       } finally {
         this.isLoading = false;
@@ -151,21 +152,21 @@ export default {
         default:
         case 0:
           this.contactCardHeader = this.$i18n.t(
-            'contacts-conversations-header',
+            "contacts-conversations-header"
           );
           this.loadConversations();
           break;
         case 1:
-          this.contactCardHeader = this.$i18n.t('contacts-friends-header');
+          this.contactCardHeader = this.$i18n.t("contacts-friends-header");
           this.loadPotentialFriends();
           break;
         case 2:
-          this.contactCardHeader = this.$i18n.t('contacts-invites-header');
+          this.contactCardHeader = this.$i18n.t("contacts-invites-header");
           this.loadInvites();
           break;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

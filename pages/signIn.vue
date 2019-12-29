@@ -4,7 +4,7 @@
     <div class="card">
       <transition name="slide">
         <form class="sign-in__form">
-          <h1 class="sign-in__title capitalize">{{$t('sign-in')}}</h1>
+          <h1 class="sign-in__title capitalize">{{ $t("sign-in") }}</h1>
           <input
             max="250"
             :placeholder="$i18n.t('sign-in-username')"
@@ -21,16 +21,25 @@
             v-model.trim="credentials.password"
           />
           <ul class="error-list">
-            <li v-for="error in errors" :key="error">{{error}}</li>
+            <li v-for="error in errors" :key="error">{{ error }}</li>
           </ul>
           <div class="sign-in__buttons" v-if="!isLoading">
             <button
               class="btn btn--default capitalize"
               @click.stop.prevent="login"
-            >{{$t('sign-in')}}</button>
-            <button @click="resetPassword" class="btn btn--raw">{{$t('sign-in-forget')}}</button>
+            >
+              {{ $t("sign-in") }}
+            </button>
+            <button @click="resetPassword" class="btn btn--raw">
+              {{ $t("sign-in-forget") }}
+            </button>
           </div>
-          <flower-spinner :animation-duration="1500" :size="60" color="#fa8072" v-else />
+          <flower-spinner
+            :animation-duration="1500"
+            :size="60"
+            color="#fa8072"
+            v-else
+          />
         </form>
       </transition>
     </div>
@@ -55,7 +64,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.$store.getters["auth/loginStatus"];
+      return this.$store.getters["auth/user"]._id;
     }
   },
   methods: {
