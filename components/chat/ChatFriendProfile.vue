@@ -77,7 +77,7 @@ import Avatar from "../Avatars/Avatar";
 import TextIcon from "../TextIcon";
 import ConversationStat from "../ConversationStat";
 import { SpringSpinner } from "epic-spinners";
-
+import eventHandler from "../../src/eventHandler";
 export default {
   components: {
     Avatar,
@@ -178,6 +178,7 @@ export default {
         await api.user.removeFriend(this.user._id);
         this.isInvited = false;
         this.isFriend = false;
+        eventHandler.$emit("friend-removed", this.user);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"

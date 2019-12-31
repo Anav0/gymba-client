@@ -15,6 +15,7 @@
 <script>
 import navbar from "../components/NavBar";
 import api from "../api";
+import eventHandler from "../src/eventHandler";
 
 export default {
   components: {
@@ -34,6 +35,10 @@ export default {
         ? "background--fill"
         : "";
     }
+  },
+  created() {
+    eventHandler.$on("friend-removed", removedFriend => this.getLoggedUser());
+    eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
   },
   async mounted() {
     try {
