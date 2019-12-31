@@ -21,7 +21,6 @@
       :selected-tab="activeTab"
       :is-loading="isLoading"
       class="chat-contacts__contact-card"
-      @reloadInvitations="loadInvites"
     />
   </div>
 </template>
@@ -31,12 +30,23 @@ import AvatarWrapper from "../components/Avatars/AvatarWrapper";
 import TabSwitcher from "../components/TabSwiitcher";
 import ContactCard from "../components/ContactCard/ContactCard";
 import api from "../api";
+import eventHandler from "../src/eventHandler";
 
 export default {
   components: {
     AvatarWrapper,
     TabSwitcher,
     ContactCard
+  },
+  created() {
+    eventHandler.$on("invitation-accepted", () => {
+      this.loadInvites();
+      this.loadConversations();
+    });
+
+    eventHandler.$on("invitation-rejected", () => {
+      this.loadInvites();
+    });
   },
   data() {
     return {

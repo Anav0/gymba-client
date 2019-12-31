@@ -1,8 +1,20 @@
 <template>
-  <potential-contact @wasClicked="$emit('wasClicked')" :user="user" :isLoading="isLoading">
+  <potential-contact
+    @wasClicked="$emit('wasClicked')"
+    :user="user"
+    :isLoading="isLoading"
+  >
     <div class="contact-card__icons">
-      <fa-icon class="contact-card__icon--invite" icon="times" @click="rejectInvitation" />
-      <fa-icon class="contact-card__icon--invite" icon="check" @click="acceptInvitation" />
+      <fa-icon
+        class="contact-card__icon--invite"
+        icon="times"
+        @click="rejectInvitation"
+      />
+      <fa-icon
+        class="contact-card__icon--invite"
+        icon="check"
+        @click="acceptInvitation"
+      />
     </div>
   </potential-contact>
 </template>
@@ -10,6 +22,7 @@
 <script>
 import PotentialContact from "../PotentialContact";
 import api from "../../api";
+import eventHandler from "../../src/eventHandler";
 
 export default {
   components: {
@@ -35,7 +48,7 @@ export default {
       try {
         this.isLoading = true;
         await api.invite.rejectInvitation(this.invitationId);
-        this.$emit("reloadInvitations");
+        eventHandler.$emit("invitation-rejected");
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -48,7 +61,7 @@ export default {
       try {
         this.isLoading = true;
         await api.invite.acceptInvitation(this.invitationId);
-        this.$emit("reloadInvitations");
+        eventHandler.$emit("invitation-accepted");
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -61,5 +74,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

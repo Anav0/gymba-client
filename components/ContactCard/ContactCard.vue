@@ -7,7 +7,7 @@
           <fa-icon
             class="contact-card__icon"
             icon="sort-amount-up-alt"
-            @click="isFiltering=!isFiltering"
+            @click="isFiltering = !isFiltering"
           />
           <g-select
             v-if="isFiltering"
@@ -15,7 +15,7 @@
             :selected-option-index.sync="selectedSortingOptionIndex"
             icon="angle-down"
             placeholder="Filter by..."
-            @clickOutside="isFiltering=!isFiltering"
+            @clickOutside="isFiltering = !isFiltering"
             @selectionChanged="sort"
           />
         </div>
@@ -55,8 +55,8 @@
       @input="search($event.target.value)"
     />
 
-    <ul v-if="!isLoading " class="contact-card__viewmodels">
-      <template v-if="selectedTab===0">
+    <ul v-if="!isLoading" class="contact-card__viewmodels">
+      <template v-if="selectedTab === 0">
         <contact-card-conversation
           v-for="conversation in filteredConversations"
           :key="`contact-card-conversation-${conversation._id}`"
@@ -64,33 +64,44 @@
           @click.native="showConversation(conversation)"
         />
       </template>
-      <template v-if="selectedTab===1">
+      <template v-if="selectedTab === 1">
         <contact-card-invitation
           v-for="viewmodel in filteredViewModels"
-          :key="'contact-card-invitation'+viewmodel.user._id"
+          :key="'contact-card-invitation' + viewmodel.user._id"
           :invitation-id="viewmodel.invitationId"
           :user="viewmodel.user"
           @wasClicked="showUserProfile(viewmodel.user._id)"
-          @invitationSend="(id)=>viewmodel.invitationId = id"
+          @invitationSend="id => (viewmodel.invitationId = id)"
         />
       </template>
-      <template v-if="selectedTab===2">
+      <template v-if="selectedTab === 2">
         <contact-card-decide
           v-for="viewmodel in filteredViewModels"
-          :key="'contact-card-decide'+viewmodel.user._id"
+          :key="'contact-card-decide' + viewmodel.user._id"
           :user="viewmodel.user"
           :invitation-id="viewmodel.invitationId"
           @wasClicked="showUserProfile(viewmodel.user._id)"
-          @invitationSend="(id)=>viewmodel.invitationId = id"
-          @reloadInvitations="$emit('reloadInvitations')"
+          @invitationSend="id => (viewmodel.invitationId = id)"
         />
       </template>
     </ul>
-    <spring-spinner v-else class="center" :animation-duration="1000" :size="50" color="#fcd87d" />
-    <h4
-      v-if="filteredViewModels.length === 0 && filteredConversations.length === 0 && !isLoading"
+    <spring-spinner
+      v-else
       class="center"
-    >{{ $t('contact-card-no-result') }}</h4>
+      :animation-duration="1000"
+      :size="50"
+      color="#fcd87d"
+    />
+    <h4
+      v-if="
+        filteredViewModels.length === 0 &&
+          filteredConversations.length === 0 &&
+          !isLoading
+      "
+      class="center"
+    >
+      {{ $t("contact-card-no-result") }}
+    </h4>
   </div>
 </template>
 
@@ -216,5 +227,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
