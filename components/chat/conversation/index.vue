@@ -61,11 +61,11 @@
             placeholder="Type your message..."
           />
           <fa-icon
-            class="conversation__action-icon"
+            class="conversation__action-icon disable"
             @click="isEmojiPickerVisible = !isEmojiPickerVisible"
             icon="smile"
           />
-          <fa-icon class="conversation__action-icon" icon="paperclip" />
+          <fa-icon class="conversation__action-icon disable" icon="paperclip" />
           <fa-icon
             @click="sendMessage"
             class="conversation__action-icon"
@@ -102,6 +102,7 @@ export default {
       chat: {}
     };
   },
+
   async mounted() {
     this.chat = io(`${process.env.VUE_APP_API_URL}/chat`);
 
