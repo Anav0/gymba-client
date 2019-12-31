@@ -1,10 +1,18 @@
 <template>
-  <potential-contact @wasClicked="$emit('wasClicked')" :user="user" :isLoading="isLoading">
+  <potential-contact
+    @wasClicked="$emit('wasClicked')"
+    :user="user"
+    :isLoading="isLoading"
+  >
     <button
       class="btn capitalize"
       @click="processInvitation"
-      :class="{'btn--outline': !invitationId, 'btn--default': invitationId}"
-    >{{!invitationId ? 'invite' : 'cancel'}}</button>
+      :class="{ 'btn--outline': !invitationId, 'btn--default': invitationId }"
+    >
+      {{
+        $i18n.t(`chat-friend-profile-${invitationId ? "uninvite" : "invite"}`)
+      }}
+    </button>
   </potential-contact>
 </template>
 
@@ -66,5 +74,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
