@@ -11,7 +11,11 @@
         <fa-icon class="chat-side-nav__icon" :icon="link.icon"></fa-icon>
       </router-link>
     </ul>
-    <fa-icon @click="logout" class="chat-side-nav__icon" icon="sign-out-alt"></fa-icon>
+    <fa-icon
+      @click="logout"
+      class="chat-side-nav__icon"
+      icon="sign-out-alt"
+    ></fa-icon>
   </div>
 </template>
 
@@ -34,7 +38,6 @@ export default {
   },
   methods: {
     goToUserProfile() {
-      console.log(window.innerWidth);
       if (window.innerWidth < 480)
         return this.$router.push({ name: "chatProfileMobile" });
 
