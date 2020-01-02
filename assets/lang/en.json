@@ -18,6 +18,7 @@
   "chat-tab-invites": "invitations",
   "chat-tab-new-friends": "find new friend",
   "chat-user-joined": "entered",
+  "chat-user-left": "left",
   "chat-user-profile-bio": "Bio",
   "chat-user-profile-email": "Email",
   "chat-user-profile-header": "Settings",
@@ -60,6 +61,9 @@
   "personality-racist-name": "Don",
   "resend-link": "Resend activation link",
   "resend-link-success": "Resend link send successfully",
+  "settings-load-generic-error": "Error occured while loading your setting. Click to retry",
+  "settings-save-generic-error": "Error occured while saving your setting. Click to retry",
+  "settings-show-enter-leave-indicator": "Show notification when user enters or leaves from selected conversation",
   "sign-in": "sign in",
   "sign-in-forget": "I forgot my password",
   "sign-in-password": "Password",
@@ -82,6 +86,5 @@
   "successfull-success": "success",
   "they-need-to": "they need to be your friend",
   "to-talk-to": "To talk to",
-  "unavilable-function": "This functionality is not yet ready",
-  "chat-user-left": "left"
+  "unavilable-function": "This functionality is not yet ready"
 }

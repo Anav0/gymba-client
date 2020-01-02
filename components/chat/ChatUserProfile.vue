@@ -21,13 +21,41 @@
       <span v-if="user.bio">{{ $t("chat-user-profile-bio") }}:</span>
       <p v-if="user.bio">{{ user.desc }}</p>
     </div>
-    <g-select
-      border
-      class="chat-user-profile__lang-switcher"
-      :options="locales"
-      :selectedOptionIndex.sync="selectedLangIndex"
-      @selectionChanged="switchLang"
+
+    <p @click="saveSettingsToStorage" v-if="settingsSaveError">
+      {{ settingsSaveError }}
+    </p>
+    <p @click="LoadSettingsFromStorage" v-if="settingsLoadError">
+      {{ settingsLoadError }}
+    </p>
+    <spring-spinner
+      v-if="isLoadingSettings"
+      class="chat-user-profile__spinner"
+      :animation-duration="1000"
+      :size="50"
+      color="#fcd87d"
     />
+    <div
+      v-if="!isLoadingSettings && !settingsLoadError && !settingsSaveError"
+      class="chat-user-profile__settings"
+    >
+      <label>
+        <input
+          type="checkbox"
+          name="isEnterLeaveIndicatorVisible"
+          v-model="settings.isEnterLeaveIndicatorVisible"
+        />
+        {{ $i18n.t("settings-show-enter-leave-indicator") }}
+      </label>
+
+      <g-select
+        border
+        class="chat-user-profile__lang-switcher"
+        :options="locales"
+        :selectedOptionIndex.sync="settings.selectedLangIndex"
+        @selectionChanged="switchLang"
+      />
+    </div>
     <div class="chat-user-profile__icons">
       <fa-icon
         class="chat-user-profile__icon disable"
@@ -49,22 +77,37 @@ import Avatar from "../Avatars/Avatar";
 import api from "../../api";
 import GSelect from "../misc/GSelect";
 import eventHandler from "../../src/eventHandler";
+import { SpringSpinner } from "epic-spinners";
 
 export default {
   components: {
     Avatar,
-    GSelect
+    GSelect,
+    SpringSpinner
   },
   data() {
     return {
-      selectedLangIndex: 0,
+      isLoadingSettings: true,
+      settingsSaveError: "",
+      settingsLoadError: "",
       locales: [
         { code: "pl", iso: "pl-PL", name: "Polski" },
         { code: "en", iso: "en-US", name: "English" }
       ]
     };
   },
+  watch: {
+    settings: {
+      async handler(value) {
+        await this.saveSettingsToStorage();
+      },
+      deep: true
+    }
+  },
   computed: {
+    settings() {
+      return this.$store.getters["settings/settings"];
+    },
     formattedCreationDate() {
       return moment(this.user.creationDate).format("DD MMMM YYYY");
     },
@@ -72,18 +115,45 @@ export default {
       return this.$store.getters["auth/user"];
     }
   },
-  mounted() {
-    const selectedLocaleCode = this.$root.$i18n.locale;
-    const pickedLangIndex = this.locales.findIndex(
-      locale => locale.code == selectedLocaleCode
-    );
-    if (pickedLangIndex && pickedLangIndex !== -1)
-      this.selectedLangIndex = pickedLangIndex;
+  async mounted() {
+    await this.LoadSettingsFromStorage();
   },
   methods: {
-    switchLang(locale) {
+    saveSettingsToStorage() {
+      return new Promise((resolve, reject) => {
+        try {
+          this.isLoadingSettings = true;
+          localStorage.settings = JSON.stringify(this.settings);
+          resolve();
+        } catch (error) {
+          reject(error);
+          console.error(error);
+          this.settingsSaveError = this.$i18n.t("settings-save-generic-error");
+        } finally {
+          this.isLoadingSettings = false;
+        }
+      });
+    },
+    LoadSettingsFromStorage() {
+      return new Promise((resolve, reject) => {
+        try {
+          if (localStorage.settings)
+            this.$store.dispatch(
+              "settings/setSettings",
+              JSON.parse(localStorage.settings)
+            );
+          resolve(this.settings);
+        } catch (error) {
+          reject(error);
+          console.error(error);
+          this.settingsLoadError = this.$i18n.t("settings-load-generic-error");
+        } finally {
+          this.isLoadingSettings = false;
+        }
+      });
+    },
+    async switchLang(locale) {
       this.$root.$i18n.locale = locale.code;
-      localStorage.locale = JSON.stringify(locale);
       this.selectedLangIndex = this.locales.findIndex(lang => lang == locale);
     },
     async logout() {
@@ -127,6 +197,7 @@ export default {
   @media (min-width: $md) {
     background: $White;
     color: $MainFontColor;
+    padding: 30px 10%;
   }
   &__lang-switcher {
     align-self: flex-start;
@@ -183,13 +254,20 @@ export default {
 
   &__infos {
     display: grid;
-    width: 100%;
     grid-template-columns: 1fr 2fr;
     grid-template-rows: repeat(4, auto);
-    grid-gap: 50px;
-    width: 100%;
+    grid-gap: 20px 30px;
     max-height: 100%;
-    overflow: auto;
+    width: 100%;
+    span {
+      place-self: center start;
+    }
+  }
+  &__settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 25%;
   }
 }
 </style>

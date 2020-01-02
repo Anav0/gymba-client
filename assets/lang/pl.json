@@ -17,6 +17,8 @@
   "chat-tab-contact": "kontakty",
   "chat-tab-invites": "zaproszenia",
   "chat-tab-new-friends": "Zaproś",
+  "chat-user-joined": "jest obecny",
+  "chat-user-left": "opuścił rozmowę",
   "chat-user-profile-bio": "Opis",
   "chat-user-profile-email": "Email",
   "chat-user-profile-header": "Ustawienia",
@@ -59,6 +61,9 @@
   "personality-racist-name": "Don",
   "resend-link": "Wyślij ponownie link aktywacyjny",
   "resend-link-success": "Link aktywacyjny został wysłany",
+  "settings-load-generic-error": "Błąd przy wczytywaniu ustawień. Kliknij aby spróbować ponownie",
+  "settings-save-generic-error": "Błąd przy zapisywaniu ustawień. Kliknij aby spróbować ponownie",
+  "settings-show-enter-leave-indicator": "Pokazuj powiadomienie, o tym czy rozmówca wszedł lub wyszedł z aktywnej rozmowy",
   "sign-in": "Logowanie",
   "sign-in-forget": "Zapomniałem hasła",
   "sign-in-password": "Hasło",
@@ -84,7 +89,5 @@
   "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona",
   "verification-failed-header": "Weryfikacja nieudana",
   "verification-success-desc": "Możesz teraz spokojnie zacząć rozmawiać!",
-  "verification-success-header": "Konto zweryfikowane!",
-  "chat-user-joined": "jest obecny",
-  "chat-user-left": "opuścił rozmowę"
+  "verification-success-header": "Konto zweryfikowane!"
 }
