@@ -81,5 +81,8 @@
   "successfull-success": "sukces",
   "they-need-to": "on/ona musi być twoim znajomym",
   "to-talk-to": "Aby porozmawiać z",
-  "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona"
+  "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona",
+  "verification-failed-header": "Weryfikacja nieudana",
+  "verification-success-desc": "Możesz teraz spokojnie zacząć rozmawiać!",
+  "verification-success-header": "Konto zweryfikowane!"
 }
