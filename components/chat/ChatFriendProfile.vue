@@ -46,6 +46,7 @@
           :text="$i18n.t(`chat-friend-profile-${inviteStatus.i18n}`)"
           @click.native="invite"
           :isLoading="isInviting"
+          :class="{ disable: user.isBot }"
         />
         <text-icon
           class="disable"
