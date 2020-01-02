@@ -81,7 +81,7 @@ library.add({
 Vue.config.productionTip = false;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 axios.defaults.withCredentials = true;
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 10000;
 
 axios.interceptors.response.use(
   response => response,
