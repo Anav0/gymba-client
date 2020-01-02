@@ -85,7 +85,6 @@ export default {
   },
   methods: {
     goToUserProfile() {
-      console.log(window.innerWidth);
       if (window.innerWidth < 480)
         return this.$router.push({ name: "chatProfileMobile" });
 
@@ -96,16 +95,18 @@ export default {
       this.conversations = [];
       this.suggestions = [];
     },
-    loadConversations() {
-      this.isLoading = true;
-      this.clearData();
-      const conversationIds = this.$store.getters["auth/user"].conversations;
-
-      conversationIds.forEach(async id => {
-        const response = await api.conversation.getConversation(id);
-        this.conversations.push(response.data);
-      });
-      this.isLoading = false;
+    async loadConversations() {
+      try {
+        this.isLoading = true;
+        this.clearData();
+        const response = await api.conversation.getAllConversations(
+          "participants"
+        );
+        this.conversations = response.data;
+        this.isLoading = false;
+      } catch (error) {
+        this.$toasted.show("Error while loading conversations list");
+      }
     },
     async loadPotentialFriends() {
       try {

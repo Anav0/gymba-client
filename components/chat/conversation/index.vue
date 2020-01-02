@@ -223,12 +223,22 @@ export default {
     sendMessage() {
       if (!this.message) return;
 
-      this.chat.emit("private message", {
-        roomId: this.conversation.roomId,
-        userId: this.user._id,
-        conversationId: this.conversation._id,
-        message: this.message
-      });
+      if (this.target.isBot) {
+        this.chat.emit("bot message", {
+          roomId: this.conversation.roomId,
+          userId: this.user._id,
+          botId: this.target._id,
+          conversationId: this.conversation._id,
+          message: this.message
+        });
+      } else {
+        this.chat.emit("private message", {
+          roomId: this.conversation.roomId,
+          userId: this.user._id,
+          conversationId: this.conversation._id,
+          message: this.message
+        });
+      }
 
       this.message = "";
     },
