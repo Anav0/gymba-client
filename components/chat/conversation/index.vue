@@ -112,17 +112,20 @@ export default {
     },
     user() {
       return this.$store.getters["auth/user"];
+    },
+    settings() {
+      return this.$store.getters["settings/settings"];
     }
   },
   async mounted() {
     this.chat = io(`${process.env.VUE_APP_API_URL}/chat`);
 
     eventHandler.$on("user-logout", user => {
-      console.log(user);
-      this.chat.emit("user left", {
-        roomId: this.conversation.roomId,
-        user: this.user
-      });
+      if (this.settings.isEnterLeaveIndicatorVisible)
+        this.chat.emit("user left", {
+          roomId: this.conversation.roomId,
+          user: this.user
+        });
     });
 
     this.chat.on("new message", async message => {
@@ -142,15 +145,17 @@ export default {
     });
 
     this.chat.on("user join room", fullname => {
-      this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-joined")}`, {
-        className: "info-toast"
-      });
+      if (this.settings.isEnterLeaveIndicatorVisible)
+        this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-joined")}`, {
+          className: "info-toast"
+        });
     });
 
     this.chat.on("user left room", fullname => {
-      this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-left")}`, {
-        className: "info-toast"
-      });
+      if (this.settings.isEnterLeaveIndicatorVisible)
+        this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-left")}`, {
+          className: "info-toast"
+        });
     });
 
     this.chat.on("user is typing", user => {
