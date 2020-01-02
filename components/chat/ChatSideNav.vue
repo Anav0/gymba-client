@@ -22,6 +22,7 @@
 <script>
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
+import eventHandler from "../../src/eventHandler";
 
 export default {
   components: {
@@ -46,6 +47,7 @@ export default {
     async logout() {
       try {
         await api.auth.logout();
+        eventHandler.$emit("user-logout", this.user);
         this.$store.dispatch("auth/logout");
         this.$router.push("/sign-in");
       } catch (err) {

@@ -84,6 +84,7 @@ import api from "../../../api";
 import io from "socket.io-client";
 import { debounce } from "debounce";
 import { SpringSpinner } from "epic-spinners";
+import eventHandler from "../../../src/eventHandler";
 
 export default {
   components: {
@@ -102,9 +103,27 @@ export default {
       chat: {}
     };
   },
-
+  computed: {
+    isFriend() {
+      return this.user.friends.includes(this.target._id);
+    },
+    conversation() {
+      return this.$store.getters["conversation/activeConversation"];
+    },
+    user() {
+      return this.$store.getters["auth/user"];
+    }
+  },
   async mounted() {
     this.chat = io(`${process.env.VUE_APP_API_URL}/chat`);
+
+    eventHandler.$on("user-logout", user => {
+      console.log(user);
+      this.chat.emit("user left", {
+        roomId: this.conversation.roomId,
+        user: this.user
+      });
+    });
 
     this.chat.on("new message", async message => {
       await new Promise(resolve => {
@@ -122,7 +141,17 @@ export default {
       }
     });
 
-    this.chat.on("user join room", message => {});
+    this.chat.on("user join room", fullname => {
+      this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-joined")}`, {
+        className: "info-toast"
+      });
+    });
+
+    this.chat.on("user left room", fullname => {
+      this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-left")}`, {
+        className: "info-toast"
+      });
+    });
 
     this.chat.on("user is typing", user => {
       this.isTyping = true;
@@ -135,17 +164,7 @@ export default {
 
     await this.init();
   },
-  computed: {
-    isFriend() {
-      return this.user.friends.includes(this.target._id);
-    },
-    conversation() {
-      return this.$store.getters["conversation/activeConversation"];
-    },
-    user() {
-      return this.$store.getters["auth/user"];
-    }
-  },
+
   watch: {
     async conversation() {
       await this.init();

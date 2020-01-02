@@ -84,5 +84,7 @@
   "unavilable-function": "Ta funkcjonalność nie jest jeszcze skończona",
   "verification-failed-header": "Weryfikacja nieudana",
   "verification-success-desc": "Możesz teraz spokojnie zacząć rozmawiać!",
-  "verification-success-header": "Konto zweryfikowane!"
+  "verification-success-header": "Konto zweryfikowane!",
+  "chat-user-joined": "jest obecny",
+  "chat-user-left": "opuścił rozmowę"
 }

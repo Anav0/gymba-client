@@ -17,6 +17,7 @@
   "chat-tab-contact": "contact",
   "chat-tab-invites": "invitations",
   "chat-tab-new-friends": "find new friend",
+  "chat-user-joined": "entered",
   "chat-user-profile-bio": "Bio",
   "chat-user-profile-email": "Email",
   "chat-user-profile-header": "Settings",
@@ -81,5 +82,6 @@
   "successfull-success": "success",
   "they-need-to": "they need to be your friend",
   "to-talk-to": "To talk to",
-  "unavilable-function": "This functionality is not yet ready"
+  "unavilable-function": "This functionality is not yet ready",
+  "chat-user-left": "left"
 }
