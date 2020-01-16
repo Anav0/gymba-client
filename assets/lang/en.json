@@ -86,5 +86,8 @@
   "successfull-success": "success",
   "they-need-to": "they need to be your friend",
   "to-talk-to": "To talk to",
-  "unavilable-function": "This functionality is not yet ready"
+  "unavilable-function": "This functionality is not yet ready",
+  "verification-failed-header": "Verification failed",
+  "verification-success-desc": "You can now start chatting!",
+  "verification-success-header": "Account verified!"
 }
