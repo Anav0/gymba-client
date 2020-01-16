@@ -5,7 +5,7 @@
         class="conversation__placeholder-icon"
         icon="comment-alt"
       ></fa-icon>
-      <h3>No conversation selected</h3>
+      <h3>{{ $i18n.t("no-conversation-selected") }}</h3>
     </div>
     <div v-else class="conversation__content">
       <transition name="slide">

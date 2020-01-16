@@ -22,10 +22,10 @@
       <p v-if="user.bio">{{ user.desc }}</p>
     </div>
 
-    <p @click="saveSettingsToStorage" v-if="settingsSaveError">
+    <p @click="saveSettings" v-if="settingsSaveError">
       {{ settingsSaveError }}
     </p>
-    <p @click="LoadSettingsFromStorage" v-if="settingsLoadError">
+    <p @click="LoadSettings" v-if="settingsLoadError">
       {{ settingsLoadError }}
     </p>
     <spring-spinner
@@ -52,7 +52,7 @@
         border
         class="chat-user-profile__lang-switcher"
         :options="locales"
-        :selectedOptionIndex.sync="settings.selectedLangIndex"
+        :selectedOptionIndex="selectedLangIndex"
         @selectionChanged="switchLang"
       />
     </div>
@@ -89,22 +89,29 @@ export default {
     return {
       isLoadingSettings: true,
       settingsSaveError: "",
-      settingsLoadError: "",
-      locales: [
-        { code: "pl", iso: "pl-PL", name: "Polski" },
-        { code: "en", iso: "en-US", name: "English" }
-      ]
+      settingsLoadError: ""
     };
+  },
+  async created() {
+    await this.LoadSettings();
   },
   watch: {
     settings: {
       async handler(value) {
-        await this.saveSettingsToStorage();
+        await this.saveSettings();
       },
       deep: true
     }
   },
   computed: {
+    selectedLangIndex() {
+      return this.locales.findIndex(
+        locale => locale.code === this.settings.locale.code
+      );
+    },
+    locales() {
+      return this.$store.getters["settings/locales"];
+    },
     settings() {
       return this.$store.getters["settings/settings"];
     },
@@ -115,15 +122,12 @@ export default {
       return this.$store.getters["auth/user"];
     }
   },
-  async mounted() {
-    await this.LoadSettingsFromStorage();
-  },
   methods: {
-    saveSettingsToStorage() {
+    saveSettings() {
       return new Promise((resolve, reject) => {
         try {
           this.isLoadingSettings = true;
-          localStorage.settings = JSON.stringify(this.settings);
+          this.$store.dispatch("settings/saveSettings", this.settings);
           resolve();
         } catch (error) {
           reject(error);
@@ -134,14 +138,11 @@ export default {
         }
       });
     },
-    LoadSettingsFromStorage() {
+    LoadSettings() {
       return new Promise((resolve, reject) => {
         try {
-          if (localStorage.settings)
-            this.$store.dispatch(
-              "settings/setSettings",
-              JSON.parse(localStorage.settings)
-            );
+          this.isLoadingSettings = true;
+          this.$store.dispatch("settings/loadSettings");
           resolve(this.settings);
         } catch (error) {
           reject(error);
@@ -154,7 +155,9 @@ export default {
     },
     async switchLang(locale) {
       this.$root.$i18n.locale = locale.code;
-      this.selectedLangIndex = this.locales.findIndex(lang => lang == locale);
+      let settings = this.settings;
+      settings.locale = locale;
+      this.$store.dispatch("settings/saveSettings", settings);
     },
     async logout() {
       try {
