@@ -37,6 +37,10 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("settings/loadSettings");
+    this.$root.$i18n.locale = this.$store.getters[
+      "settings/settings"
+    ].locale.code;
     eventHandler.$on("friend-removed", removedFriend => this.getLoggedUser());
     eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
   },
