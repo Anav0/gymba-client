@@ -18,13 +18,13 @@
     >
       <slot></slot>
       <div
-        v-if="seenStatus"
+        v-if="status"
         :class="
-          `chat-message__seen-indicator chat-message__seen-indicator--${seenStatus}`
+          `chat-message__seen-indicator chat-message__seen-indicator--${status}`
         "
       ></div>
       <div
-        v-if="seenStatus == 'received'"
+        v-if="status == 'received'"
         class="chat-message__seen-indicator chat-message__seen-indicator--received"
       >
         <img v-if="user.avatarUrl" :src="user.avatarUrl" />
@@ -68,7 +68,7 @@ export default {
       type: String,
       default: ""
     },
-    seenStatus: {
+    status: {
       type: String,
       validator: val => ["send", "delivered", "received"].includes(val)
     }

@@ -1,7 +1,7 @@
 <template>
   <potential-contact :user="user" :isLoading="isLoading">
     <div class="contact-card__info">
-      <span class="contact-card__send-date">{{ lastMessageRecivedAt }}</span>
+      <span class="contact-card__send-date">{{ lastMessageReceivedAt }}</span>
       <div class="contact-card__new-message" v-if="unreadMessages.length > 0">
         {{ unreadMessages.length > 99 ? "+99" : unreadMessages.length }}
       </div>
@@ -42,7 +42,7 @@ export default {
     }
   },
   computed: {
-    lastMessageRecivedAt() {
+    lastMessageReceivedAt() {
       const lastUnreadMessage = this.unreadMessages.pop();
       if (lastUnreadMessage)
         return moment(lastUnreadMessage.sendDate).format("HH:mm");

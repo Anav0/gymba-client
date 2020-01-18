@@ -141,7 +141,7 @@ export default {
       try {
         this.isLoading = true;
         this.clearData();
-        const response = await api.invite.getRecivedInvitations("sender");
+        const response = await api.invite.getReceivedInvitations("sender");
         response.data.forEach(invitation => {
           this.friends.push({
             isLoading: false,

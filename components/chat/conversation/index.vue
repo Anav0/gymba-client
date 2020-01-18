@@ -35,11 +35,11 @@
           :class="
             isSendByUser(message)
               ? 'conversation__message--send'
-              : 'conversation__message--recived'
+              : 'conversation__message--received'
           "
           :sender="message.sender"
-          :seen-status="message.status"
-          :send-date="message.sendDate"
+          :status="message.status"
+          :sendDate="message.sendDate"
         >
           <p>{{ message.content }}</p>
         </chat-message>
@@ -137,9 +137,19 @@ export default {
     });
 
     this.chat.on("new message", async message => {
-      await new Promise(resolve => {
+      await new Promise(async resolve => {
         this.messages.push(message);
         this.startFrom++;
+        const {
+          data: updatedMessage
+        } = await api.conversation.updateMessageStatus(
+          message._id,
+          "delivered"
+        );
+        let messageInList = this.messages.find(
+          msg => msg._id == updatedMessage._id
+        );
+        this.$set(messageInList, "status", updatedMessage.status);
         resolve();
       });
       this.scrollToBottom();
@@ -182,7 +192,6 @@ export default {
       if (distanceToTop > 0 || this.isLoading) return;
 
       const oldHeight = this.$refs.chatMessages.scrollHeight;
-      const lastElement = this.$refs.chatMessages.childNodes[0];
       await this.fetchAdditionalMessages();
       const newHeight = this.$refs.chatMessages.scrollHeight;
 
@@ -400,7 +409,7 @@ export default {
     &--send {
       justify-content: flex-end;
     }
-    &--recived {
+    &--received {
       justify-content: flex-start;
     }
   }

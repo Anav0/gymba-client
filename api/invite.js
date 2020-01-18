@@ -2,8 +2,8 @@ import axios from "axios";
 
 export default {
   getSendInvitations: populate => axios.post(`/invite/sent/`, { populate }),
-  getRecivedInvitations: populate =>
-    axios.post(`/invite/recived/`, { populate }),
+  getReceivedInvitations: populate =>
+    axios.post(`/invite/received/`, { populate }),
   postInvitation: targetId => axios.post("/invite", { targetId }),
   acceptInvitation: invitationId =>
     axios.post("/invite/accept", { id: invitationId }),

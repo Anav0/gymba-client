@@ -3,6 +3,8 @@ import axios from "axios";
 export default {
   getConversation: id => axios.get(`/conversation/${id}`),
   getAllConversations: populate => axios.post("/conversation/", { populate }),
+  updateMessageStatus: (messageId, status) =>
+    axios.patch(`/message`, { id: messageId, status }),
   getUnreadMessages: id => axios.get(`/conversation/${id}/unread`),
   getRangeOfMessages: (id, numberOfMessages, startFrom) =>
     axios.post(`/conversation/${id}/messages`, { numberOfMessages, startFrom }),
