@@ -50,6 +50,7 @@
   "greeting-marketing-pitch": "Talk and laugh with world’s top ML based chatbot!",
   "invalid-email": "Invalid email format",
   "made-with": "Made with sweat",
+  "message-featch-failed": "Failed to load additional messages",
   "navbar-contact": "contact",
   "navbar-features": "feature",
   "no-conversation-selected": "No conversation selected",

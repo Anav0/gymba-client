@@ -1,10 +1,7 @@
 <template>
   <div class="conversation">
-    <div class="conversation__placeholder" v-if="!conversation._id">
-      <fa-icon
-        class="conversation__placeholder-icon"
-        icon="comment-alt"
-      ></fa-icon>
+    <div v-if="!conversation._id" class="conversation__placeholder">
+      <fa-icon class="conversation__placeholder-icon" icon="comment-alt" />
       <h3>{{ $i18n.t("no-conversation-selected") }}</h3>
     </div>
     <div v-else class="conversation__content">
@@ -19,34 +16,37 @@
       <div class="conversation__upper" @click="showUserProfile(target._id)">
         <avatar-wrapper
           :initials="target.fullname | getInitials"
-          :avatarUrl="target.avatarUrl"
+          :avatar-url="target.avatarUrl"
         >
-          <h4 class="conversation__target-name">{{ target.fullname }}</h4>
+          <h4 class="conversation__target-name">
+            {{ target.fullname }}
+          </h4>
         </avatar-wrapper>
       </div>
       <div
         ref="chatMessages"
         :class="{ dimmed: isLoading }"
         class="conversation__messages"
+        v-on:scroll="onScroll"
       >
         <chat-message
           v-for="message in messages"
+          :key="message._id"
           :class="
             isSendByUser(message)
               ? 'conversation__message--send'
               : 'conversation__message--recived'
           "
           :sender="message.sender"
-          :seenStatus="message.status"
-          :sendDate="message.sendDate"
-          :key="message._id"
+          :seen-status="message.status"
+          :send-date="message.sendDate"
         >
           <p>{{ message.content }}</p>
         </chat-message>
       </div>
       <spring-spinner
-        class="center conversation__spinner"
         v-if="isLoading"
+        class="center conversation__spinner"
         :animation-duration="1000"
         :size="64"
         color="#fcd87d"
@@ -55,21 +55,21 @@
         <div class="conversation__input-box" :class="{ disabled: !isFriend }">
           <input
             v-model.trim="message"
+            placeholder="Type your message..."
             @keyup="stopedTyping"
             @keydown="typing"
             @keyup.enter="sendMessage"
-            placeholder="Type your message..."
           />
           <fa-icon
             class="conversation__action-icon disable"
-            @click="isEmojiPickerVisible = !isEmojiPickerVisible"
             icon="smile"
+            @click="isEmojiPickerVisible = !isEmojiPickerVisible"
           />
           <fa-icon class="conversation__action-icon disable" icon="paperclip" />
           <fa-icon
-            @click="sendMessage"
             class="conversation__action-icon"
             icon="paper-plane"
+            @click="sendMessage"
           />
         </div>
       </div>
@@ -78,12 +78,12 @@
 </template>
 
 <script>
-import AvatarWrapper from "../../Avatars/AvatarWrapper";
-import ChatMessage from "../../chat/ChatMessage";
-import api from "../../../api";
 import io from "socket.io-client";
 import { debounce } from "debounce";
 import { SpringSpinner } from "epic-spinners";
+import AvatarWrapper from "../../Avatars/AvatarWrapper";
+import ChatMessage from "../../chat/ChatMessage";
+import api from "../../../api";
 import eventHandler from "../../../src/eventHandler";
 
 export default {
@@ -99,6 +99,8 @@ export default {
       messages: [],
       isLoading: true,
       isTyping: false,
+      numberOfMessages: 15,
+      startFrom: 0,
       typer: {},
       chat: {}
     };
@@ -117,6 +119,12 @@ export default {
       return this.$store.getters["settings/settings"];
     }
   },
+
+  watch: {
+    async conversation() {
+      await this.init();
+    }
+  },
   async mounted() {
     this.chat = io(`${process.env.VUE_APP_API_URL}/chat`);
 
@@ -131,6 +139,7 @@ export default {
     this.chat.on("new message", async message => {
       await new Promise(resolve => {
         this.messages.push(message);
+        this.startFrom++;
         resolve();
       });
       this.scrollToBottom();
@@ -166,37 +175,75 @@ export default {
     this.chat.on("user stoped typing", user => {
       this.isTyping = false;
     });
-
-    await this.init();
-  },
-
-  watch: {
-    async conversation() {
-      await this.init();
-    }
   },
   methods: {
-    async init() {
-      await new Promise(async resolve => {
-        this.isLoading = true;
-        this.fillTarget();
-        if (!this.conversation._id) return (this.isLoading = false);
-        this.chat.emit("join", {
-          roomId: this.conversation.roomId,
-          user: this.user
-        });
-        const {
-          data: messages
-        } = await api.conversation.getConversationMessages(
-          this.conversation._id,
-          null,
-          null
-        );
-        this.messages = messages;
-        this.isLoading = false;
-        resolve();
+    async onScroll(event) {
+      const distanceToTop = event.target.scrollTop;
+      if (distanceToTop > 0 || this.isLoading) return;
+
+      const oldHeight = this.$refs.chatMessages.scrollHeight;
+      const lastElement = this.$refs.chatMessages.childNodes[0];
+      await this.fetchAdditionalMessages();
+      const newHeight = this.$refs.chatMessages.scrollHeight;
+
+      this.$refs.chatMessages.scroll({
+        top: newHeight - oldHeight,
+        behavior: "auto"
       });
-      this.scrollToBottom();
+    },
+    init() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          this.isLoading = true;
+          this.numberOfMessages = 15;
+          this.startFrom = 0;
+          this.messages = [];
+          this.fillTarget();
+          if (!this.conversation._id) {
+            this.isLoading = false;
+            return resolve();
+          }
+          await this.fetchAdditionalMessages();
+          this.chat.emit("join", {
+            roomId: this.conversation.roomId,
+            user: this.user
+          });
+          this.isLoading = false;
+          this.scrollToBottom();
+          resolve();
+        } catch (error) {
+          this.isLoading = false;
+          reject(error);
+        }
+      });
+    },
+    fetchAdditionalMessages() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          this.isLoading = true;
+
+          const { data: messages } = await api.conversation.getRangeOfMessages(
+            this.conversation._id,
+            this.numberOfMessages,
+            this.startFrom
+          );
+
+          if (messages.length > 0) {
+            this.startFrom += this.numberOfMessages;
+            this.messages.push(...messages);
+            this.messages.sort((a, b) => (a.sendDate < b.sendDate ? -1 : 1));
+          }
+
+          this.isLoading = false;
+          resolve();
+        } catch (error) {
+          this.isLoading = false;
+          this.$toasted.show(this.$i18n.t("message-featch-failed"), {
+            className: "error-toast"
+          });
+          reject();
+        }
+      });
     },
     showInfo() {
       if (this.isFriend) return;
@@ -244,6 +291,7 @@ export default {
         behavior: "smooth"
       });
     },
+
     sendMessage() {
       if (!this.message) return;
 
