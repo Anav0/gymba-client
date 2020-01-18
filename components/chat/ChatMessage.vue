@@ -95,6 +95,7 @@ export default {
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr auto;
   width: 100%;
+  cursor: default;
 
   .avatar-wrapper {
     flex-direction: column;
