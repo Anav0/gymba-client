@@ -156,6 +156,7 @@ export default {
     },
     async switchLang(locale) {
       this.$root.$i18n.locale = locale.code;
+      console.log(this.$root.$i18n.locale);
       let settings = this.settings;
       settings.locale = locale;
       this.$store.dispatch("settings/saveSettings", settings);

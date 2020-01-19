@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
-import moment from 'moment';
+import moment from "moment";
+const settings = JSON.parse(localStorage.settings);
 
-moment.locale(localStorage.locale ? JSON.parse(localStorage.locale).code : 'en');
+moment.locale(settings.locale ? settings.locale.code : "en");
 
 export default moment;
