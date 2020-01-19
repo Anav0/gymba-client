@@ -41,7 +41,7 @@
         <avatar
           :avatar-url="user.avatarUrl"
           :initials="user.fullname | getInitials"
-          :is-online="i % 2 === 0 ? true : false"
+          :userId="user._id"
         />
         <span>{{ user.fullname | getFirstname }}</span>
       </li>

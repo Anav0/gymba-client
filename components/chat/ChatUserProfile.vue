@@ -8,6 +8,7 @@
         alt="user's profile picture"
         :avatar-url="user.avatarUrl"
         :initials="user.fullname | getInitials"
+        :userId="user._id"
       />
       <h4>{{ user.fullname }}</h4>
     </div>

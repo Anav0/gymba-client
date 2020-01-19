@@ -5,10 +5,15 @@
       class="potential-contact__avatar"
       :avatarUrl="user.avatarUrl"
       :initials="user.fullname | getInitials"
+      :userId="user._id"
     />
     <div @click="$emit('wasClicked')" class="potential-contact__middle">
-      <span class="potential-contact__fullname bold ellipsis">{{user.fullname}}</span>
-      <p v-if="user.desc" class="potential-contact__desc ellipsis">{{user.desc}}</p>
+      <span class="potential-contact__fullname bold ellipsis">{{
+        user.fullname
+      }}</span>
+      <p v-if="user.desc" class="potential-contact__desc ellipsis">
+        {{ user.desc }}
+      </p>
     </div>
     <div class="potential-contact__spinner-wrapper">
       <slot v-if="!isLoading" />

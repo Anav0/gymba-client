@@ -17,6 +17,7 @@
         <avatar-wrapper
           :initials="target.fullname | getInitials"
           :avatar-url="target.avatarUrl"
+          :userId="target._id"
         >
           <h4 class="conversation__target-name">
             {{ target.fullname }}
@@ -30,7 +31,7 @@
         v-on:scroll="onScroll"
       >
         <chat-message
-          v-for="message in messages"
+          v-for="(message, i) in messages"
           :key="message._id"
           :class="
             isSendByUser(message)
@@ -40,6 +41,7 @@
           :sender="message.sender"
           :seen-status="message.status"
           :send-date="message.sendDate"
+          :showMessageAvatar="shouldShowAvatar(message, i)"
         >
           <p>{{ message.content }}</p>
         </chat-message>
@@ -85,7 +87,6 @@ import AvatarWrapper from "../../Avatars/AvatarWrapper";
 import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import eventHandler from "../../../src/eventHandler";
-
 export default {
   components: {
     AvatarWrapper,
@@ -126,9 +127,19 @@ export default {
     }
   },
   async mounted() {
-    this.chat = io(`${process.env.VUE_APP_API_URL}/chat`);
+    this.chat = io(`${process.env.VUE_APP_API_URL}/chat`, {
+      query: this.user
+    });
+
+    this.chat.on("user login", userId => {
+      eventHandler.$emit("user-connected", userId);
+    });
+    this.chat.on("user logout", userId => {
+      eventHandler.$emit("user-disconnected", userId);
+    });
 
     eventHandler.$on("user-logout", user => {
+      this.chat.disconnect();
       if (this.settings.isEnterLeaveIndicatorVisible)
         this.chat.emit("user left", {
           roomId: this.conversation.roomId,
@@ -177,6 +188,12 @@ export default {
     });
   },
   methods: {
+    shouldShowAvatar(message, index) {
+      const prevMessage = this.messages[index + 1];
+      if (!prevMessage) return true;
+      if (prevMessage.sender._id == message.sender._id) return false;
+      return true;
+    },
     async onScroll(event) {
       const distanceToTop = event.target.scrollTop;
       if (distanceToTop > 0 || this.isLoading) return;
@@ -390,6 +407,9 @@ export default {
     grid-template-rows: repeat(20, auto);
     overflow: auto;
     padding: 0 50px;
+    @media (min-width: $lg) {
+      padding: 0 75px;
+    }
     .chat-message {
       margin: 10px;
     }

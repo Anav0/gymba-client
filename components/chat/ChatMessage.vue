@@ -3,9 +3,10 @@
     <avatar
       class="chat-message__sender-avatar"
       alt="message sender profile picture"
+      v-if="user._id !== sender._id && showMessageAvatar"
       :avatarUrl="sender.avatarUrl"
       :initials="sender.fullname | getInitials"
-      v-if="user._id !== sender._id"
+      :userId="sender._id"
     />
     <div
       class="chat-message__bubble"
@@ -60,6 +61,10 @@ export default {
     };
   },
   props: {
+    showMessageAvatar: {
+      type: Boolean,
+      default: false
+    },
     sender: {
       type: Object,
       default: {}
@@ -95,6 +100,7 @@ export default {
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr auto;
   width: 100%;
+  position: relative;
   cursor: default;
 
   .avatar-wrapper {
@@ -165,11 +171,18 @@ export default {
     place-self: end center;
     margin-right: 10px;
 
+    position: absolute !important;
+    top: 50%;
+    left: -40px;
+    z-index: 2;
+    transform: translate(0, -50%);
+
     @media (min-width: $lg) {
       width: 35px !important;
       height: 35px !important;
       font-size: 14px;
       margin-right: 15px;
+      left: -45px;
     }
   }
 
