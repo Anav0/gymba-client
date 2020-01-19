@@ -120,7 +120,6 @@ export default {
       return this.$store.getters["settings/settings"];
     }
   },
-
   watch: {
     async conversation() {
       await this.init();
@@ -186,6 +185,8 @@ export default {
     this.chat.on("user stoped typing", user => {
       this.isTyping = false;
     });
+
+    if (window.innerWidth < 400) await this.init();
   },
   methods: {
     shouldShowAvatar(message, index) {
@@ -209,6 +210,7 @@ export default {
       });
     },
     init() {
+      console.log("INIT");
       return new Promise(async (resolve, reject) => {
         try {
           this.isLoading = true;
@@ -308,7 +310,6 @@ export default {
         behavior: "smooth"
       });
     },
-
     sendMessage() {
       if (!this.message) return;
 
