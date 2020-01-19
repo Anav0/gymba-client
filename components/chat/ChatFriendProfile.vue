@@ -14,6 +14,7 @@
       <avatar
         class="chat-friend-profile__avatar-initials"
         :initials="user.fullname | getInitials"
+        :userId="user._id"
       />
       <h3 class="chat-friend-profile__fullname-initials">
         {{ user.fullname }}

@@ -1,12 +1,13 @@
 <template>
   <div class="chat-contacts">
     <avatar-wrapper
-      :avatar-url="avatarUrl"
+      :avatar-url="loggedUser.avatarUrl"
       class="chat-contacts__avatar-wrapper"
-      :initials="fullname | getInitials"
+      :initials="loggedUser.fullname | getInitials"
       @click.native="goToUserProfile"
+      :userId="loggedUser._id"
     >
-      <h4>{{ name }}</h4>
+      <h4>{{ loggedUser.fullname.split(" ")[0] }}</h4>
     </avatar-wrapper>
     <tab-switcher
       class="chat-contacts__tab-switcher"
@@ -64,14 +65,8 @@ export default {
     };
   },
   computed: {
-    name() {
-      return this.$store.getters["auth/user"].fullname.split(" ")[0];
-    },
-    fullname() {
-      return this.$store.getters["auth/user"].fullname;
-    },
-    avatarUrl() {
-      return this.$store.getters["auth/user"].avatarUrl;
+    loggedUser() {
+      return this.$store.getters["auth/user"];
     }
   },
   watch: {

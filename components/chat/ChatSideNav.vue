@@ -5,6 +5,7 @@
       :avatarUrl="user.avatarUrl"
       :initials="user.fullname | getInitials"
       icon="cog"
+      :userId="user._id"
     />
     <ul class="chat-side-nav__icon-container">
       <router-link v-for="link in navLinks" :key="link.icon" :to="link.route">
