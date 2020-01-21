@@ -2,12 +2,12 @@
   <div class="avatar-wrapper">
     <avatar
       class="avatar-wrapper__avatar"
-      :isOnline="isOnline"
       :avatarUrl="avatarUrl"
       :icon="icon"
       :alt="alt"
       :initials="initials"
       :text="text"
+      :userId="userId"
     />
     <slot></slot>
   </div>
@@ -21,10 +21,6 @@ export default {
     Avatar
   },
   props: {
-    isOnline: {
-      type: Boolean,
-      default: false
-    },
     avatarUrl: {
       type: String,
       default: ""
@@ -44,6 +40,9 @@ export default {
     text: {
       type: String,
       default: ""
+    },
+    userId: {
+      type: String
     }
   }
 };

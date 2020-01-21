@@ -1,11 +1,10 @@
 <template>
   <potential-contact :user="user" :isLoading="isLoading">
     <div class="contact-card__info">
-      <span class="contact-card__send-date">{{lastMessageRecivedAt}}</span>
-      <div
-        class="contact-card__new-message"
-        v-if="unreadMessages.length>0"
-      >{{unreadMessages.length}}</div>
+      <span class="contact-card__send-date">{{ lastMessageRecivedAt }}</span>
+      <div class="contact-card__new-message" v-if="unreadMessages.length > 0">
+        {{ unreadMessages.length > 99 ? "+99" : unreadMessages.length }}
+      </div>
     </div>
   </potential-contact>
 </template>
@@ -73,5 +72,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

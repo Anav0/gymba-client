@@ -1,30 +1,30 @@
 <template>
   <div class="contact-card">
     <div class="contact-card__toolbar">
-      <h4 class="contact-card__header">{{header}}</h4>
+      <h4 class="contact-card__header">{{ header }}</h4>
       <div class="contact-card__toolbar">
         <div class="contact-card__select-wrapper">
           <fa-icon
             class="contact-card__icon"
             icon="sort-amount-up-alt"
-            @click="isFiltering=!isFiltering"
-          ></fa-icon>
+            @click="isFiltering = !isFiltering"
+          />
           <g-select
             v-if="isFiltering"
             :options="sortingOptions"
-            :selectedOptionIndex.sync="selectedSortingOptionIndex"
+            :selected-option-index.sync="selectedSortingOptionIndex"
             icon="angle-down"
             placeholder="Filter by..."
-            @clickOutside="isFiltering=!isFiltering"
+            @clickOutside="isFiltering = !isFiltering"
             @selectionChanged="sort"
           />
         </div>
 
         <fa-icon
           class="contact-card__icon"
-          :icon="isSearching ?  'times' : 'search'"
+          :icon="isSearching ? 'times' : 'search'"
           @click="toggleSearch"
-        ></fa-icon>
+        />
       </div>
     </div>
     <ul
@@ -33,72 +33,82 @@
       class="contact-card__suggestions"
     >
       <li
-        class="contact-card__suggestion"
         v-for="(user, i) in suggestedUsers"
         :key="`contact-card-${user._id}`"
+        class="contact-card__suggestion"
         @click="showUserProfile(user._id)"
       >
         <avatar
-          :avatarUrl="user.avatarUrl"
+          :avatar-url="user.avatarUrl"
           :initials="user.fullname | getInitials"
-          :isOnline="i % 2 === 0 ? true : false"
+          :userId="user._id"
         />
-        <span>{{user.fullname | getFirstname}}</span>
+        <span>{{ user.fullname | getFirstname }}</span>
       </li>
     </ul>
     <input
       v-show="isSearching"
       ref="contactCardInput"
-      class="contact-card__search"
       v-model="searchPhrase"
-      @input="search($event.target.value)"
+      class="contact-card__search"
       :placeholder="$i18n.t('contact-card-search')"
+      @input="search($event.target.value)"
     />
 
-    <ul v-if="!isLoading " class="contact-card__viewmodels">
-      <template v-if="selectedTab===0">
+    <ul v-if="!isLoading" class="contact-card__viewmodels">
+      <template v-if="selectedTab === 0">
         <contact-card-conversation
           v-for="conversation in filteredConversations"
-          @click.native="showConversation(conversation)"
           :key="`contact-card-conversation-${conversation._id}`"
           :conversation="conversation"
+          @click.native="showConversation(conversation)"
         />
       </template>
-      <template v-if="selectedTab===1">
+      <template v-if="selectedTab === 1">
         <contact-card-invitation
           v-for="viewmodel in filteredViewModels"
-          :key="'contact-card-invitation'+viewmodel.user._id"
-          @wasClicked="showUserProfile(viewmodel.user._id)"
-          :invitationId="viewmodel.invitationId"
+          :key="'contact-card-invitation' + viewmodel.user._id"
+          :invitation-id="viewmodel.invitationId"
           :user="viewmodel.user"
-          @invitationSend="(id)=>viewmodel.invitationId = id"
+          @wasClicked="showUserProfile(viewmodel.user._id)"
+          @invitationSend="id => (viewmodel.invitationId = id)"
         />
       </template>
-      <template v-if="selectedTab===2">
+      <template v-if="selectedTab === 2">
         <contact-card-decide
           v-for="viewmodel in filteredViewModels"
-          @wasClicked="showUserProfile(viewmodel.user._id)"
-          :key="'contact-card-decide'+viewmodel.user._id"
+          :key="'contact-card-decide' + viewmodel.user._id"
           :user="viewmodel.user"
-          :invitationId="viewmodel.invitationId"
-          @invitationSend="(id)=>viewmodel.invitationId = id"
-          @reloadInvitations="$emit('reloadInvitations')"
+          :invitation-id="viewmodel.invitationId"
+          @wasClicked="showUserProfile(viewmodel.user._id)"
+          @invitationSend="id => (viewmodel.invitationId = id)"
         />
       </template>
     </ul>
-    <spring-spinner v-else class="center" :animation-duration="1000" :size="50" color="#fcd87d" />
-    <h4
+    <spring-spinner
+      v-else
       class="center"
-      v-if="filteredViewModels.length === 0 && filteredConversations.length === 0 && !isLoading"
-    >{{$t('contact-card-no-result')}}</h4>
+      :animation-duration="1000"
+      :size="50"
+      color="#fcd87d"
+    />
+    <h4
+      v-if="
+        filteredViewModels.length === 0 &&
+          filteredConversations.length === 0 &&
+          !isLoading
+      "
+      class="center"
+    >
+      {{ $t("contact-card-no-result") }}
+    </h4>
   </div>
 </template>
 
 <script>
-import Avatar from "../Avatars/Avatar";
-import GSelect from "../GSelect";
-import api from "../../api";
 import { SpringSpinner } from "epic-spinners";
+import Avatar from "../Avatars/Avatar";
+import GSelect from "../misc/GSelect";
 import ContactCardDecide from "./ContactCardDecide";
 import ContactCardInvitation from "./ContactCardInvitation";
 import ContactCardConversation from "./ContactCardConversation";
@@ -180,7 +190,7 @@ export default {
     showUserProfile(id) {
       if (window.innerWidth < 400)
         return this.$router.push({ name: "chatFriendMobile", params: { id } });
-      this.$router.push({ name: "chatFriend", params: { id } });
+      return this.$router.push({ name: "chatFriend", params: { id } });
     },
     sort(selected) {
       this.filteredViewModels.sort(
@@ -195,15 +205,15 @@ export default {
       return this.searchViewModels(phrase);
     },
     searchConversations(phrase) {
-      //TODO: make this search work
+      // TODO: make this search work
       if (!phrase) return (this.filteredConversations = this.conversations);
-      this.filteredConversations = this.conversations.filter(conversation => {
-        return conversation.participants.includes(
+      this.filteredConversations = this.conversations.filter(conversation =>
+        conversation.participants.includes(
           user =>
             user.fullname.toLowerCase().includes(phrase) ||
             user.desc.toLowerCase().includes(phrase)
-        );
-      });
+        )
+      );
     },
     searchViewModels(phrase) {
       if (!phrase) return (this.filteredViewModels = this.viewmodels);
@@ -217,5 +227,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

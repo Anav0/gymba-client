@@ -1,59 +1,121 @@
 <template>
   <div class="chat-user-profile">
-    <h3 class="chat-user-profile__header">{{$t('chat-user-profile-header')}}</h3>
+    <h3 class="chat-user-profile__header">
+      {{ $t("chat-user-profile-header") }}
+    </h3>
     <div class="chat-user-profile__avatar">
       <avatar
         alt="user's profile picture"
-        :avatarUrl="user.avatarUrl"
+        :avatar-url="user.avatarUrl"
         :initials="user.fullname | getInitials"
+        :userId="user._id"
       />
-      <h4>{{user.fullname}}</h4>
+      <h4>{{ user.fullname }}</h4>
     </div>
     <div class="chat-user-profile__infos">
-      <span>{{$t('chat-user-profile-joined')}}:</span>
-      <span>{{formattedCreationDate}}</span>
-      <span>{{$t('chat-user-profile-username')}}:</span>
-      <span>{{user.username}}</span>
-      <span>{{$t('chat-user-profile-email')}}:</span>
-      <span>{{user.email}}</span>
-      <span v-if="user.bio">{{$t('chat-user-profile-bio')}}:</span>
-      <p v-if="user.bio">{{user.desc}}</p>
+      <span>{{ $t("chat-user-profile-joined") }}:</span>
+      <span>{{ formattedCreationDate }}</span>
+      <span>{{ $t("chat-user-profile-username") }}:</span>
+      <span>{{ user.username }}</span>
+      <span>{{ $t("chat-user-profile-email") }}:</span>
+      <span>{{ user.email }}</span>
+      <span v-if="user.bio">{{ $t("chat-user-profile-bio") }}:</span>
+      <p v-if="user.bio">{{ user.desc }}</p>
     </div>
-    <g-select
-      border
-      class="chat-user-profile__lang-switcher"
-      @selectionChanged="switchLang"
-      :options="locales"
-      :selectedOptionIndex="selectedLangIndex"
+
+    <p @click="saveSettings" v-if="settingsSaveError">
+      {{ settingsSaveError }}
+    </p>
+    <p @click="LoadSettings" v-if="settingsLoadError">
+      {{ settingsLoadError }}
+    </p>
+    <spring-spinner
+      v-if="isLoadingSettings"
+      class="chat-user-profile__spinner"
+      :animation-duration="1000"
+      :size="50"
+      color="#fcd87d"
     />
+    <div
+      v-if="!isLoadingSettings && !settingsLoadError && !settingsSaveError"
+      class="chat-user-profile__settings"
+    >
+      <label>
+        <input
+          type="checkbox"
+          name="isEnterLeaveIndicatorVisible"
+          v-model="settings.isEnterLeaveIndicatorVisible"
+        />
+        {{ $i18n.t("settings-show-enter-leave-indicator") }}
+      </label>
+
+      <g-select
+        border
+        class="chat-user-profile__lang-switcher"
+        :options="locales"
+        :selectedOptionIndex="selectedLangIndex"
+        @selectionChanged="switchLang"
+      />
+    </div>
     <div class="chat-user-profile__icons">
-      <fa-icon class="chat-user-profile__icon" icon="trash" @click="deleteAccount" />
-      <fa-icon class="chat-user-profile__icon" icon="sign-out-alt" @click="logout" />
+      <fa-icon
+        class="chat-user-profile__icon disable"
+        icon="trash"
+        @click="deleteAccount"
+      />
+      <fa-icon
+        class="chat-user-profile__icon"
+        icon="sign-out-alt"
+        @click="logout"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import moment from "moment";
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
-import moment from "moment";
-import GSelect from "../GSelect";
+import GSelect from "../misc/GSelect";
+import eventHandler from "../../src/eventHandler";
+import { SpringSpinner } from "epic-spinners";
 
 export default {
   components: {
     Avatar,
-    GSelect
+    GSelect,
+    SpringSpinner
   },
   data() {
     return {
-      selectedLangIndex: 0,
-      locales: [
-        { code: "pl", iso: "pl-PL", name: "Polski" },
-        { code: "en", iso: "en-US", name: "English" }
-      ]
+      isLoadingSettings: true,
+      settingsSaveError: "",
+      settingsLoadError: ""
     };
   },
+  async created() {
+    await this.LoadSettings();
+  },
+  watch: {
+    settings: {
+      async handler(value) {
+        await this.saveSettings();
+      },
+      deep: true
+    }
+  },
   computed: {
+    selectedLangIndex() {
+      return this.locales.findIndex(
+        locale => locale.code === this.settings.locale.code
+      );
+    },
+    locales() {
+      return this.$store.getters["settings/locales"];
+    },
+    settings() {
+      return this.$store.getters["settings/settings"];
+    },
     formattedCreationDate() {
       return moment(this.user.creationDate).format("DD MMMM YYYY");
     },
@@ -62,14 +124,47 @@ export default {
     }
   },
   methods: {
-    switchLang(locale) {
+    saveSettings() {
+      return new Promise((resolve, reject) => {
+        try {
+          this.isLoadingSettings = true;
+          this.$store.dispatch("settings/saveSettings", this.settings);
+          resolve();
+        } catch (error) {
+          reject(error);
+          console.error(error);
+          this.settingsSaveError = this.$i18n.t("settings-save-generic-error");
+        } finally {
+          this.isLoadingSettings = false;
+        }
+      });
+    },
+    LoadSettings() {
+      return new Promise((resolve, reject) => {
+        try {
+          this.isLoadingSettings = true;
+          this.$store.dispatch("settings/loadSettings");
+          resolve(this.settings);
+        } catch (error) {
+          reject(error);
+          console.error(error);
+          this.settingsLoadError = this.$i18n.t("settings-load-generic-error");
+        } finally {
+          this.isLoadingSettings = false;
+        }
+      });
+    },
+    async switchLang(locale) {
       this.$root.$i18n.locale = locale.code;
-      localStorage.locale = JSON.stringify(locale);
-      this.selectedLangIndex = this.locales.findIndex(lang => lang == locale);
+      console.log(this.$root.$i18n.locale);
+      let settings = this.settings;
+      settings.locale = locale;
+      this.$store.dispatch("settings/saveSettings", settings);
     },
     async logout() {
       try {
         await api.auth.logout();
+        eventHandler.$emit("user-logout", this.user);
         this.$store.dispatch("auth/logout");
         this.$router.push("/sign-in");
       } catch (err) {
@@ -88,12 +183,6 @@ export default {
         });
       }
     }
-  },
-  mounted() {
-    const selectedLocaleCode = this.$root.$i18n.locale;
-    this.selectedLangIndex = this.locales.findIndex(
-      locale => locale.code == selectedLocaleCode
-    );
   }
 };
 </script>
@@ -113,6 +202,7 @@ export default {
   @media (min-width: $md) {
     background: $White;
     color: $MainFontColor;
+    padding: 30px 10%;
   }
   &__lang-switcher {
     align-self: flex-start;
@@ -169,13 +259,20 @@ export default {
 
   &__infos {
     display: grid;
-    width: 100%;
     grid-template-columns: 1fr 2fr;
     grid-template-rows: repeat(4, auto);
-    grid-gap: 50px;
-    width: 100%;
+    grid-gap: 20px 30px;
     max-height: 100%;
-    overflow: auto;
+    width: 100%;
+    span {
+      place-self: center start;
+    }
+  }
+  &__settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 25%;
   }
 }
 </style>

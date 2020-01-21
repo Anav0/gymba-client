@@ -5,19 +5,25 @@
       :avatarUrl="user.avatarUrl"
       :initials="user.fullname | getInitials"
       icon="cog"
+      :userId="user._id"
     />
     <ul class="chat-side-nav__icon-container">
       <router-link v-for="link in navLinks" :key="link.icon" :to="link.route">
         <fa-icon class="chat-side-nav__icon" :icon="link.icon"></fa-icon>
       </router-link>
     </ul>
-    <fa-icon @click="logout" class="chat-side-nav__icon" icon="sign-out-alt"></fa-icon>
+    <fa-icon
+      @click="logout"
+      class="chat-side-nav__icon"
+      icon="sign-out-alt"
+    ></fa-icon>
   </div>
 </template>
 
 <script>
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
+import eventHandler from "../../src/eventHandler";
 
 export default {
   components: {
@@ -34,7 +40,6 @@ export default {
   },
   methods: {
     goToUserProfile() {
-      console.log(window.innerWidth);
       if (window.innerWidth < 480)
         return this.$router.push({ name: "chatProfileMobile" });
 
@@ -43,6 +48,7 @@ export default {
     async logout() {
       try {
         await api.auth.logout();
+        eventHandler.$emit("user-logout", this.user);
         this.$store.dispatch("auth/logout");
         this.$router.push("/sign-in");
       } catch (err) {

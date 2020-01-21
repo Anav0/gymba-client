@@ -3,7 +3,9 @@
     <fa-icon
       v-if="isBackArrowVisible"
       class="chat__go-back-arrow"
-      :class="{'chat__go-back-arrow--accent': $route.name==='chatConversationMobile'}"
+      :class="{
+        'chat__go-back-arrow--accent': $route.name === 'chatConversationMobile'
+      }"
       icon="angle-left"
       @click="$router.go(-1)"
     />
@@ -51,6 +53,9 @@ export default {
   grid-template-columns: 75px 2fr 7fr;
   width: 100%;
   height: 100%;
+  @media (min-width: $xxl) {
+    grid-template-columns: 75px 10% 1fr;
+  }
   @media (max-width: $md) {
     grid-template-columns: 100%;
     .chat-side-nav--desktop,

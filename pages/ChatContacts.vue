@@ -1,24 +1,28 @@
 <template>
   <div class="chat-contacts">
     <avatar-wrapper
-      @click.native="goToUserProfile"
-      :avatarUrl="avatarUrl"
+      :avatar-url="loggedUser.avatarUrl"
       class="chat-contacts__avatar-wrapper"
-      :initials="fullname | getInitials"
+      :initials="loggedUser.fullname | getInitials"
+      @click.native="goToUserProfile"
+      :userId="loggedUser._id"
     >
-      <h4>{{name}}</h4>
+      <h4>{{ loggedUser.fullname.split(" ")[0] }}</h4>
     </avatar-wrapper>
-    <tab-switcher class="chat-contacts__tab-switcher" @tab-switched="switchTabs" :tabs="tabs" />
+    <tab-switcher
+      class="chat-contacts__tab-switcher"
+      :tabs="tabs"
+      @tab-switched="switchTabs"
+    />
     <contact-card
       :viewmodels="friends"
       :conversations="conversations"
-      :suggestedUsers="suggestions"
+      :suggested-users="suggestions"
       :header="contactCardHeader"
-      :selectedTab="activeTab"
-      @reloadInvitations="loadInvites"
-      :isLoading="isLoading"
+      :selected-tab="activeTab"
+      :is-loading="isLoading"
       class="chat-contacts__contact-card"
-    ></contact-card>
+    />
   </div>
 </template>
 
@@ -27,6 +31,7 @@ import AvatarWrapper from "../components/Avatars/AvatarWrapper";
 import TabSwitcher from "../components/TabSwiitcher";
 import ContactCard from "../components/ContactCard/ContactCard";
 import api from "../api";
+import eventHandler from "../src/eventHandler";
 
 export default {
   components: {
@@ -34,25 +39,15 @@ export default {
     TabSwitcher,
     ContactCard
   },
-  mounted() {
-    if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
-    else this.switchTabs(0);
-  },
-  computed: {
-    name() {
-      return this.$store.getters["auth/user"].fullname.split(" ")[0];
-    },
-    fullname() {
-      return this.$store.getters["auth/user"].fullname;
-    },
-    avatarUrl() {
-      return this.$store.getters["auth/user"].avatarUrl;
-    }
-  },
-  watch: {
-    $route(to, from) {
-      if (to.params.tab) this.switchTabs(+to.params.tab);
-    }
+  created() {
+    eventHandler.$on("invitation-accepted", () => {
+      this.loadInvites();
+      this.loadConversations();
+    });
+
+    eventHandler.$on("invitation-rejected", () => {
+      this.loadInvites();
+    });
   },
   data() {
     return {
@@ -69,9 +64,22 @@ export default {
       suggestions: []
     };
   },
+  computed: {
+    loggedUser() {
+      return this.$store.getters["auth/user"];
+    }
+  },
+  watch: {
+    $route(to) {
+      if (to.params.tab) this.switchTabs(+to.params.tab);
+    }
+  },
+  mounted() {
+    if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
+    else this.switchTabs(0);
+  },
   methods: {
     goToUserProfile() {
-      console.log(window.innerWidth);
       if (window.innerWidth < 480)
         return this.$router.push({ name: "chatProfileMobile" });
 
@@ -82,15 +90,18 @@ export default {
       this.conversations = [];
       this.suggestions = [];
     },
-    loadConversations() {
-      this.isLoading = true;
-      this.clearData();
-      const conversationIds = this.$store.getters["auth/user"].conversations;
-      conversationIds.forEach(async id => {
-        const response = await api.conversation.getConversation(id);
-        this.conversations.push(response.data);
-      });
-      this.isLoading = false;
+    async loadConversations() {
+      try {
+        this.isLoading = true;
+        this.clearData();
+        const response = await api.conversation.getAllConversations(
+          "participants"
+        );
+        this.conversations = response.data;
+        this.isLoading = false;
+      } catch (error) {
+        this.$toasted.show("Error while loading conversations list");
+      }
     },
     async loadPotentialFriends() {
       try {

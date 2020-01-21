@@ -1,7 +1,7 @@
 <template>
   <div class="avatar">
     <img class="avatar__image" v-if="avatarUrl" :src="avatarUrl" :alt="alt" />
-    <h4 v-else class="avatar__initials">{{initials}}</h4>
+    <h4 v-else class="avatar__initials">{{ initials }}</h4>
     <transition name="fade">
       <div
         v-if="isOnline && !icon"
@@ -9,18 +9,25 @@
       ></div>
     </transition>
     <transition name="fade">
-      <fa-icon v-if="icon && !isOnline" class="avatar__active-indicator" :icon="icon"></fa-icon>
+      <fa-icon
+        v-if="icon"
+        class="avatar__active-indicator"
+        :icon="icon"
+      ></fa-icon>
     </transition>
   </div>
 </template>
 
 <script>
+import eventHandler from "../../src/eventHandler";
+import api from "../../api";
 export default {
+  data() {
+    return {
+      isOnline: false
+    };
+  },
   props: {
-    isOnline: {
-      type: Boolean,
-      default: false
-    },
     avatarUrl: {
       type: String,
       default: ""
@@ -36,7 +43,38 @@ export default {
     icon: {
       type: String,
       default: ""
+    },
+    userId: {
+      type: String
     }
+  },
+  watch: {
+    async userId(value) {
+      this.updateIsOnlineStatus();
+    }
+  },
+  methods: {
+    async updateIsOnlineStatus() {
+      if (!this.userId) return;
+      const { data: activity } = await api.activity.getActivityByUserId(
+        this.userId
+      );
+      if (activity) this.isOnline = activity.isOnline;
+    }
+  },
+  mounted() {
+    this.updateIsOnlineStatus();
+  },
+  created() {
+    eventHandler.$on("user-disconnected", userId => {
+      if (!this.userId || !userId) return;
+      if (this.userId != userId) return;
+      this.isOnline = false;
+    });
+    eventHandler.$on("user-connected", userId => {
+      if (this.userId != userId) return;
+      this.isOnline = true;
+    });
   }
 };
 </script>
@@ -70,8 +108,8 @@ export default {
 
   &__active-indicator {
     position: absolute;
-    width: 15px;
-    height: 15px;
+    width: 25%;
+    height: 25%;
     left: 75%;
     right: 0%;
     top: 68.75%;
