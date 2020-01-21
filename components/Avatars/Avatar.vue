@@ -10,7 +10,7 @@
     </transition>
     <transition name="fade">
       <fa-icon
-        v-if="icon && !isOnline"
+        v-if="icon"
         class="avatar__active-indicator"
         :icon="icon"
       ></fa-icon>
