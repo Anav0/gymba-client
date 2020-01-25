@@ -41,7 +41,7 @@ export default {
     this.$root.$i18n.locale = this.$store.getters[
       "settings/settings"
     ].locale.code;
-    eventHandler.$on("friend-removed", removedFriend => this.getLoggedUser());
+    eventHandler.$on("participant-removed-friend", () => this.getLoggedUser());
     eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
   },
   async mounted() {
@@ -59,6 +59,7 @@ export default {
           const response = await api.user.getAuthUser();
           if (response.data) {
             await this.$store.dispatch("auth/login", response.data);
+            eventHandler.$emit("logged-user-info-changes");
           }
           resolve(response.data);
         } catch (err) {

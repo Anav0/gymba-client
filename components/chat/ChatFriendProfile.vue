@@ -88,19 +88,7 @@ export default {
     SpringSpinner
   },
   async mounted() {
-    try {
-      await this.fillUser();
-      await this.fillExchangedMessages();
-      await this.fillWords();
-      await this.fillInvitationId();
-      await this.fillIsFriend();
-    } catch (err) {
-      this.$toasted.show(err.message, {
-        className: "error-toast"
-      });
-    } finally {
-      this.isLoading = false;
-    }
+    this.init();
   },
 
   data() {
@@ -140,7 +128,26 @@ export default {
       return this.$store.getters["auth/user"];
     }
   },
+  created() {
+    eventHandler.$on("logged-user-info-changes", () => this.init());
+  },
   methods: {
+    async init() {
+      try {
+        this.isLoading = true;
+        await this.fillUser();
+        await this.fillExchangedMessages();
+        await this.fillWords();
+        await this.fillInvitationId();
+        await this.fillIsFriend();
+      } catch (err) {
+        this.$toasted.show(err.message, {
+          className: "error-toast"
+        });
+      } finally {
+        this.isLoading = false;
+      }
+    },
     async invite() {
       if (this.isFriend) return await this.removeFriend();
       if (!this.isInvited) await this.sendInvite();

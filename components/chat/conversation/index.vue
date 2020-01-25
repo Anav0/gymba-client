@@ -133,8 +133,20 @@ export default {
     this.chat.on("user login", userId => {
       eventHandler.$emit("user-connected", userId);
     });
+
     this.chat.on("user logout", userId => {
       eventHandler.$emit("user-disconnected", userId);
+    });
+
+    this.chat.on("friend removed", friendId => {
+      eventHandler.$emit("participant-removed-friend");
+    });
+
+    eventHandler.$on("friend-removed", friend => {
+      this.chat.emit("friend removed", {
+        user: friend,
+        roomId: this.conversation.roomId
+      });
     });
 
     eventHandler.$on("user-logout", user => {
@@ -210,7 +222,6 @@ export default {
       });
     },
     init() {
-      console.log("INIT");
       return new Promise(async (resolve, reject) => {
         try {
           this.isLoading = true;
