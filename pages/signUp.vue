@@ -2,7 +2,11 @@
   <div class="sign-up landing-page-section">
     <div class="card">
       <transition name="slide">
-        <form v-if="!isSuccessfull" class="sign-up__form">
+        <form
+          v-if="!isSuccessfull"
+          class="sign-up__form"
+          enctype="multipart/form-data"
+        >
           <h1 class="sign-up__title capitalize">{{ $t("sign-up") }}</h1>
           <input
             max="250"
@@ -42,12 +46,16 @@
             type="password"
             v-model.trim="user.confirmPassword"
           />
+
           <textarea
             max="250"
             name="desc"
             :placeholder="$i18n.t('sign-up-bio')"
             v-model="user.desc"
           />
+          <g-file-input
+            @filesPicked="files => (user.file = files[0])"
+          ></g-file-input>
           <ul class="error-list">
             <li v-for="error in errors" :key="error">{{ error }}</li>
           </ul>
@@ -126,9 +134,9 @@ import { FlowerSpinner } from "epic-spinners";
 import Successfull from "../components/Successfull";
 import { setInterval } from "timers";
 import GModal from "../components/misc/GModal";
-
+import GFileInput from "../components/misc/GFileInput";
 export default {
-  components: { FlowerSpinner, Successfull, GModal },
+  components: { FlowerSpinner, Successfull, GModal, GFileInput },
   data() {
     return {
       isLoading: false,
@@ -162,7 +170,8 @@ export default {
         password: "",
         confirmPassword: "",
         email: "",
-        desc: ""
+        desc: "",
+        file: null
       }
     };
   },
@@ -233,7 +242,12 @@ export default {
             });
         }
         if (isValid) {
-          const response = await api.user.postUser(this.user);
+          let formData = new FormData();
+
+          for (let property in this.user) {
+            formData.append(property, this.user[property]);
+          }
+          const response = await api.user.postUser(formData);
 
           this.createdUserId = response.data._id;
           this.isSuccessfull = true;
@@ -258,6 +272,7 @@ export default {
   @media (max-width: $xsm) {
     margin-top: 5rem;
   }
+
   &__modal-btn {
     color: $AccentColor1;
     border-color: $AccentColor1;
@@ -300,7 +315,8 @@ export default {
     height: 100%;
 
     input,
-    textarea {
+    textarea,
+    .g-file-input {
       width: 100%;
       margin: 10px 0;
     }

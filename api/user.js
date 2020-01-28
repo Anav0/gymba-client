@@ -5,5 +5,10 @@ export default {
   deleteAccount: () => axios.delete("/user"),
   removeFriend: id => axios.post("/user/remove-friend", { id }),
   getSuggestedContacts: () => axios.get("/user/suggested-friends"),
-  postUser: data => axios.post("/user", data)
+  postUser: data =>
+    axios.post("/user", data, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    })
 };
