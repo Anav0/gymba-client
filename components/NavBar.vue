@@ -2,20 +2,26 @@
   <nav class="navbar">
     <logo class="navbar__logo"></logo>
     <div class="navbar__menu--desktop">
-      <router-link tag="button" to="/#features" class="btn btn--raw">{{$t('navbar-features')}}</router-link>
-      <router-link tag="button" to="/#contact" class="btn btn--raw">{{$t('navbar-contact')}}</router-link>
+      <router-link tag="button" to="/#features" class="btn btn--raw">{{
+        $t("navbar-features")
+      }}</router-link>
+      <router-link tag="button" to="/#contact" class="btn btn--raw">{{
+        $t("navbar-contact")
+      }}</router-link>
       <router-link
         v-if="!user.fullname"
         tag="button"
         to="/sign-in"
         class="btn btn--outline"
-      >{{$t('sign-in')}}</router-link>
+        >{{ $t("sign-in") }}</router-link
+      >
       <router-link
         v-if="!user.fullname"
         tag="button"
         to="/sign-up"
         class="btn btn--long"
-      >{{$t('sign-up')}}</router-link>
+        >{{ $t("sign-up") }}</router-link
+      >
       <transition>
         <router-link
           v-if="user.fullname"
@@ -24,7 +30,7 @@
           to="/chat/0"
         >
           <fa-icon class="navbar__user-icon" icon="user" />
-          <span class="navbar__user-fullname">{{user.fullname}}</span>
+          <span class="navbar__user-fullname">{{ user.fullname }}</span>
         </router-link>
       </transition>
     </div>
@@ -130,6 +136,7 @@ export default {
   }
   &__user-fullname {
     font-size: $font-size-larger;
+    max-width: 200px;
   }
 }
 </style>
