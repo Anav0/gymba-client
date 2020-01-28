@@ -54,6 +54,7 @@
             v-model="user.desc"
           />
           <g-file-input
+            accept=".jpg,.png,.jpeg"
             @filesPicked="files => (user.file = files[0])"
           ></g-file-input>
           <ul class="error-list">
