@@ -8,9 +8,11 @@
       :userId="user._id"
     />
     <ul class="chat-side-nav__icon-container">
-      <router-link v-for="link in navLinks" :key="link.icon" :to="link.route">
-        <fa-icon class="chat-side-nav__icon" :icon="link.icon"></fa-icon>
-      </router-link>
+      <Tooltip v-for="link in navLinks" :key="link.icon" :tip="link.tip">
+        <router-link :to="link.route">
+          <fa-icon class="chat-side-nav__icon" :icon="link.icon"></fa-icon>
+        </router-link>
+      </Tooltip>
     </ul>
     <fa-icon
       @click="logout"
@@ -24,17 +26,19 @@
 import Avatar from "../Avatars/Avatar";
 import api from "../../api";
 import eventHandler from "../../src/eventHandler";
+import Tooltip from "../misc/Tooltip";
 
 export default {
   components: {
-    Avatar
+    Avatar,
+    Tooltip
   },
   data() {
     return {
       navLinks: [
-        { icon: "comment-alt", route: "/chat/0" },
-        { icon: "user-friends", route: "/chat/1" },
-        { icon: "envelope-open-text", route: "/chat/2" }
+        { icon: "comment-alt", route: "/chat/0", tip: "tip awd a awd wad 1" },
+        { icon: "user-friends", route: "/chat/1", tip: "tip2a wda wda wd awd" },
+        { icon: "envelope-open-text", route: "/chat/2", tip: "tia wda wda wp3" }
       ]
     };
   },
@@ -83,7 +87,9 @@ export default {
   a {
     color: $White;
   }
-
+  .tooltip {
+    margin: 14px;
+  }
   .avatar {
     min-width: 48px;
     min-height: 48px;

@@ -12,21 +12,26 @@
     width: auto;
     height: auto;
   }
-
   &--default {
     background-color: $button-background-color;
     box-shadow: $box-shadow-button;
+  }
+  &--default:focus {
+    background-color: darken($button-background-color, 10%);
   }
   &--outline {
     background-color: transparent;
     border: 1px solid $button-background-color;
     box-shadow: $box-shadow-button;
   }
+
   &--disabled {
     background-color: $button-background-color-disable;
   }
 }
-
+.btn:focus {
+  transform: scale(1.15);
+}
 .btn:hover {
   transform: scale(1.1);
 }
