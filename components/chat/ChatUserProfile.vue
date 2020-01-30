@@ -3,13 +3,34 @@
     <h3 class="chat-user-profile__header">
       {{ $t("chat-user-profile-header") }}
     </h3>
-    <div class="chat-user-profile__avatar">
-      <avatar
-        alt="user's profile picture"
-        :avatar-url="user.avatarUrl"
-        :initials="user.fullname | getInitials"
-        :userId="user._id"
+    <div style="margin-bottom:40px;">
+      <input
+        type="file"
+        id="avatar-input"
+        accept=".png,.jpg,.jpeg"
+        class="chat-user-profile__avatar-input"
+        @change="filePicked"
       />
+      <label
+        for="avatar-input"
+        class="chat-user-profile__avatar"
+        :class="{ 'chat-user-profile__avatar--changing': isChangingAvatar }"
+      >
+        <spring-spinner
+          v-if="isChangingAvatar"
+          class="chat-user-profile__avatar-spinner"
+          :animation-duration="1000"
+          :size="45"
+          color="#fa8072"
+        />
+        <avatar
+          alt="user's profile picture"
+          icon="camera"
+          :avatar-url="user.avatarUrl"
+          :initials="user.fullname | getInitials"
+          :userId="user._id"
+        />
+      </label>
       <h4>{{ user.fullname }}</h4>
     </div>
     <div class="chat-user-profile__infos">
@@ -90,7 +111,8 @@ export default {
     return {
       isLoadingSettings: true,
       settingsSaveError: "",
-      settingsLoadError: ""
+      settingsLoadError: "",
+      isChangingAvatar: false
     };
   },
   async created() {
@@ -124,6 +146,32 @@ export default {
     }
   },
   methods: {
+    async filePicked(event) {
+      try {
+        this.isChangingAvatar = true;
+        const file = event.target.files[0];
+        const data = new FormData();
+        data.append("file", file);
+        const response = await api.user.changeAvatar(data);
+        eventHandler.$emit("avatar-changed");
+      } catch (error) {
+        console.error(error.response);
+        console.error(error);
+        if (!error.response.data.errors)
+          return this.$toasted.show(this.$i18n.t("avatar-change-failed"), {
+            className: "error-toast"
+          });
+        else {
+          for (let error in error.response.data.errors) {
+            this.$toasted.show(error, {
+              className: "error-toast"
+            });
+          }
+        }
+      } finally {
+        this.isChangingAvatar = false;
+      }
+    },
     saveSettings() {
       return new Promise((resolve, reject) => {
         try {
@@ -156,7 +204,6 @@ export default {
     },
     async switchLang(locale) {
       this.$root.$i18n.locale = locale.code;
-      console.log(this.$root.$i18n.locale);
       let settings = this.settings;
       settings.locale = locale;
       this.$store.dispatch("settings/saveSettings", settings);
@@ -204,6 +251,16 @@ export default {
     color: $MainFontColor;
     padding: 30px 10%;
   }
+  &__avatar-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+    cursor: pointer;
+  }
+
   &__lang-switcher {
     align-self: flex-start;
   }
@@ -236,16 +293,35 @@ export default {
   &__header {
     margin-bottom: 20px;
   }
-
+  &__avatar-spinner {
+    z-index: 3;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
   &__avatar {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 
-    cursor: auto;
-
+    &--changing {
+      position: relative;
+      &:after {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        content: "";
+        filter: blur(7px);
+        border-radius: 50%;
+        z-index: 1;
+      }
+    }
     h4 {
       margin-top: 10px;
     }
@@ -254,6 +330,7 @@ export default {
       font-weight: $font-weight-bold;
       width: 110px;
       height: 110px;
+      color: $MainFontColor;
     }
   }
 

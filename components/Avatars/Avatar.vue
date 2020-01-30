@@ -115,7 +115,7 @@ export default {
     top: 68.75%;
     bottom: 6.25%;
     border-radius: 50%;
-
+    z-index: 2;
     &--online {
       background: $avatars-active-indication-background;
       border: 1px solid $avatars-active-indication-border;

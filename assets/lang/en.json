@@ -92,5 +92,6 @@
   "unavilable-function": "This functionality is not yet ready",
   "verification-failed-header": "Verification failed",
   "verification-success-desc": "You can now start chatting!",
-  "verification-success-header": "Account verified!"
+  "verification-success-header": "Account verified!",
+  "avatar-change-failed": "Failed to change avatar. Try again."
 }
