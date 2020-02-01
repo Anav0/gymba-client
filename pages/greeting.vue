@@ -1,21 +1,51 @@
 <template>
   <section class="greeting landing-page-section">
     <div class="greeting__content">
-      <h1 class="greeting__marketing">{{$t('greeting-marketing-pitch')}}</h1>
-      <div v-if="!user.fullname" class="greeting__buttons">
-        <router-link tag="button" to="/sign-up" class="btn btn--default">{{$t('sign-up')}}</router-link>
-        <router-link tag="button" to="/sign-in" class="btn btn--outline">{{$t('sign-in')}}</router-link>
+      <h1 class="greeting__marketing">{{ $t("greeting-marketing-pitch") }}</h1>
+      <spring-spinner
+        v-if="isFetchingUser && window.innerWidth < 480 && !user._id"
+        :animation-duration="1000"
+        :size="50"
+        color="#fcd87d"
+      />
+      <div v-if="!user.fullname && !isFetchingUser" class="greeting__buttons">
+        <router-link tag="button" to="/sign-up" class="btn btn--default">{{
+          $t("sign-up")
+        }}</router-link>
+        <router-link tag="button" to="/sign-in" class="btn btn--outline">{{
+          $t("sign-in")
+        }}</router-link>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import { SpringSpinner } from "epic-spinners";
+import eventHandler from "../src/eventHandler";
+
 export default {
+  components: {
+    SpringSpinner
+  },
+  data() {
+    return {
+      isFetchingUser: true
+    };
+  },
   computed: {
+    window() {
+      return window;
+    },
     user() {
       return this.$store.getters["auth/user"];
     }
+  },
+  created() {
+    eventHandler.$on(
+      "logged-user-info-changes",
+      () => (this.isFetchingUser = false)
+    );
   }
 };
 </script>

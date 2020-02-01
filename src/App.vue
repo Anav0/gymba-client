@@ -16,8 +16,10 @@
 import navbar from "../components/NavBar";
 import api from "../api";
 import eventHandler from "../src/eventHandler";
+import userMixin from "../mixins/userMixin";
 
 export default {
+  mixins: [userMixin],
   components: {
     navbar
   },
@@ -44,30 +46,6 @@ export default {
     eventHandler.$on("participant-removed-friend", () => this.getLoggedUser());
     eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
     eventHandler.$on("avatar-changed", () => this.getLoggedUser());
-  },
-  async mounted() {
-    try {
-      await this.getLoggedUser();
-    } catch (error) {
-      //TODO: Maybe not show this error
-      console.error(error);
-    }
-  },
-  methods: {
-    getLoggedUser() {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const response = await api.user.getAuthUser();
-          if (response.data) {
-            await this.$store.dispatch("auth/login", response.data);
-            eventHandler.$emit("logged-user-info-changes");
-          }
-          resolve(response.data);
-        } catch (err) {
-          reject(err);
-        }
-      });
-    }
   }
 };
 </script>

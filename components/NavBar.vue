@@ -8,15 +8,21 @@
       <router-link tag="button" to="/#contact" class="btn btn--raw">{{
         $t("navbar-contact")
       }}</router-link>
+      <spring-spinner
+        v-if="isFetchingUser && !user._id"
+        :animation-duration="1000"
+        :size="50"
+        color="#fcd87d"
+      />
       <router-link
-        v-if="!user.fullname"
+        v-if="!user.fullname && !isFetchingUser"
         tag="button"
         to="/sign-in"
         class="btn btn--outline"
         >{{ $t("sign-in") }}</router-link
       >
       <router-link
-        v-if="!user.fullname"
+        v-if="!user.fullname && !isFetchingUser"
         tag="button"
         to="/sign-up"
         class="btn btn--long"
@@ -49,14 +55,33 @@
 
 <script>
 import Logo from "./Logo";
+import eventHandler from "../src/eventHandler";
+import { SpringSpinner } from "epic-spinners";
+import userMixin from "../mixins/userMixin";
 
 export default {
+  mixins: [userMixin],
   components: {
-    Logo
+    Logo,
+    SpringSpinner
+  },
+  data() {
+    return {
+      isFetchingUser: true
+    };
   },
   computed: {
     user() {
       return this.$store.getters["auth/user"];
+    }
+  },
+  async mounted() {
+    try {
+      await this.getLoggedUser();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isFetchingUser = false;
     }
   }
 };
