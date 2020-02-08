@@ -40,7 +40,6 @@ import { router } from "./router";
 import { i18n } from "../plugins";
 import "./registerServiceWorker";
 import store from "../store";
-import "../assets/style/styles.scss";
 // eslint-disable-next-line
 import * as filters from "../filters";
 
