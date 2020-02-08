@@ -142,11 +142,19 @@ export default {
       eventHandler.$emit("participant-removed-friend");
     });
 
+    this.chat.on("new invitation", data => {
+      eventHandler.$emit("new-invitation", data);
+    });
+
     eventHandler.$on("friend-removed", friend => {
       this.chat.emit("friend removed", {
         user: friend,
         roomId: this.conversation.roomId
       });
+    });
+
+    eventHandler.$on("invitation-sent", invitation => {
+      this.chat.emit("invitation sent", invitation);
     });
 
     eventHandler.$on("user-logout", user => {

@@ -171,6 +171,8 @@ export default {
       try {
         this.isInviting = true;
         const response = await api.invite.postInvitation(this.user._id);
+        this.$emit("invitationSend", response.data._id);
+        eventHandler.$emit("invitation-sent", response.data);
         this.invitationId = response.data._id;
         this.isInvited = true;
       } catch (err) {

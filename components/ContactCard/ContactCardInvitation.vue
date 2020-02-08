@@ -19,6 +19,7 @@
 <script>
 import PotentialContact from "../PotentialContact";
 import api from "../../api";
+import eventHandler from "../../src/eventHandler";
 
 export default {
   components: {
@@ -39,6 +40,7 @@ export default {
       default: null
     }
   },
+
   methods: {
     processInvitation() {
       if (this.invitationId) this.rejectInvitation();
@@ -49,6 +51,7 @@ export default {
       try {
         const response = await api.invite.postInvitation(this.user._id);
         this.$emit("invitationSend", response.data._id);
+        eventHandler.$emit("invitation-sent", response.data);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"

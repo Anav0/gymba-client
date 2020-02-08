@@ -112,6 +112,7 @@ import GSelect from "../misc/GSelect";
 import ContactCardDecide from "./ContactCardDecide";
 import ContactCardInvitation from "./ContactCardInvitation";
 import ContactCardConversation from "./ContactCardConversation";
+import eventHandler from "../../src/eventHandler";
 
 export default {
   components: {
@@ -173,6 +174,15 @@ export default {
       this.filteredViewModels = this.viewmodels;
       if (value) this.$nextTick(() => this.$refs.contactCardInput.focus());
     }
+  },
+  created() {
+    eventHandler.$on("new-invitation", invitation => {
+      if (!invitation._id || !invitation.sender) return;
+      const vm = this.viewmodels.find(
+        viewmodel => viewmodel.user._id == invitation.sender
+      );
+      if (vm) vm.invitationId = invitation._id;
+    });
   },
   methods: {
     toggleSearch() {
