@@ -39,16 +39,6 @@ export default {
     TabSwitcher,
     ContactCard
   },
-  created() {
-    eventHandler.$on("invitation-accepted", () => {
-      this.loadInvites();
-      this.loadConversations();
-    });
-
-    eventHandler.$on("invitation-rejected", () => {
-      this.loadInvites();
-    });
-  },
   data() {
     return {
       activeTab: 0,
@@ -71,14 +61,27 @@ export default {
   },
   watch: {
     $route(to) {
-      if (to.params.tab) this.switchTabs(+to.params.tab);
+      if (to.params.tab) {
+        this.clearData();
+        this.switchTabs(+to.params.tab);
+      }
     }
   },
   mounted() {
     if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
     else this.switchTabs(0);
+
+    eventHandler.$on("new-invitation", this.loadDataForTab);
+    eventHandler.$on("someone-accepted-invitation", this.loadDataForTab);
+    eventHandler.$on("invitation-accepted", this.loadDataForTab);
+    eventHandler.$on("someone-rejected-invitation", this.loadDataForTab);
+    eventHandler.$on("invitation-rejected", this.loadDataForTab);
   },
   methods: {
+    loadDataForTab() {
+      this.clearData();
+      this.switchTabs(+this.$route.params.tab);
+    },
     goToUserProfile() {
       if (window.innerWidth < 480)
         return this.$router.push({ name: "chatProfileMobile" });

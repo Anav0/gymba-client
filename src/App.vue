@@ -45,6 +45,7 @@ export default {
     ].locale.code;
     eventHandler.$on("participant-removed-friend", () => this.getLoggedUser());
     eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
+    eventHandler.$on("someone-accepted-invitation", () => this.getLoggedUser());
     eventHandler.$on("avatar-changed", () => this.getLoggedUser());
   }
 };
