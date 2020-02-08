@@ -146,6 +146,14 @@ export default {
       eventHandler.$emit("new-invitation", data);
     });
 
+    this.chat.on("invitation rejected", invitation => {
+      eventHandler.$emit("someone-rejected-invitation", invitation);
+    });
+
+    this.chat.on("invitation accepted", invitation => {
+      eventHandler.$emit("someone-accepted-invitation", invitation);
+    });
+
     eventHandler.$on("friend-removed", friend => {
       this.chat.emit("friend removed", {
         user: friend,
@@ -155,6 +163,14 @@ export default {
 
     eventHandler.$on("invitation-sent", invitation => {
       this.chat.emit("invitation sent", invitation);
+    });
+
+    eventHandler.$on("invitation-accepted", invitation => {
+      this.chat.emit("invitation accepted", invitation);
+    });
+
+    eventHandler.$on("invitation-rejected", invitation => {
+      this.chat.emit("invitation rejected", invitation);
     });
 
     eventHandler.$on("user-logout", user => {

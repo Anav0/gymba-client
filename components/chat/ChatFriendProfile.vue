@@ -89,6 +89,34 @@ export default {
   },
   async mounted() {
     this.init();
+    eventHandler.$on("new-invitation", invitation => {
+      if (
+        invitation.sender == this.user._id ||
+        invitation.target == this.user._id
+      ) {
+        this.isInvited = true;
+        this.isFriend = false;
+        this.invitationId = invitation._id;
+      }
+    });
+    eventHandler.$on("someone-accept-invitation", invitation => {
+      if (
+        invitation.sender == this.user._id ||
+        invitation.target == this.user._id
+      ) {
+        this.isInvited = false;
+        this.isFriend = true;
+      }
+    });
+    eventHandler.$on("someone-rejected-invitation", invitation => {
+      if (
+        invitation.sender == this.user._id ||
+        invitation.target == this.user._id
+      ) {
+        this.isInvited = false;
+        this.isFriend = false;
+      }
+    });
   },
 
   data() {
@@ -156,9 +184,12 @@ export default {
     async cancelInvite() {
       try {
         this.isInviting = true;
-        await api.invite.rejectInvitation(this.invitationId);
+        const { data: invitation } = await api.invite.rejectInvitation(
+          this.invitationId
+        );
         this.isInvited = false;
         this.invitationId = null;
+        eventHandler.$emit("invitation-rejected", invitation);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -171,7 +202,7 @@ export default {
       try {
         this.isInviting = true;
         const response = await api.invite.postInvitation(this.user._id);
-        this.$emit("invitationSend", response.data._id);
+        this.$emit("invitationStatusChanged", response.data._id);
         eventHandler.$emit("invitation-sent", response.data);
         this.invitationId = response.data._id;
         this.isInvited = true;

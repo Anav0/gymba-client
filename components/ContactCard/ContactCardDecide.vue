@@ -47,8 +47,10 @@ export default {
     async rejectInvitation() {
       try {
         this.isLoading = true;
-        await api.invite.rejectInvitation(this.invitationId);
-        eventHandler.$emit("invitation-rejected");
+        const { data: invitation } = await api.invite.rejectInvitation(
+          this.invitationId
+        );
+        eventHandler.$emit("invitation-rejected", invitation);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -60,8 +62,10 @@ export default {
     async acceptInvitation() {
       try {
         this.isLoading = true;
-        await api.invite.acceptInvitation(this.invitationId);
-        eventHandler.$emit("invitation-accepted");
+        const { data: invitation } = await api.invite.acceptInvitation(
+          this.invitationId
+        );
+        eventHandler.$emit("invitation-accepted", invitation);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"

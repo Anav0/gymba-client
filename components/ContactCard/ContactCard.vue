@@ -71,7 +71,7 @@
           :invitation-id="viewmodel.invitationId"
           :user="viewmodel.user"
           @wasClicked="showUserProfile(viewmodel.user._id)"
-          @invitationSend="id => (viewmodel.invitationId = id)"
+          @invitationStatusChanged="id => (viewmodel.invitationId = id)"
         />
       </template>
       <template v-if="selectedTab === 2">
@@ -81,7 +81,7 @@
           :user="viewmodel.user"
           :invitation-id="viewmodel.invitationId"
           @wasClicked="showUserProfile(viewmodel.user._id)"
-          @invitationSend="id => (viewmodel.invitationId = id)"
+          @invitationStatusChanged="id => (viewmodel.invitationId = id)"
         />
       </template>
     </ul>
@@ -175,7 +175,7 @@ export default {
       if (value) this.$nextTick(() => this.$refs.contactCardInput.focus());
     }
   },
-  created() {
+  mounted() {
     eventHandler.$on("new-invitation", invitation => {
       if (!invitation._id || !invitation.sender) return;
       const vm = this.viewmodels.find(
