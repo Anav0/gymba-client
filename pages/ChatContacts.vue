@@ -32,6 +32,8 @@ import TabSwitcher from "../components/TabSwiitcher";
 import ContactCard from "../components/ContactCard/ContactCard";
 import api from "../api";
 import eventHandler from "../src/eventHandler";
+import { chat } from "../events/sockets";
+console.log("SOCKET");
 
 export default {
   components: {
@@ -67,15 +69,15 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     if (this.$route.params.tab) this.switchTabs(+this.$route.params.tab);
     else this.switchTabs(0);
 
-    eventHandler.$on("new-invitation", this.loadDataForTab);
-    eventHandler.$on("someone-accepted-invitation", this.loadDataForTab);
-    eventHandler.$on("invitation-accepted", this.loadDataForTab);
-    eventHandler.$on("someone-rejected-invitation", this.loadDataForTab);
-    eventHandler.$on("invitation-rejected", this.loadDataForTab);
+    chat.on("new invitation", this.loadDataForTab);
+    // eventHandler.$on("invitation-rejected", this.loadDataForTab);
+    // eventHandler.$on("invitation-accepted", this.loadDataForTab);
+    chat.on("invitation rejected", this.loadDataForTab);
+    chat.on("invitation accpted", this.loadDataForTab);
   },
   methods: {
     loadDataForTab() {
@@ -111,6 +113,7 @@ export default {
         this.isLoading = true;
         this.clearData();
         let response = await api.invite.getSendInvitations("target");
+
         response.data.forEach(invitation => {
           this.friends.push({
             isLoading: false,

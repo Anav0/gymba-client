@@ -80,13 +80,15 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import { debounce } from "debounce";
 import { SpringSpinner } from "epic-spinners";
 import AvatarWrapper from "../../Avatars/AvatarWrapper";
 import ChatMessage from "../../chat/ChatMessage";
 import api from "../../../api";
 import eventHandler from "../../../src/eventHandler";
+console.log("SOCKET");
+import { chat } from "../../../events/sockets";
+
 export default {
   components: {
     AvatarWrapper,
@@ -102,8 +104,7 @@ export default {
       isTyping: false,
       numberOfMessages: 15,
       startFrom: 0,
-      typer: {},
-      chat: {}
+      typer: {}
     };
   },
   computed: {
@@ -126,63 +127,7 @@ export default {
     }
   },
   async mounted() {
-    this.chat = io(`${process.env.VUE_APP_API_URL}/chat`, {
-      query: this.user
-    });
-
-    this.chat.on("user login", userId => {
-      eventHandler.$emit("user-connected", userId);
-    });
-
-    this.chat.on("user logout", userId => {
-      eventHandler.$emit("user-disconnected", userId);
-    });
-
-    this.chat.on("friend removed", friendId => {
-      eventHandler.$emit("participant-removed-friend");
-    });
-
-    this.chat.on("new invitation", data => {
-      eventHandler.$emit("new-invitation", data);
-    });
-
-    this.chat.on("invitation rejected", invitation => {
-      eventHandler.$emit("someone-rejected-invitation", invitation);
-    });
-
-    this.chat.on("invitation accepted", invitation => {
-      eventHandler.$emit("someone-accepted-invitation", invitation);
-    });
-
-    eventHandler.$on("friend-removed", friend => {
-      this.chat.emit("friend removed", {
-        user: friend,
-        roomId: this.conversation.roomId
-      });
-    });
-
-    eventHandler.$on("invitation-sent", invitation => {
-      this.chat.emit("invitation sent", invitation);
-    });
-
-    eventHandler.$on("invitation-accepted", invitation => {
-      this.chat.emit("invitation accepted", invitation);
-    });
-
-    eventHandler.$on("invitation-rejected", invitation => {
-      this.chat.emit("invitation rejected", invitation);
-    });
-
-    eventHandler.$on("user-logout", user => {
-      this.chat.disconnect();
-      if (this.settings.isEnterLeaveIndicatorVisible)
-        this.chat.emit("user left", {
-          roomId: this.conversation.roomId,
-          user: this.user
-        });
-    });
-
-    this.chat.on("new message", async message => {
+    chat.on("new message", async message => {
       await new Promise(resolve => {
         this.messages.push(message);
         this.startFrom++;
@@ -191,7 +136,7 @@ export default {
       this.scrollToBottom();
     });
 
-    this.chat.on("failed to send message", async data => {
+    chat.on("failed to send message", async data => {
       for (const error of data.errors) {
         this.$toasted.show(error, {
           className: "error-toast"
@@ -199,26 +144,26 @@ export default {
       }
     });
 
-    this.chat.on("user join room", fullname => {
+    chat.on("user join room", fullname => {
       if (this.settings.isEnterLeaveIndicatorVisible)
         this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-joined")}`, {
           className: "info-toast"
         });
     });
 
-    this.chat.on("user left room", fullname => {
+    chat.on("user left room", fullname => {
       if (this.settings.isEnterLeaveIndicatorVisible)
         this.$toasted.show(`${fullname} ${this.$i18n.t("chat-user-left")}`, {
           className: "info-toast"
         });
     });
 
-    this.chat.on("user is typing", user => {
+    chat.on("user is typing", user => {
       this.isTyping = true;
       this.typer = user;
     });
 
-    this.chat.on("user stoped typing", user => {
+    chat.on("user stoped typing", user => {
       this.isTyping = false;
     });
 
@@ -258,7 +203,7 @@ export default {
             return resolve();
           }
           await this.fetchAdditionalMessages();
-          this.chat.emit("join", {
+          chat.emit("join", {
             roomId: this.conversation.roomId,
             user: this.user
           });
@@ -318,7 +263,7 @@ export default {
       this.$router.push({ name: "chatFriend", params: { id } });
     },
     stopedTyping: debounce(function() {
-      this.chat.emit("stoped typing", {
+      chat.emit("stoped typing", {
         user: {
           fullname: this.user.fullname,
           _id: this.user._id
@@ -328,7 +273,7 @@ export default {
     }, 500),
     typing: debounce(
       function() {
-        this.chat.emit("is typing", {
+        chat.emit("is typing", {
           user: {
             fullname: this.user.fullname,
             _id: this.user._id
@@ -349,7 +294,7 @@ export default {
       if (!this.message) return;
 
       if (this.target.isBot) {
-        this.chat.emit("bot message", {
+        chat.emit("bot message", {
           roomId: this.conversation.roomId,
           userId: this.user._id,
           botId: this.target._id,
@@ -357,7 +302,7 @@ export default {
           message: this.message
         });
       } else {
-        this.chat.emit("private message", {
+        chat.emit("private message", {
           roomId: this.conversation.roomId,
           userId: this.user._id,
           conversationId: this.conversation._id,

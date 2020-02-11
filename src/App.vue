@@ -17,7 +17,8 @@ import navbar from "../components/NavBar";
 import api from "../api";
 import eventHandler from "../src/eventHandler";
 import userMixin from "../mixins/userMixin";
-
+import { chat } from "../events/sockets";
+console.log("SOCKET");
 export default {
   mixins: [userMixin],
   components: {
@@ -38,15 +39,15 @@ export default {
         : "";
     }
   },
-  created() {
+  async mounted() {
     this.$store.dispatch("settings/loadSettings");
     this.$root.$i18n.locale = this.$store.getters[
       "settings/settings"
     ].locale.code;
-    eventHandler.$on("participant-removed-friend", () => this.getLoggedUser());
-    eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
-    eventHandler.$on("someone-accepted-invitation", () => this.getLoggedUser());
     eventHandler.$on("avatar-changed", () => this.getLoggedUser());
+    chat.on("friend removed", () => this.getLoggedUser());
+    chat.on("invitation accepted", () => this.getLoggedUser());
+    chat.on("invitation rejected", () => this.getLoggedUser());
   }
 };
 </script>

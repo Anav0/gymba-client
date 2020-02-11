@@ -79,7 +79,10 @@ import Avatar from "../Avatars/Avatar";
 import TextIcon from "../TextIcon";
 import ConversationStat from "../ConversationStat";
 import { SpringSpinner } from "epic-spinners";
+console.log("SOCKET");
+import { chat } from "../../events/sockets";
 import eventHandler from "../../src/eventHandler";
+
 export default {
   components: {
     Avatar,
@@ -89,7 +92,7 @@ export default {
   },
   async mounted() {
     this.init();
-    eventHandler.$on("new-invitation", invitation => {
+    chat.on("new invitation", invitation => {
       if (
         invitation.sender == this.user._id ||
         invitation.target == this.user._id
@@ -99,7 +102,7 @@ export default {
         this.invitationId = invitation._id;
       }
     });
-    eventHandler.$on("someone-accept-invitation", invitation => {
+    chat.on("invitation accepted", invitation => {
       if (
         invitation.sender == this.user._id ||
         invitation.target == this.user._id
@@ -108,7 +111,7 @@ export default {
         this.isFriend = true;
       }
     });
-    eventHandler.$on("someone-rejected-invitation", invitation => {
+    chat.on("invitation rejected", invitation => {
       if (
         invitation.sender == this.user._id ||
         invitation.target == this.user._id
@@ -189,7 +192,6 @@ export default {
         );
         this.isInvited = false;
         this.invitationId = null;
-        eventHandler.$emit("invitation-rejected", invitation);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -203,7 +205,6 @@ export default {
         this.isInviting = true;
         const response = await api.invite.postInvitation(this.user._id);
         this.$emit("invitationStatusChanged", response.data._id);
-        eventHandler.$emit("invitation-sent", response.data);
         this.invitationId = response.data._id;
         this.isInvited = true;
       } catch (err) {

@@ -49,6 +49,7 @@
 <script>
 import api from "../api";
 import { FlowerSpinner } from "epic-spinners";
+import eventHandler from "../src/eventHandler";
 
 export default {
   components: { FlowerSpinner },
@@ -82,8 +83,8 @@ export default {
       try {
         this.isLoading = true;
         const response = await api.auth.login(this.credentials);
-        this.$store.dispatch("auth/login", response.data.user);
-
+        await this.$store.dispatch("auth/login", response.data.user);
+        eventHandler.$emit("logged-user-info-changes", response.data);
         if (window.innerWidth < 400)
           return this.$router.push({
             name: "chatContactsMobile",

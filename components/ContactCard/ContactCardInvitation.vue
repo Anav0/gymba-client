@@ -51,7 +51,6 @@ export default {
       try {
         const response = await api.invite.postInvitation(this.user._id);
         this.$emit("invitationStatusChanged", response.data._id);
-        eventHandler.$emit("invitation-sent", response.data);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"
@@ -67,7 +66,6 @@ export default {
           this.invitationId
         );
         this.$emit("invitationStatusChanged", null);
-        eventHandler.$emit("invitation-rejected", invitation);
       } catch (err) {
         this.$toasted.show(err.message, {
           className: "error-toast"

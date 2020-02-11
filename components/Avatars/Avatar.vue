@@ -21,6 +21,9 @@
 <script>
 import eventHandler from "../../src/eventHandler";
 import api from "../../api";
+console.log("SOCKET");
+import { chat } from "../../events/sockets";
+
 export default {
   data() {
     return {
@@ -65,13 +68,13 @@ export default {
   mounted() {
     this.updateIsOnlineStatus();
   },
-  created() {
-    eventHandler.$on("user-disconnected", userId => {
+  async created() {
+    chat.on("user logout", userId => {
       if (!this.userId || !userId) return;
       if (this.userId != userId) return;
       this.isOnline = false;
     });
-    eventHandler.$on("user-connected", userId => {
+    chat.on("user login", userId => {
       if (this.userId != userId) return;
       this.isOnline = true;
     });

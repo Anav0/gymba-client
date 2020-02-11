@@ -113,6 +113,8 @@ import ContactCardDecide from "./ContactCardDecide";
 import ContactCardInvitation from "./ContactCardInvitation";
 import ContactCardConversation from "./ContactCardConversation";
 import eventHandler from "../../src/eventHandler";
+console.log("SOCKET");
+import { chat } from "../../events/sockets";
 
 export default {
   components: {
@@ -175,8 +177,8 @@ export default {
       if (value) this.$nextTick(() => this.$refs.contactCardInput.focus());
     }
   },
-  mounted() {
-    eventHandler.$on("new-invitation", invitation => {
+  async mounted() {
+    chat.on("new invitation", invitation => {
       if (!invitation._id || !invitation.sender) return;
       const vm = this.viewmodels.find(
         viewmodel => viewmodel.user._id == invitation.sender

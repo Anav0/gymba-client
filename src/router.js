@@ -11,7 +11,7 @@ import ChatUserProfile from "../components/chat/ChatUserProfile";
 import ChatFriendProfile from "../components/chat/ChatFriendProfile";
 import conversation from "../components/chat/conversation";
 import store from "../store";
-import api from "../api";
+import { getLoggedUser } from "../helpers/authHelper";
 
 Vue.use(Router);
 
@@ -125,18 +125,6 @@ export const router = new Router({
   ]
 });
 
-const getLoggedUser = () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const response = await api.user.getAuthUser();
-      if (response.data) {
-        await store.dispatch("auth/login", response.data);
-      }
-      resolve(response.data);
-    } catch (err) {
-      reject(err);
-    }
-  });
 router.beforeEach(async (to, from, next) => {
   try {
     if (to.matched.some(route => route.meta.requiresAuth)) {
