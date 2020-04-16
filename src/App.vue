@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <div v-if="!isChat" class="background" :class="dynamicBackground" />
+    <div
+      v-if="!isChat"
+      class="background"
+      :class="dynamicBackground"
+    />
     <navbar v-if="!isChat" />
     <transition name="fade">
       <router-view class="app-content" />
@@ -13,41 +17,41 @@
   </div>
 </template>
 <script>
-import navbar from "../components/NavBar";
-import api from "../api";
-import eventHandler from "../src/eventHandler";
-import userMixin from "../mixins/userMixin";
+import navbar from '../components/NavBar';
+import api from '../api';
+import eventHandler from './eventHandler';
+import userMixin from '../mixins/userMixin';
 
 export default {
-  mixins: [userMixin],
   components: {
-    navbar
+    navbar,
   },
+  mixins: [userMixin],
   data() {
     return {
-      fillRoutes: ["noPage"]
+      fillRoutes: ['noPage'],
     };
   },
   computed: {
     isChat() {
-      return this.$route.matched.some(route => route.path.includes("/chat"));
+      return this.$route.matched.some(route => route.path.includes('/chat'));
     },
     dynamicBackground() {
       return this.fillRoutes.includes(this.$route.name)
-        ? "background--fill"
-        : "";
-    }
+        ? 'background--fill'
+        : '';
+    },
   },
   created() {
-    this.$store.dispatch("settings/loadSettings");
+    this.$store.dispatch('settings/loadSettings');
     this.$root.$i18n.locale = this.$store.getters[
-      "settings/settings"
+      'settings/settings'
     ].locale.code;
-    eventHandler.$on("participant-removed-friend", () => this.getLoggedUser());
-    eventHandler.$on("invitation-accepted", () => this.getLoggedUser());
-    eventHandler.$on("someone-accepted-invitation", () => this.getLoggedUser());
-    eventHandler.$on("avatar-changed", () => this.getLoggedUser());
-  }
+    eventHandler.$on('participant-removed-friend', () => this.getLoggedUser());
+    eventHandler.$on('invitation-accepted', () => this.getLoggedUser());
+    eventHandler.$on('someone-accepted-invitation', () => this.getLoggedUser());
+    eventHandler.$on('avatar-changed', () => this.getLoggedUser());
+  },
 };
 </script>
 

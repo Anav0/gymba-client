@@ -1,5 +1,5 @@
-import Vue from "vue";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import Vue from 'vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faUser,
   faSmile,
@@ -30,24 +30,24 @@ import {
   faAngleDown,
   faHeart,
   faCommentSlash,
-  faBan
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import axios from "axios";
-import Toasted from "vue-toasted";
-import App from "./App.vue";
-import { router } from "./router";
-import { i18n } from "../plugins";
-import "./registerServiceWorker";
-import store from "../store";
+  faBan,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import axios from 'axios';
+import Toasted from 'vue-toasted';
+import App from './App.vue';
+import { router } from './router';
+import { i18n } from '../plugins';
+import './registerServiceWorker';
+import store from '../store';
 // eslint-disable-next-line
 import * as filters from "../filters";
 
 Vue.use(Toasted, {
-  position: "bottom-right",
-  duration: 5000
+  position: 'bottom-right',
+  duration: 5000,
 });
-Vue.component("fa-icon", FontAwesomeIcon);
+Vue.component('fa-icon', FontAwesomeIcon);
 library.add({
   faUser,
   faSmile,
@@ -78,7 +78,7 @@ library.add({
   faAngleDown,
   faHeart,
   faCommentSlash,
-  faBan
+  faBan,
 });
 
 Vue.config.productionTip = false;
@@ -95,18 +95,18 @@ axios.interceptors.response.use(
 
     for (const errmsg of errors) {
       Vue.toasted.show(errmsg, {
-        className: "error-toast"
+        className: 'error-toast',
       });
     }
     if (errors.length > 0) return Promise.reject(errors);
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject([error.message]);
-  }
+  },
 );
 
 new Vue({
   router,
   store,
   i18n,
-  render: h => h(App)
-}).$mount("#app");
+  render: h => h(App),
+}).$mount('#app');
