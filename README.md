@@ -1,29 +1,15 @@
-# gymba-client
+# Gymba chat application
+Standard chat application allowing to exchange message via interweb.
 
-## Project setup
-```
-npm install
-```
+#### https://github.com/Anav0/gymba-server
+#### https://github.com/Anav0/gymba-chatbot
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+- WebSockets
+- Vue
+- Express.js
+- Node
+- MongoDb
+- Mongoose
+- Figma
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![Gymba website look and feel](https://github.com/Anav0/gymba-client/blob/master/Chat%20(1).jpg)
